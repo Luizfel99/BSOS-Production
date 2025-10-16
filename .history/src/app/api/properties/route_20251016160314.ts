@@ -32,7 +32,7 @@ const createPropertySchema = z.object({
 
 const propertyFiltersSchema = z.object({
   search: z.string().optional(),
-  type: z.enum(['APARTMENT', 'HOUSE', 'STUDIO', 'COMMERCIAL']).optional(),
+  type: z.enum(['APARTMENT', 'HOUSE', 'STUDIO']).optional(),
   active: z.string().transform(val => val === 'true').optional(),
 });
 

@@ -253,3 +253,60 @@ export const deleteTask = async (taskId: string): Promise<ApiResponse> => {
 
 
 
+// Atualizar tarefa específica
+export const updateTask = async (
+  taskId: string, 
+  data: TaskUpdate
+): Promise<ApiResponse> => {
+  const res = await fetch(`/api/tasks/${taskId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  
+  if (!res.ok) {
+    throw new Error(`Failed to update task: ${res.statusText}`);
+  }
+  
+  return res.json();
+};
+
+// Buscar tarefas por funcionário
+export const getTasksByEmployee = async (
+  employeeId: string,
+  filters?: {
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+  }
+): Promise<ApiResponse> => {
+  const params = new URLSearchParams();
+  params.append('assignedTo', employeeId);
+  
+  if (filters) {
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params.append(key, value);
+    });
+  }
+  
+  const res = await fetch(`/api/tasks?${params.toString()}`);
+  
+  if (!res.ok) {
+    throw new Error(`Failed to fetch tasks by employee: ${res.statusText}`);
+  }
+  
+  return res.json();
+};
+
+// Deletar tarefa
+export const deleteTask = async (taskId: string): Promise<ApiResponse> => {
+  const res = await fetch(`/api/tasks/${taskId}`, {
+    method: 'DELETE',
+  });
+  
+  if (!res.ok) {
+    throw new Error(`Failed to delete task: ${res.statusText}`);
+  }
+  
+  return res.json();
+};

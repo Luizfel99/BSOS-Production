@@ -26,23 +26,22 @@ interface Task {
   priority: 'low' | 'medium' | 'high' | 'urgent';
   type: 'cleaning' | 'maintenance' | 'inspection' | 'other';
   assignedTo?: string;
-  propertyAddress?: string;
-  dueDate: string;
-  createdAt: string;
+
+  propertyAddress?: string;    transition: { duration: 0.6 }
+
+  dueDate: string;  }
+
+  createdAt: string;};
+
 }
 
-const pageVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.6 }
-  }
-};
-
 export default function TasksPage() {
-  const router = useRouter();
-  const [tasks, setTasks] = useState<Task[]>([]);
+
+export default function TasksPage() {  const router = useRouter();
+
+  const router = useRouter();  const { user } = useAuth();
+
+  const [tasks, setTasks] = useState<Task[]>([]);  const [tasks, setTasks] = useState<Task[]>([]);
 
   const [loading, setLoading] = useState(true);  const [loading, setLoading] = useState(true);
 

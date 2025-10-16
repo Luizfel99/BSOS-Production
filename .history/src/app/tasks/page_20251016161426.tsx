@@ -20,29 +20,34 @@ import { listTasks, deleteTask, type Task } from '@/services/tasks';
 
 interface Task {
   id: string;
+
   title: string;
-  description?: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  type: 'cleaning' | 'maintenance' | 'inspection' | 'other';
-  assignedTo?: string;
-  propertyAddress?: string;
-  dueDate: string;
-  createdAt: string;
+
+  description?: string;const pageVariants = {
+
+  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';  hidden: { opacity: 0, y: 20 },
+
+  priority: 'low' | 'medium' | 'high' | 'urgent';  visible: { 
+
+  type: 'cleaning' | 'maintenance' | 'inspection' | 'other';    opacity: 1, 
+
+  assignedTo?: string;    y: 0,
+
+  propertyAddress?: string;    transition: { duration: 0.6 }
+
+  dueDate: string;  }
+
+  createdAt: string;};
+
 }
 
-const pageVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.6 }
-  }
-};
-
 export default function TasksPage() {
-  const router = useRouter();
-  const [tasks, setTasks] = useState<Task[]>([]);
+
+export default function TasksPage() {  const router = useRouter();
+
+  const router = useRouter();  const { user } = useAuth();
+
+  const [tasks, setTasks] = useState<Task[]>([]);  const [tasks, setTasks] = useState<Task[]>([]);
 
   const [loading, setLoading] = useState(true);  const [loading, setLoading] = useState(true);
 

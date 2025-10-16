@@ -40,12 +40,11 @@ const pageVariants = {
 
 export default function NewTaskPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<Array<{id: string, name: string}>>([]);
   const [properties, setProperties] = useState<Array<{id: string, name: string, address: string}>>([]);
 
-  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<TaskFormData>({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<TaskFormData>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
       status: 'pending',
@@ -56,13 +55,7 @@ export default function NewTaskPage() {
 
   useEffect(() => {
     loadFormData();
-    
-    // Check for propertyId in URL params
-    const propertyId = searchParams.get('propertyId');
-    if (propertyId) {
-      setValue('propertyId', propertyId);
-    }
-  }, [searchParams, setValue]);
+  }, []);
 
   const loadFormData = async () => {
     try {
