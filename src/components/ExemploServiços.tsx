@@ -109,7 +109,7 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
       await startCleaning(cleaningId, employeeId);
       
       // Atualizar status da propriedade
-      await updatePropertyStatus(propertyId, 'cleaning');
+      await updatePropertyStatus(propertyId, 'active');
 
       success('Limpeza iniciada!');
       loadCleanings();
@@ -135,7 +135,7 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
       });
 
       // Atualizar status da propriedade
-      await updatePropertyStatus(propertyId, 'available');
+      await updatePropertyStatus(propertyId, 'active');
 
       success('Limpeza finalizada!');
       loadCleanings();
@@ -150,11 +150,11 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
       await createTask({
         title: 'Verificar produtos de limpeza',
         description: 'Verificar se há produtos suficientes para próximas limpezas',
-        type: 'administrative',
+        type: 'other',
         priority: 'medium',
         assignedTo: employeeId,
         propertyId,
-        dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Amanhã
+        dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Amanhã
       });
 
       success('Tarefa criada!');

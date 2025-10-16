@@ -186,6 +186,64 @@ export const togglePropertyStatus = async (propertyId: string): Promise<ApiRespo
   }
 };
 
+// Schedule property cleaning
+export const schedulePropertyCleaning = async (
+  propertyId: string,
+  schedulingData: {
+    scheduledDate: Date;
+    cleaningType: 'deep' | 'regular' | 'maintenance';
+    estimatedDuration?: number;
+    specialInstructions?: string;
+    assignedTo?: string;
+  }
+): Promise<ApiResponse<any>> => {
+  try {
+    const response = await fetch(`/api/properties/${propertyId}/schedule`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(schedulingData),
+    });
+    
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to schedule cleaning');
+    }
+    
+    toast.success('Cleaning scheduled successfully!');
+    return result;
+  } catch (error: any) {
+    toast.error(error.message || 'Failed to schedule cleaning');
+    throw error;
+  }
+};
+
+// Update property status (active/inactive)
+export const updatePropertyStatus = async (
+  propertyId: string,
+  status: 'active' | 'inactive'
+): Promise<ApiResponse<Property>> => {
+  try {
+    const response = await fetch(`/api/properties/${propertyId}/status`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ active: status === 'active' }),
+    });
+    
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to update property status');
+    }
+    
+    toast.success(`Property ${status === 'active' ? 'activated' : 'deactivated'} successfully!`);
+    return result;
+  } catch (error: any) {
+    toast.error(error.message || 'Failed to update property status');
+    throw error;
+  }
+};
+
 // Utility functions
 export const getPropertyTypeLabel = (type: string): string => {
   const typeLabels: Record<string, string> = {

@@ -29,9 +29,10 @@ function getUserFromCookies(request: NextRequest) {
 // GET /api/team/[id] - Get specific team member
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const currentUser = getUserFromCookies(request);
     
     if (!currentUser) {
@@ -44,7 +45,7 @@ export async function GET(
     }
 
     const teamMember = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: {
         id: true,
         name: true,
@@ -82,9 +83,10 @@ export async function GET(
 // PUT /api/team/[id] - Update team member
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const currentUser = getUserFromCookies(request);
     
     if (!currentUser) {
@@ -97,7 +99,7 @@ export async function PUT(
     // Check permissions
     if (!['owner', 'manager'].includes(userRole)) {
       // Supervisors can only edit their own profile
-      if (userRole === 'supervisor' && params.id !== userId) {
+      if (userRole === 'supervisor' && id !== userId) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
       }
       // Employees/cleaners cannot edit
@@ -111,7 +113,7 @@ export async function PUT(
 
     // Check if team member exists
     const existingMember = await prisma.user.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!existingMember) {
@@ -141,7 +143,7 @@ export async function PUT(
     );
 
     const updatedMember = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       select: {
         id: true,
@@ -180,9 +182,10 @@ export async function PUT(
 // DELETE /api/team/[id] - Delete team member
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const currentUser = getUserFromCookies(request);
     
     if (!currentUser) {
@@ -198,7 +201,7 @@ export async function DELETE(
     }
 
     // Prevent self-deletion
-    if (params.id === userId) {
+    if (id === userId) {
       return NextResponse.json(
         { error: 'Você não pode excluir sua própria conta' },
         { status: 400 }
@@ -207,7 +210,7 @@ export async function DELETE(
 
     // Check if team member exists
     const existingMember = await prisma.user.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!existingMember) {
@@ -220,7 +223,7 @@ export async function DELETE(
     // Soft delete by setting active to false instead of hard delete
     // This preserves data integrity for historical records
     await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: { 
         active: false,
         updatedAt: new Date()

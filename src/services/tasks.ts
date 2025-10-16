@@ -251,35 +251,6 @@ export const deleteTask = async (taskId: string): Promise<ApiResponse> => {
   return res.json();
 };
 
-// Buscar detalhes de uma tarefa específica
-export const getTaskDetails = async (taskId: string): Promise<ApiResponse> => {
-  const res = await fetch(`/api/tasks/${taskId}`);
-  
-  if (!res.ok) {
-    throw new Error(`Failed to fetch task details: ${res.statusText}`);
-  }
-  
-  return res.json();
-};
-
-// Atualizar tarefa específica
-export const updateTask = async (
-  taskId: string, 
-  data: TaskUpdate
-): Promise<ApiResponse> => {
-  const res = await fetch(`/api/tasks/${taskId}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  
-  if (!res.ok) {
-    throw new Error(`Failed to update task: ${res.statusText}`);
-  }
-  
-  return res.json();
-};
-
 // Buscar tarefas por funcionário
 export const getTasksByEmployee = async (
   employeeId: string,
@@ -307,15 +278,3 @@ export const getTasksByEmployee = async (
   return res.json();
 };
 
-// Deletar tarefa
-export const deleteTask = async (taskId: string): Promise<ApiResponse> => {
-  const res = await fetch(`/api/tasks/${taskId}`, {
-    method: 'DELETE',
-  });
-  
-  if (!res.ok) {
-    throw new Error(`Failed to delete task: ${res.statusText}`);
-  }
-  
-  return res.json();
-};

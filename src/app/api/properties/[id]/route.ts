@@ -28,9 +28,10 @@ const updatePropertySchema = z.object({
 // GET - Get property by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const currentUser = getUserFromCookies(request);
 
     if (!currentUser) {
@@ -41,7 +42,7 @@ export async function GET(
     }
 
     const property = await prisma.property.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!property) {
@@ -76,9 +77,10 @@ export async function GET(
 // PUT - Update property
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const currentUser = getUserFromCookies(request);
 
     if (!currentUser) {
@@ -97,7 +99,7 @@ export async function PUT(
     }
 
     const property = await prisma.property.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!property) {
@@ -132,7 +134,7 @@ export async function PUT(
     }
 
     const updatedProperty = await prisma.property.update({
-      where: { id: params.id },
+      where: { id },
       data: validatedData
     });
 
@@ -162,9 +164,10 @@ export async function PUT(
 // DELETE - Delete property (soft delete by setting active to false)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const currentUser = getUserFromCookies(request);
 
     if (!currentUser) {
@@ -183,7 +186,7 @@ export async function DELETE(
     }
 
     const property = await prisma.property.findUnique({
-      where: { id: params.id }
+      where: { id }
     });
 
     if (!property) {
@@ -195,7 +198,7 @@ export async function DELETE(
 
     // Soft delete - set active to false
     const deletedProperty = await prisma.property.update({
-      where: { id: params.id },
+      where: { id },
       data: { active: false }
     });
 

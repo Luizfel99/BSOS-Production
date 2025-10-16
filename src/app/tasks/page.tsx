@@ -1,568 +1,367 @@
-'use client';'use client';
+'use client';
 
-
-
-import { useState, useEffect } from 'react';import React, { useState, useEffect } from 'react';
-
-import { useRouter } from 'next/navigation';import { motion } from 'framer-motion';
-
-import { Plus, Search, Calendar, User, MapPin, Edit2, Trash2 } from 'lucide-react';import { Plus, Search, Filter, Calendar, User, Building, AlertCircle } from 'lucide-react';
-
-import { motion } from 'framer-motion';import { useRouter } from 'next/navigation';
-
-import { RouteGuard } from '@/components/RouteGuard';import { useAuth } from '@/contexts/AuthContext';
-
-import { MobileNavigation } from '@/components/MobileNavigation';import { toast } from 'react-hot-toast';
-
-import { ProtectedComponent } from '@/components/ProtectedComponent';import RouteGuard from '@/components/RouteGuard';
-
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Plus, Search, Filter, Calendar, User, Building, AlertCircle, Edit2, Trash2, Clock, MapPin } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'react-hot-toast';
+import RouteGuard from '@/components/RouteGuard';
 import MobileNavigation from '@/components/MobileNavigation';
+import ProtectedComponent from '@/components/ProtectedComponent';
+import { listTasks, deleteTask, type Task } from '@/services/tasks';
 
-interface Task {import ProtectedComponent from '@/components/ProtectedComponent';
-
-  id: string;import { listTasks, deleteTask, type Task } from '@/services/tasks';
-
-  title: string;
-
-  description?: string;const pageVariants = {
-
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled';  hidden: { opacity: 0, y: 20 },
-
-  priority: 'low' | 'medium' | 'high' | 'urgent';  visible: { 
-
-  type: 'cleaning' | 'maintenance' | 'inspection' | 'other';    opacity: 1, 
-
-  assignedTo?: string;    y: 0,
-
-  propertyAddress?: string;    transition: { duration: 0.6 }
-
-  dueDate: string;  }
-
-  createdAt: string;};
-
-}
+const pageVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6 }
+  }
+};
 
 export default function TasksPage() {
+  const router = useRouter();
+  const { user } = useAuth();
 
-export default function TasksPage() {  const router = useRouter();
-
-  const router = useRouter();  const { user } = useAuth();
-
-  const [tasks, setTasks] = useState<Task[]>([]);  const [tasks, setTasks] = useState<Task[]>([]);
-
-  const [loading, setLoading] = useState(true);  const [loading, setLoading] = useState(true);
-
-  const [searchTerm, setSearchTerm] = useState('');  const [filters, setFilters] = useState({
-
-  const [statusFilter, setStatusFilter] = useState('all');    search: '',
-
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    search: '',
     status: '',
+    priority: '',
+    assignedTo: ''
+  });
 
-  // Mock data for now    priority: '',
+  useEffect(() => {
+    loadTasks();
+  }, [filters]);
 
-  useEffect(() => {    assignedTo: ''
-
-    const mockTasks: Task[] = [  });
-
-      {
-
-        id: '1',  useEffect(() => {
-
-        title: 'Limpeza Apartamento 101',    loadTasks();
-
-        description: 'Limpeza completa com foco em banheiros e cozinha',  }, [filters]);
-
-        status: 'pending',
-
-        priority: 'high',  const loadTasks = async () => {
-
-        type: 'cleaning',    try {
-
-        assignedTo: 'Maria Silva',      setLoading(true);
-
-        propertyAddress: 'Rua das Flores, 123 - Apt 101',      const response = await listTasks(filters);
-
-        dueDate: '2025-10-16',      if (response.success) {
-
-        createdAt: '2025-10-15'        setTasks(response.data.tasks);
-
-      },      }
-
-      {    } catch (error) {
-
-        id: '2',      toast.error('Erro ao carregar tarefas');
-
-        title: 'Manutenção Ar Condicionado',    } finally {
-
-        description: 'Verificar funcionamento e fazer limpeza dos filtros',      setLoading(false);
-
-        status: 'in_progress',    }
-
-        priority: 'medium',  };
-
-        type: 'maintenance',
-
-        assignedTo: 'Carlos Santos',  const handleDelete = async (id: string) => {
-
-        propertyAddress: 'Av. Copacabana, 456 - Sala 203',    if (!confirm('Tem certeza que deseja excluir esta tarefa?')) return;
-
-        dueDate: '2025-10-17',    
-
-        createdAt: '2025-10-14'    try {
-
-      },      await deleteTask(id);
-
-      {      toast.success('Tarefa excluída com sucesso');
-
-        id: '3',      loadTasks();
-
-        title: 'Inspeção Vistoria',    } catch (error) {
-
-        description: 'Vistoria para entrada de novo inquilino',      toast.error('Erro ao excluir tarefa');
-
-        status: 'completed',    }
-
-        priority: 'medium',  };
-
-        type: 'inspection',
-
-        assignedTo: 'Ana Costa',  const getStatusColor = (status: string) => {
-
-        propertyAddress: 'Rua Principal, 789',    switch (status) {
-
-        dueDate: '2025-10-15',      case 'completed': return 'bg-green-100 text-green-800';
-
-        createdAt: '2025-10-13'      case 'in_progress': return 'bg-blue-100 text-blue-800';
-
-      }      case 'pending': return 'bg-yellow-100 text-yellow-800';
-
-    ];      case 'cancelled': return 'bg-red-100 text-red-800';
-
-          default: return 'bg-gray-100 text-gray-800';
-
-    setTasks(mockTasks);    }
-
-    setLoading(false);  };
-
-  }, []);
-
-  const getPriorityColor = (priority: string) => {
-
-  const getStatusColor = (status: string) => {    switch (priority) {
-
-    switch (status) {      case 'urgent': return 'bg-red-100 text-red-800';
-
-      case 'pending': return 'bg-yellow-100 text-yellow-800';      case 'high': return 'bg-orange-100 text-orange-800';
-
-      case 'in_progress': return 'bg-blue-100 text-blue-800';      case 'medium': return 'bg-yellow-100 text-yellow-800';
-
-      case 'completed': return 'bg-green-100 text-green-800';      case 'low': return 'bg-green-100 text-green-800';
-
-      case 'cancelled': return 'bg-red-100 text-red-800';      default: return 'bg-gray-100 text-gray-800';
-
-      default: return 'bg-gray-100 text-gray-800';    }
-
-    }  };
-
+  const loadTasks = async () => {
+    try {
+      setLoading(true);
+      const response = await listTasks(filters);
+      if (response.success && response.data) {
+        setTasks(response.data.tasks || []);
+      }
+    } catch (error: any) {
+      console.error('Error loading tasks:', error);
+      toast.error('Erro ao carregar tarefas');
+      // Use mock data as fallback
+      setTasks(getMockTasks());
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const getMockTasks = (): Task[] => [
+    {
+      id: '1',
+      title: 'Limpeza Apartamento 101',
+      description: 'Limpeza completa com foco em banheiros e cozinha',
+      status: 'pending',
+      priority: 'high',
+      type: 'cleaning',
+      assignedToName: 'Maria Silva',
+      propertyName: 'Rua das Flores, 123 - Apt 101',
+      dueDate: '2025-10-16',
+      createdAt: '2025-10-15',
+      updatedAt: '2025-10-15'
+    },
+    {
+      id: '2',
+      title: 'Manutenção Ar Condicionado',
+      description: 'Verificar funcionamento e fazer limpeza dos filtros',
+      status: 'in_progress',
+      priority: 'medium',
+      type: 'maintenance',
+      assignedToName: 'Carlos Santos',
+      propertyName: 'Av. Copacabana, 456 - Sala 203',
+      dueDate: '2025-10-17',
+      createdAt: '2025-10-14',
+      updatedAt: '2025-10-15'
+    },
+    {
+      id: '3',
+      title: 'Inspeção Vistoria',
+      description: 'Vistoria para entrada de novo inquilino',
+      status: 'completed',
+      priority: 'medium',
+      type: 'inspection',
+      assignedToName: 'Ana Costa',
+      propertyName: 'Rua Principal, 789',
+      dueDate: '2025-10-15',
+      createdAt: '2025-10-13',
+      updatedAt: '2025-10-15'
+    }
+  ];
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Tem certeza que deseja excluir esta tarefa?')) return;
+    
+    try {
+      await deleteTask(id);
+      toast.success('Tarefa excluída com sucesso');
+      loadTasks();
+    } catch (error) {
+      toast.error('Erro ao excluir tarefa');
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'bg-green-100 text-green-800 border-green-200';
+      case 'in_progress': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'urgent': return 'bg-red-100 text-red-800 border-red-200';
+      case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'low': return 'bg-green-100 text-green-800 border-green-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'pending': return 'Pendente';
+      case 'in_progress': return 'Em Andamento';
+      case 'completed': return 'Concluída';
+      case 'cancelled': return 'Cancelada';
+      default: return status;
+    }
+  };
+
+  const getPriorityLabel = (priority: string) => {
+    switch (priority) {
+      case 'low': return 'Baixa';
+      case 'medium': return 'Média';
+      case 'high': return 'Alta';
+      case 'urgent': return 'Urgente';
+      default: return priority;
+    }
+  };
+
+  const getTypeLabel = (type: string) => {
+    switch (type) {
+      case 'cleaning': return 'Limpeza';
+      case 'maintenance': return 'Manutenção';
+      case 'inspection': return 'Inspeção';
+      case 'other': return 'Outro';
+      default: return type;
+    }
+  };
+
+  const filteredTasks = tasks.filter(task => {
+    const matchesSearch = task.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+                         task.description?.toLowerCase().includes(filters.search.toLowerCase()) ||
+                         task.assignedToName?.toLowerCase().includes(filters.search.toLowerCase()) ||
+                         task.propertyName?.toLowerCase().includes(filters.search.toLowerCase());
+    const matchesStatus = !filters.status || task.status === filters.status;
+    const matchesPriority = !filters.priority || task.priority === filters.priority;
+    
+    return matchesSearch && matchesStatus && matchesPriority;
+  });
+
   return (
+    <RouteGuard>
+      <MobileNavigation activeItem="tasks">
+        <ProtectedComponent allowedRoles={['admin', 'supervisor', 'employee']}>
+          <motion.div
+            variants={pageVariants}
+            initial="hidden"
+            animate="visible"
+            className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-4 sm:p-6 lg:p-8"
+          >
+            <div className="max-w-7xl mx-auto">
+              {/* Header */}
+              <div className="mb-8">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                      Tarefas
+                    </h1>
+                    <p className="text-gray-600">
+                      Gerencie todas as tarefas e atividades da equipe
+                    </p>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => router.push('/tasks/new')}
+                    className="mt-4 sm:mt-0 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-lg"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Nova Tarefa
+                  </motion.button>
+                </div>
+              </div>
 
-  const getPriorityColor = (priority: string) => {    <RouteGuard>
+              {/* Filters */}
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Search */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input
+                      type="text"
+                      placeholder="Buscar tarefas..."
+                      value={filters.search}
+                      onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
 
-    switch (priority) {      <MobileNavigation activeItem="tasks">
-
-      case 'urgent': return 'bg-red-500';        <motion.div 
-
-      case 'high': return 'bg-orange-500';          className="p-6"
-
-      case 'medium': return 'bg-yellow-500';          variants={pageVariants}
-
-      case 'low': return 'bg-green-500';          initial="hidden"
-
-      default: return 'bg-gray-500';          animate="visible"
-
-    }        >
-
-  };          <div className="max-w-7xl mx-auto">
-
-            <div className="flex justify-between items-center mb-6">
-
-  const getStatusText = (status: string) => {              <div>
-
-    switch (status) {                <h1 className="text-3xl font-bold text-gray-900">Gestão de Tarefas</h1>
-
-      case 'pending': return 'Pendente';                <p className="text-gray-600 mt-2">
-
-      case 'in_progress': return 'Em Andamento';                  Gerencie e acompanhe todas as tarefas de limpeza e manutenção
-
-      case 'completed': return 'Concluída';                </p>
-
-      case 'cancelled': return 'Cancelada';              </div>
-
-      default: return status;              
-
-    }              <ProtectedComponent allowedRoles={['owner', 'manager', 'supervisor']}>
-
-  };                <button
-
-                  onClick={() => router.push('/tasks/new')}
-
-  const handleCreateTask = () => {                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
-
-    console.log('Criar nova tarefa');                >
-
-    alert('Funcionalidade de criar tarefa em desenvolvimento');                  <Plus className="h-4 w-4" />
-
-  };                  Criar Nova Tarefa
-
-                </button>
-
-  const handleEditTask = (taskId: string) => {              </ProtectedComponent>
-
-    console.log('Editar tarefa:', taskId);            </div>
-
-    alert(`Editar tarefa ${taskId} - Em desenvolvimento`);
-
-  };            <div className="bg-white rounded-lg shadow">
-
-              <div className="p-4 border-b">
-
-  const handleDeleteTask = async (taskId: string) => {                <div className="flex flex-col sm:flex-row gap-4">
-
-    if (confirm('Tem certeza que deseja excluir esta tarefa?')) {                  <div className="flex-1">
-
-      console.log('Deletar tarefa:', taskId);                    <div className="relative">
-
-      setTasks(tasks.filter(task => task.id !== taskId));                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-
-      alert('Tarefa excluída com sucesso!');                      <input
-
-    }                        type="text"
-
-  };                        placeholder="Buscar tarefas..."
-
-                        value={filters.search}
-
-  const filteredTasks = tasks.filter(task => {                        onChange={(e) => setFilters({...filters, search: e.target.value})}
-
-    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-md w-full"
-
-                         task.description?.toLowerCase().includes(searchTerm.toLowerCase());                      />
-
-    const matchesStatus = statusFilter === 'all' || task.status === statusFilter;                    </div>
-
-    return matchesSearch && matchesStatus;                  </div>
-
-  });                  <select
-
+                  {/* Status Filter */}
+                  <select
                     value={filters.status}
-
-  return (                    onChange={(e) => setFilters({...filters, status: e.target.value})}
-
-    <RouteGuard>                    className="px-3 py-2 border border-gray-300 rounded-md"
-
-      <MobileNavigation activeItem="tasks">                  >
-
-        <div className="min-h-screen bg-gray-50">                    <option value="">Todos os Status</option>
-
-          <div className="max-w-6xl mx-auto px-4 py-6">                    <option value="pending">Pendente</option>
-
-            <motion.div                    <option value="in_progress">Em Andamento</option>
-
-              initial={{ opacity: 0, y: 20 }}                    <option value="completed">Concluída</option>
-
-              animate={{ opacity: 1, y: 0 }}                    <option value="cancelled">Cancelada</option>
-
-              transition={{ duration: 0.5 }}                  </select>
-
-            >                  <select
-
-              {/* Header */}                    value={filters.priority}
-
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">                    onChange={(e) => setFilters({...filters, priority: e.target.value})}
-
-                <div>                    className="px-3 py-2 border border-gray-300 rounded-md"
-
-                  <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">                  >
-
-                    <Calendar className="h-6 w-6 text-blue-600" />                    <option value="">Todas as Prioridades</option>
-
-                    Gestão de Tarefas                    <option value="urgent">Urgente</option>
-
-                  </h1>                    <option value="high">Alta</option>
-
-                  <p className="text-gray-600">Gerencie todas as tarefas e agendamentos</p>                    <option value="medium">Média</option>
-
-                </div>                    <option value="low">Baixa</option>
-
-                                  </select>
-
-                <ProtectedComponent allowedRoles={['owner', 'manager', 'supervisor']}>                </div>
-
-                  <button              </div>
-
-                    onClick={handleCreateTask}
-
-                    className="mt-4 sm:mt-0 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"              <div className="overflow-x-auto">
-
-                  >                <table className="w-full">
-
-                    <Plus className="h-4 w-4" />                  <thead className="bg-gray-50">
-
-                    Nova Tarefa                    <tr>
-
-                  </button>                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
-                </ProtectedComponent>                        Tarefa
-
-              </div>                      </th>
-
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
-              {/* Filters */}                        Status
-
-              <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">                      </th>
-
-                <div className="flex flex-col sm:flex-row gap-4">                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
-                  <div className="flex-1">                        Prioridade
-
-                    <div className="relative">                      </th>
-
-                      <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
-                      <input                        Responsável
-
-                        type="text"                      </th>
-
-                        placeholder="Buscar tarefas..."                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
-                        value={searchTerm}                        Vencimento
-
-                        onChange={(e) => setSearchTerm(e.target.value)}                      </th>
-
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
-                      />                        Ações
-
-                    </div>                      </th>
-
-                  </div>                    </tr>
-
-                                    </thead>
-
-                  <select                  <tbody className="bg-white divide-y divide-gray-200">
-
-                    value={statusFilter}                    {loading ? (
-
-                    onChange={(e) => setStatusFilter(e.target.value)}                      <tr>
-
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"                        <td colSpan={6} className="px-6 py-4 text-center">
-
-                  >                          Carregando...
-
-                    <option value="all">Todos os Status</option>                        </td>
-
-                    <option value="pending">Pendente</option>                      </tr>
-
-                    <option value="in_progress">Em Andamento</option>                    ) : tasks.length === 0 ? (
-
-                    <option value="completed">Concluída</option>                      <tr>
-
-                    <option value="cancelled">Cancelada</option>                        <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
-
-                  </select>                          Nenhuma tarefa encontrada
-
-                </div>                        </td>
-
-              </div>                      </tr>
-
-                    ) : (
-
-              {/* Tasks List */}                      tasks.map((task) => (
-
-              <div className="space-y-4">                        <tr key={task.id} className="hover:bg-gray-50">
-
-                {loading ? (                          <td className="px-6 py-4">
-
-                  <div className="text-center py-12">                            <div>
-
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>                              <div className="font-medium text-gray-900">{task.title}</div>
-
-                    <p className="mt-2 text-gray-600">Carregando tarefas...</p>                              {task.description && (
-
-                  </div>                                <div className="text-sm text-gray-500">{task.description}</div>
-
-                ) : filteredTasks.length === 0 ? (                              )}
-
-                  <div className="text-center py-12">                            </div>
-
-                    <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />                          </td>
-
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">                          <td className="px-6 py-4">
-
-                      Nenhuma tarefa encontrada                            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(task.status)}`}>
-
-                    </h3>                              {task.status}
-
-                    <p className="text-gray-600 mb-4">                            </span>
-
-                      {searchTerm || statusFilter !== 'all'                           </td>
-
-                        ? 'Tente ajustar os filtros de busca'                          <td className="px-6 py-4">
-
-                        : 'Comece criando sua primeira tarefa'                            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getPriorityColor(task.priority)}`}>
-
-                      }                              {task.priority}
-
-                    </p>                            </span>
-
-                    <ProtectedComponent allowedRoles={['owner', 'manager', 'supervisor']}>                          </td>
-
-                      <button                          <td className="px-6 py-4 text-sm text-gray-900">
-
-                        onClick={handleCreateTask}                            {task.assignedToName || 'Não atribuído'}
-
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"                          </td>
-
-                      >                          <td className="px-6 py-4 text-sm text-gray-900">
-
-                        Criar Primeira Tarefa                            {task.dueDate ? new Date(task.dueDate).toLocaleDateString('pt-BR') : '-'}
-
-                      </button>                          </td>
-
-                    </ProtectedComponent>                          <td className="px-6 py-4 text-sm font-medium">
-
-                  </div>                            <div className="flex space-x-2">
-
-                ) : (                              <ProtectedComponent allowedRoles={['owner', 'manager', 'supervisor']}>
-
-                  filteredTasks.map((task, index) => (                                <button
-
-                    <motion.div                                  onClick={() => router.push(`/tasks/${task.id}/edit`)}
-
-                      key={task.id}                                  className="text-blue-600 hover:text-blue-900"
-
-                      initial={{ opacity: 0, y: 20 }}                                >
-
-                      animate={{ opacity: 1, y: 0 }}                                  Editar
-
-                      transition={{ duration: 0.3, delay: index * 0.1 }}                                </button>
-
-                      className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow"                                <button
-
-                    >                                  onClick={() => handleDelete(task.id)}
-
-                      <div className="flex items-start justify-between">                                  className="text-red-600 hover:text-red-900"
-
-                        <div className="flex-1 min-w-0">                                >
-
-                          <div className="flex items-center gap-3 mb-2">                                  Excluir
-
-                            <div className={`w-3 h-3 rounded-full ${getPriorityColor(task.priority)}`} title={task.priority}></div>                                </button>
-
-                            <h3 className="text-lg font-medium text-gray-900 truncate">                              </ProtectedComponent>
-
-                              {task.title}                            </div>
-
-                            </h3>                          </td>
-
-                            <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(task.status)}`}>                        </tr>
-
-                              {getStatusText(task.status)}                      ))
-
-                            </span>                    )}
-
-                          </div>                  </tbody>
-
-                                          </table>
-
-                          {task.description && (              </div>
-
-                            <p className="text-gray-600 mb-3">{task.description}</p>            </div>
-
-                          )}          </div>
-
-                                  </motion.div>
-
-                          <div className="flex flex-wrap gap-4 text-sm text-gray-500">      </MobileNavigation>
-
-                            {task.assignedTo && (    </RouteGuard>
-
-                              <div className="flex items-center gap-1">  );
-
-                                <User className="h-4 w-4" />}
-                                {task.assignedTo}
-                              </div>
-                            )}
-                            {task.propertyAddress && (
+                    onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Todos os Status</option>
+                    <option value="pending">Pendente</option>
+                    <option value="in_progress">Em Andamento</option>
+                    <option value="completed">Concluída</option>
+                    <option value="cancelled">Cancelada</option>
+                  </select>
+
+                  {/* Priority Filter */}
+                  <select
+                    value={filters.priority}
+                    onChange={(e) => setFilters(prev => ({ ...prev, priority: e.target.value }))}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Todas as Prioridades</option>
+                    <option value="low">Baixa</option>
+                    <option value="medium">Média</option>
+                    <option value="high">Alta</option>
+                    <option value="urgent">Urgente</option>
+                  </select>
+
+                  {/* Clear Filters */}
+                  <button
+                    onClick={() => setFilters({ search: '', status: '', priority: '', assignedTo: '' })}
+                    className="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Filter className="w-4 h-4" />
+                    Limpar Filtros
+                  </button>
+                </div>
+              </div>
+
+              {/* Tasks List */}
+              {loading ? (
+                <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span className="ml-3 text-gray-600">Carregando tarefas...</span>
+                  </div>
+                </div>
+              ) : filteredTasks.length === 0 ? (
+                <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center">
+                  <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Nenhuma tarefa encontrada
+                  </h3>
+                  <p className="text-gray-600">
+                    Não há tarefas que correspondam aos filtros selecionados.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid gap-4">
+                  {filteredTasks.map((task) => (
+                    <motion.div
+                      key={task.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex flex-col lg:flex-row lg:items-center justify-between">
+                        {/* Task Info */}
+                        <div className="flex-1">
+                          <div className="flex flex-wrap items-center gap-3 mb-3">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {task.title}
+                            </h3>
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`}>
+                              {getStatusLabel(task.status)}
+                            </span>
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getPriorityColor(task.priority)}`}>
+                              {getPriorityLabel(task.priority)}
+                            </span>
+                          </div>
+
+                          {task.description && (
+                            <p className="text-gray-600 mb-3 text-sm">
+                              {task.description}
+                            </p>
+                          )}
+
+                          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                            {task.assignedToName && (
                               <div className="flex items-center gap-1">
-                                <MapPin className="h-4 w-4" />
-                                {task.propertyAddress}
+                                <User className="w-4 h-4" />
+                                <span>{task.assignedToName}</span>
                               </div>
                             )}
+                            
+                            {task.propertyName && (
+                              <div className="flex items-center gap-1">
+                                <MapPin className="w-4 h-4" />
+                                <span>{task.propertyName}</span>
+                              </div>
+                            )}
+
+                            {task.dueDate && (
+                              <div className="flex items-center gap-1">
+                                <Calendar className="w-4 h-4" />
+                                <span>{new Date(task.dueDate).toLocaleDateString('pt-BR')}</span>
+                              </div>
+                            )}
+
                             <div className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              {new Date(task.dueDate).toLocaleDateString('pt-BR')}
+                              <Building className="w-4 h-4" />
+                              <span>{getTypeLabel(task.type)}</span>
                             </div>
                           </div>
                         </div>
-                        
-                        <ProtectedComponent allowedRoles={['owner', 'manager', 'supervisor']}>
-                          <div className="flex items-center gap-2 ml-4">
-                            <button
-                              onClick={() => handleEditTask(task.id)}
-                              className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                              title="Editar tarefa"
-                            >
-                              <Edit2 className="h-4 w-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteTask(task.id)}
-                              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                              title="Excluir tarefa"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </ProtectedComponent>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-2 mt-4 lg:mt-0 lg:ml-6">
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => router.push(`/tasks/${task.id}`)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Ver detalhes"
+                          >
+                            <Edit2 className="w-5 h-5" />
+                          </motion.button>
+                          
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleDelete(task.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Excluir tarefa"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </motion.button>
+                        </div>
                       </div>
                     </motion.div>
-                  ))
-                )}
-              </div>
-
-              {/* Summary Stats */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-                <div className="bg-white p-4 rounded-lg border">
-                  <div className="text-2xl font-bold text-gray-900">
-                    {tasks.filter(t => t.status === 'pending').length}
-                  </div>
-                  <div className="text-sm text-gray-600">Pendentes</div>
+                  ))}
                 </div>
-                <div className="bg-white p-4 rounded-lg border">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {tasks.filter(t => t.status === 'in_progress').length}
-                  </div>
-                  <div className="text-sm text-gray-600">Em Andamento</div>
-                </div>
-                <div className="bg-white p-4 rounded-lg border">
-                  <div className="text-2xl font-bold text-green-600">
-                    {tasks.filter(t => t.status === 'completed').length}
-                  </div>
-                  <div className="text-sm text-gray-600">Concluídas</div>
-                </div>
-                <div className="bg-white p-4 rounded-lg border">
-                  <div className="text-2xl font-bold text-gray-900">
-                    {tasks.length}
-                  </div>
-                  <div className="text-sm text-gray-600">Total</div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
+              )}
+            </div>
+          </motion.div>
+        </ProtectedComponent>
       </MobileNavigation>
     </RouteGuard>
   );

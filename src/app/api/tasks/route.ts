@@ -192,7 +192,7 @@ export const PUT = withErrorHandling(async (request: NextRequest) => {
       updatedAt: new Date()
     },
     include: {
-      assignedTo: {
+      assignedToUser: {
         select: { id: true, name: true, email: true, role: true }
       },
       property: {

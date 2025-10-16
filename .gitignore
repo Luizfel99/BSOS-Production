@@ -4,3 +4,12 @@ node_modules
 
 .vercel
 .env*.local
+
+# Build artifacts
+.next/
+*.tsbuildinfo
+
+# Backup files
+*.backup
+*.corrupted
+backup/
