@@ -1,0 +1,16 @@
+{
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "files.backup.path": "C:\\Backups\\VS_Backups",
+  "files.hotExit": "onExitAndWindowClose",
+  "workbench.settings.enableNaturalLanguageSearch": false,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "emmet.includeLanguages": {
+    "typescript": "typescriptreact",
+    "javascript": "javascriptreact"
+  }
+}
