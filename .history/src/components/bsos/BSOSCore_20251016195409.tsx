@@ -2084,23 +2084,6 @@ export default function BSOSCore() {
                       <p className="text-gray-500 italic px-4">Feature coming soon</p>
                     </div>
                   )}
-
-                  {activeTab === 'settings' && (
-                    <div className="text-center py-8 sm:py-12">
-                      <div className="text-4xl sm:text-6xl mb-4">⚙️</div>
-                      <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Settings</h3>
-                      <p className="text-gray-600 mb-4 px-4">Configure system settings, permissions, and integrations</p>
-                      <div className="mt-6">
-                        <a 
-                          href="/settings" 
-                          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                          <Settings className="w-4 h-4 mr-2" />
-                          Open Settings
-                        </a>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -2147,23 +2130,6 @@ export default function BSOSCore() {
                   <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Relatórios de Campo</h3>
                   <p className="text-gray-600 mb-4 px-4">Notas, observações e reportes de danos</p>
                   <p className="text-gray-500 italic px-4">Feature coming soon</p>
-                </div>
-              )}
-
-              {activeTab === 'settings' && (
-                <div className="text-center py-8 sm:py-12">
-                  <div className="text-4xl sm:text-6xl mb-4">⚙️</div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Settings</h3>
-                  <p className="text-gray-600 mb-4 px-4">Configure system settings, permissions, and integrations</p>
-                  <div className="mt-6">
-                    <a 
-                      href="/settings" 
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      <Settings className="w-4 h-4 mr-2" />
-                      Open Settings
-                    </a>
-                  </div>
                 </div>
               )}
             </div>

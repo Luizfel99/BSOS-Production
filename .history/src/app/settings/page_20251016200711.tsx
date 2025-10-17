@@ -38,7 +38,7 @@ const PERMISSION_DESCRIPTIONS = {
 };
 
 export default function SettingsPage() {
-  const { user, authChecked } = useAuth();
+  const { user, loading: sessionLoading } = useSession();
   const [settings, setSettings] = useState<GroupedSettings>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
@@ -51,11 +51,11 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
-    if (authChecked && user) {
+    if (!sessionLoading && user) {
       loadSettings();
       checkIntegrationStatus();
     }
-  }, [authChecked, user]);
+  }, [sessionLoading, user]);
 
   const loadSettings = async () => {
     try {
@@ -205,7 +205,7 @@ export default function SettingsPage() {
     </div>
   );
 
-  if (!authChecked || loading) {
+  if (sessionLoading || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
