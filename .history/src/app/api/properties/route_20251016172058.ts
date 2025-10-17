@@ -47,9 +47,9 @@ const createPropertySchema = z.object({
 });
 
 const propertyFiltersSchema = z.object({
-  search: z.string().nullable().optional(),
-  type: z.enum(['APARTMENT', 'HOUSE', 'STUDIO', 'COMMERCIAL']).nullable().optional(),
-  active: z.string().nullable().transform(val => val === 'true').optional(),
+  search: z.string().optional(),
+  type: z.enum(['APARTMENT', 'HOUSE', 'STUDIO', 'COMMERCIAL']).optional(),
+  active: z.string().transform(val => val === 'true').optional(),
 });
 
 // GET - List properties with filters
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check permissions
-    if (!['ADMIN', 'MANAGER'].includes(currentUser.role)) {
+    if (!['OWNER', 'MANAGER'].includes(currentUser.role)) {
       return NextResponse.json(
         { error: 'Insufficient permissions to create properties' },
         { status: 403 }

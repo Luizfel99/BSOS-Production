@@ -3,13 +3,13 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ taskId: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { taskId } = await context.params;
+    const { id } = await context.params;
 
     const notes = await prisma.taskNote.findMany({
-      where: { taskId },
+      where: { taskId: id },
       include: {
         user: {
           select: {
@@ -41,10 +41,10 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ taskId: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { taskId } = await context.params;
+    const { id } = await context.params;
     const body = await request.json();
     const { content, type = 'field_note', userId } = body;
 

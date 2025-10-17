@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check permissions
-    if (!['ADMIN', 'MANAGER'].includes(currentUser.role)) {
+    if (!['OWNER', 'MANAGER'].includes(currentUser.role)) {
       return NextResponse.json(
         { error: 'Insufficient permissions to create properties' },
         { status: 403 }
