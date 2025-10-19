@@ -1,4 +1,4 @@
-﻿#  BSOS VERCEL DEPLOYMENT GUIDE
+﻿#  BSOS VERCEL DEPLOYMENT GUIDE - UPDATED
 
 ##  PRE-DEPLOYMENT CHECKLIST
 
@@ -8,7 +8,15 @@
 - [x] All dependencies in package.json
 - [x] Build verified locally
 
-###  2. Database Setup (Choose One)
+###  2. Project Names Available
+Since "bsos-production" is taken, use one of these alternatives:
+- **bsos-platform-2025** (recommended - set in vercel.json)
+- bsos-cleaning-management
+- bsos-app-luizfel99
+- cleaning-management-bsos
+- bsos-surgical-mode
+
+###  3. Database Setup (Choose One)
 
 #### Option A: Neon (Recommended - Free Tier)
 ```bash
@@ -35,13 +43,16 @@
 # Format: postgresql://postgres:password@containers-us-west-x.railway.app:5432/railway
 ```
 
-##  VERCEL DEPLOYMENT STEPS
+##  VERCEL DEPLOYMENT STEPS - UPDATED
 
 ### Step 1: Import Repository
 1. Go to https://vercel.com
 2. Click "Add New Project"
 3. Import from GitHub: `Luizfel99/BSOS-Production`
-4. Configure project settings:
+4. **IMPORTANT:** When asked for project name, use:
+   - `bsos-platform-2025` (recommended)
+   - OR any other available name from the list above
+5. Configure project settings:
    - **Framework Preset:** Next.js
    - **Root Directory:** ./
    - **Build Command:** `npm run build` (default)
@@ -57,7 +68,7 @@ DATABASE_URL=postgresql://username:password@hostname:5432/database_name
 
 # Authentication (Required)
 NEXTAUTH_SECRET=your-generated-32-char-secret
-NEXTAUTH_URL=https://your-app-name.vercel.app
+NEXTAUTH_URL=https://bsos-platform-2025.vercel.app
 
 # Stripe (Required)
 STRIPE_SECRET_KEY=sk_live_your_secret_key
@@ -75,23 +86,29 @@ openssl rand -base64 32
 
 # Or use online generator:
 # https://generate-secret.vercel.app/32
+
+# Example generated secret:
+# 9lF/gr7g508D08RMN99VOBX4/Ayv7U+QUYGyXi/hHFE=
 ```
 
 ### Step 4: Deploy
 1. Click "Deploy"
-2. Wait for build to complete
-3. Your app will be available at: `https://your-app-name.vercel.app`
+2. Wait for build to complete (2-5 minutes)
+3. Your app will be available at: `https://bsos-platform-2025.vercel.app`
+4. Or your chosen project name: `https://your-project-name.vercel.app`
 
 ##  DATABASE INITIALIZATION
 
-After deployment, initialize your database:
+After successful deployment, initialize your database:
 
 ```bash
 # Option 1: Use Vercel CLI (Recommended)
-npx vercel env pull .env.local
+npm install -g vercel
+vercel link
+vercel env pull .env.local
 npm install
-npx prisma db push
 npx prisma generate
+npx prisma db push
 
 # Option 2: Direct connection
 # Use your DATABASE_URL to connect via psql or database GUI
@@ -100,23 +117,23 @@ npx prisma generate
 
 ##  POST-DEPLOYMENT CONFIGURATION
 
-### 1. Stripe Webhooks
+### 1. Update NEXTAUTH_URL
+After deployment, update the environment variable:
+```bash
+# In Vercel Dashboard > Settings > Environment Variables
+NEXTAUTH_URL=https://your-actual-domain.vercel.app
+```
+
+### 2. Stripe Webhooks
 1. Go to Stripe Dashboard > Webhooks
-2. Add endpoint: `https://your-app-name.vercel.app/api/webhooks/stripe`
+2. Add endpoint: `https://your-actual-domain.vercel.app/api/webhooks/stripe`
 3. Select events: `payment_intent.succeeded`, `invoice.payment_succeeded`
 4. Copy webhook secret to STRIPE_WEBHOOK_SECRET
 
-### 2. Custom Domain (Optional)
+### 3. Custom Domain (Optional)
 1. In Vercel Dashboard > Settings > Domains
 2. Add your custom domain
 3. Update NEXTAUTH_URL to your custom domain
-
-### 3. Environment Variables Update
-Update these after deployment:
-```bash
-NEXTAUTH_URL=https://your-custom-domain.com  # or vercel domain
-VERCEL_URL=auto-populated-by-vercel
-```
 
 ##  TESTING DEPLOYMENT
 
@@ -127,10 +144,20 @@ VERCEL_URL=auto-populated-by-vercel
 4.  Authentication: Try login flow
 5.  Navigation: Test SURGICAL MODE navigation
 
-### Debugging:
-- Check Vercel Function Logs for errors
-- Use Vercel CLI: `vercel logs your-app-name`
-- Monitor database connections in your provider dashboard
+### Common Issues & Solutions:
+```bash
+# Issue: Project name already exists
+# Solution: Use alternative names listed above
+
+# Issue: Build fails
+# Solution: Check build logs, verify all dependencies
+
+# Issue: Database connection fails  
+# Solution: Verify DATABASE_URL format and SSL settings
+
+# Issue: Environment variables not loaded
+# Solution: Redeploy after adding variables
+```
 
 ##  SECURITY CHECKLIST
 
@@ -141,15 +168,16 @@ VERCEL_URL=auto-populated-by-vercel
 - [x] CORS settings configured for your domain
 - [x] Rate limiting enabled for API routes
 
-##  MONITORING
+##  ALTERNATIVE PROJECT NAMES
 
-### Optional: Add Sentry for Error Tracking
-```bash
-# Add to environment variables:
-SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
-
-# Sentry will automatically capture errors in production
-```
+If you encounter naming conflicts, try these:
+- `bsos-platform-2025`  (recommended)
+- `bsos-cleaning-management`
+- `bsos-app-luizfel99`  
+- `cleaning-management-bsos`
+- `bsos-surgical-mode`
+- `luizfel99-bsos`
+- `bsos-production-v2`
 
 ##  DEPLOYMENT COMMANDS
 
@@ -173,10 +201,13 @@ If you encounter issues:
 2. Verify all environment variables are set
 3. Test database connection separately
 4. Check Prisma schema compatibility
+5. Try alternative project names
 
 **Status:** Ready for Production Deployment 
 **Expected Deploy Time:** 2-5 minutes
 **Post-Deploy Setup:** 10-15 minutes
+**Project Name:** bsos-platform-2025 (recommended)
 
 ---
-*Generated for BSOS Production - SURGICAL MODE Complete*
+*Updated for BSOS Production - SURGICAL MODE Complete*
+*Fixed: Project naming conflicts resolved*
