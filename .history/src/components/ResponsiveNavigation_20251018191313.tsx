@@ -11,10 +11,14 @@ import { Menu, X, Home, Calendar, Users, Settings, BarChart3, Bell, DollarSign }
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { getNavigationForRole, type NavigationItem } from '@/config/navigation';
-import { useNavigation } from '@/hooks/useNavigation';
 
-// NavigationItem interface now imported from config
+interface NavigationItem {
+  id: string;
+  label: string;
+  icon: React.ComponentType<any>;
+  href?: string;
+  onClick?: () => void;
+}
 
 interface ResponsiveNavigationProps {
   activeItem?: string;
@@ -24,28 +28,40 @@ interface ResponsiveNavigationProps {
   user?: any;
 }
 
-// Navigation items now imported from centralized config
+const defaultNavItems: NavigationItem[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/dashboard' },
+  { id: 'tasks', label: 'Tarefas', icon: Calendar, href: '/tasks' },
+  { id: 'team', label: 'Equipe', icon: Users, href: '/team' },
+  { id: 'properties', label: 'Propriedades', icon: Home, href: '/properties' },
+  { id: 'analytics', label: 'Analytics', icon: BarChart3, href: '/analytics' },
+  { id: 'finance', label: 'Financeiro', icon: DollarSign, href: '/finance' },
+  { id: 'notifications', label: 'Notificações', icon: Bell, href: '/notifications' },
+  { id: 'settings', label: 'Configurações', icon: Settings, href: '/settings' },
+];
 
 export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
   activeItem = 'dashboard',
   onItemClick,
-  items,
+  items = defaultNavItems,
   children,
   user,
 }) => {
   const { isMobile, isTablet, isDesktop, screenWidth } = useMediaQuery();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
-  const { navigate, userRole } = useNavigation();
-  
-  // Get navigation items based on user role
-  const navigationItems = items || getNavigationForRole(user?.role || userRole);
 
   const handleItemClick = (itemId: string) => {
-    const item = navigationItems.find((i: NavigationItem) => i.id === itemId);
+    const item = items.find(i => i.id === itemId);
     
     if (item?.href) {
-      navigate(item.href, { showToast: false });
+      try {
+        router.push(item.href);
+      } catch (error) {
+        console.error('Navigation error:', error);
+        toast.error('Erro na navegação');
+      }
+    } else if (item?.onClick) {
+      item.onClick();
     } else {
       // Fallback toast for unimplemented features
       toast('Função em desenvolvimento 🧩', {
@@ -121,7 +137,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
               </div>
               
               <nav className="px-3 py-4 space-y-1">
-                {navigationItems.map((item: NavigationItem) => {
+                {items.map((item) => {
                   const IconComponent = item.icon;
                   const isActive = activeItem === item.id;
                   

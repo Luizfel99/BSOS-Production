@@ -42,10 +42,17 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
   const navigationItems = items || getNavigationForRole(user?.role || userRole);
 
   const handleItemClick = (itemId: string) => {
-    const item = navigationItems.find((i: NavigationItem) => i.id === itemId);
+    const item = items.find(i => i.id === itemId);
     
     if (item?.href) {
-      navigate(item.href, { showToast: false });
+      try {
+        router.push(item.href);
+      } catch (error) {
+        console.error('Navigation error:', error);
+        toast.error('Erro na navegação');
+      }
+    } else if (item?.onClick) {
+      item.onClick();
     } else {
       // Fallback toast for unimplemented features
       toast('Função em desenvolvimento 🧩', {
@@ -121,7 +128,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
               </div>
               
               <nav className="px-3 py-4 space-y-1">
-                {navigationItems.map((item: NavigationItem) => {
+                {items.map((item) => {
                   const IconComponent = item.icon;
                   const isActive = activeItem === item.id;
                   

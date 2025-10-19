@@ -13,7 +13,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useNotifications } from '@/hooks/useNotifications';
-import { getNavigationForRole, type NavigationItem } from '@/config/navigation';
+import { getNavigationItems, type NavigationItem } from '@/config/navigation';
 import { useNavigation } from '@/hooks/useNavigation';
 import toast from 'react-hot-toast';
 
@@ -27,7 +27,16 @@ interface MobileNavigationProps {
   user?: any;
 }
 
-
+const defaultNavItems: NavigationItem[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/dashboard' },
+  { id: 'tasks', label: 'Tarefas', icon: Calendar, href: '/tasks' },
+  { id: 'team', label: 'Equipe', icon: Users, href: '/team' },
+  { id: 'properties', label: 'Propriedades', icon: Home, href: '/properties' },
+  { id: 'analytics', label: 'Analytics', icon: BarChart3, href: '/analytics' },
+  { id: 'finance', label: 'Financeiro', icon: DollarSign, href: '/finance' },
+  { id: 'notifications', label: 'Notificações', icon: Bell, href: '/notifications' },
+  { id: 'settings', label: 'Configurações', icon: Settings, href: '/settings' },
+];
 
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   activeItem = 'dashboard',
@@ -45,7 +54,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const { navigate } = useNavigation();
 
   // Get navigation items based on user role
-  const navigationItems = items || getNavigationForRole(authUser?.role || 'CLEANER');
+  const navigationItems = items || getNavigationItems(authUser?.role || 'CLEANER');
 
   const handleItemClick = (itemId: string) => {
     navigate(itemId);
@@ -110,7 +119,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
           
           {/* Navigation Items */}
           <div className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-            {navigationItems.map((item: NavigationItem) => {
+            {items.map((item) => {
               const IconComponent = item.icon;
               const isActive = activeItem === item.id;
               
@@ -189,7 +198,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             </div>
             
             <nav className="px-3 py-4 space-y-1">
-              {navigationItems.map((item: NavigationItem) => {
+              {items.map((item) => {
                 const IconComponent = item.icon;
                 const isActive = activeItem === item.id;
                 

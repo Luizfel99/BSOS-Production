@@ -13,11 +13,15 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useNotifications } from '@/hooks/useNotifications';
-import { getNavigationForRole, type NavigationItem } from '@/config/navigation';
-import { useNavigation } from '@/hooks/useNavigation';
 import toast from 'react-hot-toast';
 
-
+interface NavigationItem {
+  id: string;
+  label: string;
+  icon: React.ComponentType<any>;
+  href?: string;
+  onClick?: () => void;
+}
 
 interface MobileNavigationProps {
   activeItem?: string;
@@ -27,28 +31,40 @@ interface MobileNavigationProps {
   user?: any;
 }
 
-
+const defaultNavItems: NavigationItem[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/dashboard' },
+  { id: 'tasks', label: 'Tarefas', icon: Calendar, href: '/tasks' },
+  { id: 'team', label: 'Equipe', icon: Users, href: '/team' },
+  { id: 'properties', label: 'Propriedades', icon: Home, href: '/properties' },
+  { id: 'analytics', label: 'Analytics', icon: BarChart3, href: '/analytics' },
+  { id: 'finance', label: 'Financeiro', icon: DollarSign, href: '/finance' },
+  { id: 'notifications', label: 'Notificações', icon: Bell, href: '/notifications' },
+  { id: 'settings', label: 'Configurações', icon: Settings, href: '/settings' },
+];
 
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   activeItem = 'dashboard',
   onItemClick,
-  items,
+  items = defaultNavItems,
   children,
   user,
 }) => {
   const { isMobile, screenWidth } = useMediaQuery();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { logout, user: authUser } = useAuth();
+  const { logout } = useAuth();
   const router = useRouter();
   const { t } = useTranslation();
   const { success, info } = useNotifications();
-  const { navigate } = useNavigation();
-
-  // Get navigation items based on user role
-  const navigationItems = items || getNavigationForRole(authUser?.role || 'CLEANER');
 
   const handleItemClick = (itemId: string) => {
-    navigate(itemId);
+    const item = items.find(i => i.id === itemId);
+    
+    if (item?.href) {
+      router.push(item.href);
+    } else if (item?.onClick) {
+      item.onClick();
+    }
+    
     onItemClick?.(itemId);
     setIsMobileMenuOpen(false);
   };
@@ -110,7 +126,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
           
           {/* Navigation Items */}
           <div className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-            {navigationItems.map((item: NavigationItem) => {
+            {items.map((item) => {
               const IconComponent = item.icon;
               const isActive = activeItem === item.id;
               
@@ -189,7 +205,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             </div>
             
             <nav className="px-3 py-4 space-y-1">
-              {navigationItems.map((item: NavigationItem) => {
+              {items.map((item) => {
                 const IconComponent = item.icon;
                 const isActive = activeItem === item.id;
                 

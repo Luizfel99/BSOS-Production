@@ -13,7 +13,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useNotifications } from '@/hooks/useNotifications';
-import { getNavigationForRole, type NavigationItem } from '@/config/navigation';
+import { getNavigationItems, type NavigationItem } from '@/config/navigation';
 import { useNavigation } from '@/hooks/useNavigation';
 import toast from 'react-hot-toast';
 
@@ -45,7 +45,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const { navigate } = useNavigation();
 
   // Get navigation items based on user role
-  const navigationItems = items || getNavigationForRole(authUser?.role || 'CLEANER');
+  const navigationItems = items || getNavigationItems(authUser?.role || 'CLEANER');
 
   const handleItemClick = (itemId: string) => {
     navigate(itemId);
@@ -189,7 +189,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             </div>
             
             <nav className="px-3 py-4 space-y-1">
-              {navigationItems.map((item: NavigationItem) => {
+              {items.map((item) => {
                 const IconComponent = item.icon;
                 const isActive = activeItem === item.id;
                 

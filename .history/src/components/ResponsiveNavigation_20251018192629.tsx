@@ -121,7 +121,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
               </div>
               
               <nav className="px-3 py-4 space-y-1">
-                {navigationItems.map((item: NavigationItem) => {
+                {items.map((item) => {
                   const IconComponent = item.icon;
                   const isActive = activeItem === item.id;
                   

@@ -45,7 +45,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const { navigate } = useNavigation();
 
   // Get navigation items based on user role
-  const navigationItems = items || getNavigationForRole(authUser?.role || 'CLEANER');
+  const navigationItems = items || getNavigationItems(authUser?.role || 'CLEANER');
 
   const handleItemClick = (itemId: string) => {
     navigate(itemId);
