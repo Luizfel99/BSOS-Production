@@ -253,12 +253,10 @@ export default function SettingsPage() {
                 const isDisabled = tab.id !== 'about' && !canAccessTab(tab.id);
                 
                 return (
-                  <Button
+                  <button
                     key={tab.id}
                     onClick={() => !isDisabled && setActiveTab(tab.id)}
                     disabled={isDisabled}
-                    variant={isActive ? "primary" : "ghost"}
-                    size="sm"
                     className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                       isActive
                         ? 'border-blue-500 text-blue-600'
@@ -269,7 +267,7 @@ export default function SettingsPage() {
                   >
                     <Icon className="h-4 w-4" />
                     {tab.name}
-                  </Button>
+                  </button>
                 );
               })}
             </nav>

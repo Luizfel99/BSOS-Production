@@ -196,14 +196,17 @@ export default function SettingsPage() {
         </span>
       </div>
       <p className="text-gray-600 mb-4">{description}</p>
-      <Button 
+      <button 
         onClick={onConnect} 
         disabled={!connected && name !== 'Stripe'}
-        variant={connected ? "secondary" : "primary"}
-        size="sm"
+        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+          connected 
+            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' 
+            : 'bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed'
+        }`}
       >
         {connected ? 'Manage' : 'Connect'}
-      </Button>
+      </button>
     </div>
   );
 
@@ -253,12 +256,10 @@ export default function SettingsPage() {
                 const isDisabled = tab.id !== 'about' && !canAccessTab(tab.id);
                 
                 return (
-                  <Button
+                  <button
                     key={tab.id}
                     onClick={() => !isDisabled && setActiveTab(tab.id)}
                     disabled={isDisabled}
-                    variant={isActive ? "primary" : "ghost"}
-                    size="sm"
                     className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
                       isActive
                         ? 'border-blue-500 text-blue-600'
@@ -269,7 +270,7 @@ export default function SettingsPage() {
                   >
                     <Icon className="h-4 w-4" />
                     {tab.name}
-                  </Button>
+                  </button>
                 );
               })}
             </nav>

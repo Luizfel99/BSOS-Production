@@ -100,15 +100,14 @@ export default function FinancePage() {
             <p className="text-gray-600 mb-6">
               No invoices yet. Crie sua primeira fatura para começar.
             </p>
-            <Button
+            <button
               onClick={handleCreateInvoice}
               disabled={loading}
-              leftIcon={<Plus className="h-5 w-5" />}
-              variant="primary"
-              size="lg"
+              className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-6 py-3 flex items-center gap-2 mx-auto transition-colors disabled:opacity-50"
             >
+              <Plus className="h-5 w-5" />
               Criar Primera Fatura
-            </Button>
+            </button>
           </div>
         );
       
@@ -165,23 +164,23 @@ export default function FinancePage() {
                 </div>
                 
                 <div className="flex gap-3">
-                  <Button
+                  <button
                     onClick={handleSyncStripe}
                     disabled={loading}
-                    variant="secondary"
-                    leftIcon={<RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />}
+                    className="bg-purple-600 hover:bg-purple-700 text-white rounded-md px-4 py-2 flex items-center gap-2 transition-colors disabled:opacity-50"
                   >
+                    <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                     Sync Stripe
-                  </Button>
+                  </button>
                   
-                  <Button
+                  <button
                     onClick={handleCreateInvoice}
                     disabled={loading}
-                    variant="primary"
-                    leftIcon={<Plus className="h-4 w-4" />}
+                    className="bg-green-600 hover:bg-green-700 text-white rounded-md px-4 py-2 flex items-center gap-2 transition-colors disabled:opacity-50"
                   >
-                    Nova Fatura
-                  </Button>
+                    <Plus className="h-4 w-4" />
+                    Create Invoice
+                  </button>
                 </div>
               </div>
             </div>
@@ -202,8 +201,8 @@ export default function FinancePage() {
                     R$ {summary.totalIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </p>
                 </div>
-                <div className="bg-bsos-primary/10 p-3 rounded-bsos">
-                  <TrendingUp className="h-6 w-6 text-bsos-primary" />
+                <div className="bg-green-100 p-3 rounded-full">
+                  <TrendingUp className="h-6 w-6 text-green-600" />
                 </div>
               </div>
             </div>

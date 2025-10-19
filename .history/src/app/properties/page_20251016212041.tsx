@@ -151,21 +151,21 @@ export default function PropertiesPage() {
                 </div>
                 
                 <div className="flex gap-3">
-                  <Button
+                  <button
                     onClick={() => handleCreateTask()}
-                    variant="secondary"
-                    leftIcon={<Sparkles className="h-4 w-4" />}
+                    className="bg-green-600 hover:bg-green-700 text-white rounded-md px-4 py-2 flex items-center gap-2 transition-colors"
                   >
+                    <Sparkles className="h-4 w-4" />
                     Create Cleaning Task
-                  </Button>
+                  </button>
                   
-                  <Button
+                  <button
                     onClick={handleAddProperty}
-                    variant="primary"
-                    leftIcon={<Plus className="h-4 w-4" />}
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 flex items-center gap-2 transition-colors"
                   >
+                    <Plus className="h-4 w-4" />
                     Add Property
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>

@@ -220,6 +220,7 @@ export default function TasksPage() {
               >
                 Criar Primera Tarefa
               </Button>
+              </button>
             </motion.div>
           )}
 

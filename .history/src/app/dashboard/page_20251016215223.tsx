@@ -442,7 +442,7 @@ export default function ProtectedDashboardExample() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Atividades Recentes</h3>
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-bsos-primary rounded-full"></div>
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                         <p className="text-sm text-gray-600">Limpeza concluída - Apt 301</p>
                         <span className="text-xs text-gray-400 ml-auto">2h atrás</span>
                       </div>

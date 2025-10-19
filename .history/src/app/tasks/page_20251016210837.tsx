@@ -139,13 +139,13 @@ export default function TasksPage() {
                   </div>
                 </div>
                 
-                <Button
+                <button
                   onClick={handleNewTask}
-                  variant="primary"
-                  leftIcon={<Plus className="h-4 w-4" />}
+                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 flex items-center gap-2 transition-colors"
                 >
+                  <Plus className="h-4 w-4" />
                   Nova Tarefa
-                </Button>
+                </button>
               </div>
             </div>
           </motion.div>
@@ -212,14 +212,13 @@ export default function TasksPage() {
               <p className="text-gray-600 mb-6">
                 Comece criando sua primeira tarefa de limpeza.
               </p>
-              <Button
+              <button
                 onClick={handleNewTask}
-                variant="primary"
-                size="lg"
-                leftIcon={<Plus className="h-5 w-5" />}
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-6 py-3 flex items-center gap-2 mx-auto transition-colors"
               >
+                <Plus className="h-5 w-5" />
                 Criar Primera Tarefa
-              </Button>
+              </button>
             </motion.div>
           )}
 

@@ -125,14 +125,12 @@ export default function TeamManagePage() {
             >
               {/* Header */}
               <div className="flex items-center gap-4 mb-6">
-                <Button
+                <button
                   onClick={handleCancel}
-                  variant="ghost"
-                  size="sm"
-                  className="p-2 text-gray-400 hover:text-gray-600"
+                  className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <ArrowLeft className="h-5 w-5" />
-                </Button>
+                </button>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {isEditing ? 'Editar Membro' : 'Adicionar Membro'}
@@ -237,12 +235,10 @@ export default function TeamManagePage() {
 
                     {/* Actions */}
                     <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                      <Button
+                      <button
                         type="submit"
                         disabled={submitLoading}
-                        variant="primary"
-                        size="md"
-                        className="flex-1 flex items-center justify-center gap-2"
+                        className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
                       >
                         {submitLoading ? (
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -253,18 +249,16 @@ export default function TeamManagePage() {
                           ? 'Salvando...' 
                           : isEditing ? 'Atualizar' : 'Salvar'
                         }
-                      </Button>
+                      </button>
                       
-                      <Button
+                      <button
                         type="button"
                         onClick={handleCancel}
-                        variant="secondary"
-                        size="md"
-                        className="flex-1 sm:flex-initial flex items-center justify-center gap-2"
+                        className="flex-1 sm:flex-initial bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors flex items-center justify-center gap-2"
                       >
                         <X className="h-4 w-4" />
                         Cancelar
-                      </Button>
+                      </button>
                     </div>
                   </form>
                 )}

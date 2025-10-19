@@ -362,7 +362,7 @@ export default function ProtectedDashboardExample() {
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center py-6">
                   <div>
-                    <h1 className={typographyClasses.h2}>Dashboard</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
                     <p className="text-gray-600">Sistema de Gestão de Limpeza B.S.O.S.</p>
                   </div>
                   
@@ -442,7 +442,7 @@ export default function ProtectedDashboardExample() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Atividades Recentes</h3>
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-bsos-primary rounded-full"></div>
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                         <p className="text-sm text-gray-600">Limpeza concluída - Apt 301</p>
                         <span className="text-xs text-gray-400 ml-auto">2h atrás</span>
                       </div>

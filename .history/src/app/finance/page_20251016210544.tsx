@@ -182,6 +182,10 @@ export default function FinancePage() {
                   >
                     Nova Fatura
                   </Button>
+                  >
+                    <Plus className="h-4 w-4" />
+                    Create Invoice
+                  </button>
                 </div>
               </div>
             </div>
@@ -202,8 +206,8 @@ export default function FinancePage() {
                     R$ {summary.totalIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </p>
                 </div>
-                <div className="bg-bsos-primary/10 p-3 rounded-bsos">
-                  <TrendingUp className="h-6 w-6 text-bsos-primary" />
+                <div className="bg-green-100 p-3 rounded-full">
+                  <TrendingUp className="h-6 w-6 text-green-600" />
                 </div>
               </div>
             </div>

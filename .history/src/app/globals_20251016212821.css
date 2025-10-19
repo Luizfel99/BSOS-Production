@@ -210,39 +210,6 @@ body {
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
-/* ===== BSOS BRAND UTILITIES ===== */
-
-/* Brand Colors */
-.bg-bsos-primary { background-color: var(--bsos-primary); }
-.bg-bsos-secondary { background-color: var(--bsos-secondary); }
-.bg-bsos-success { background-color: var(--bsos-success); }
-.bg-bsos-warning { background-color: var(--bsos-warning); }
-.bg-bsos-error { background-color: var(--bsos-error); }
-
-.text-bsos-primary { color: var(--bsos-primary); }
-.text-bsos-secondary { color: var(--bsos-secondary); }
-.text-bsos-success { color: var(--bsos-success); }
-.text-bsos-warning { color: var(--bsos-warning); }
-.text-bsos-error { color: var(--bsos-error); }
-
-.border-bsos-primary { border-color: var(--bsos-primary); }
-
-/* Brand Radius */
-.rounded-bsos { border-radius: var(--bsos-radius); }
-
-/* Brand Shadows */
-.shadow-bsos { box-shadow: var(--bsos-shadow); }
-.shadow-bsos-hover { box-shadow: var(--bsos-shadow-hover); }
-
-/* Brand Transitions */
-.transition-bsos { 
-  transition: all var(--transition-normal);
-}
-
-.hover\:shadow-bsos-hover:hover {
-  box-shadow: var(--bsos-shadow-hover);
-}
-
 /* ===== UTILITY CLASSES ===== */
 
 /* Typography */

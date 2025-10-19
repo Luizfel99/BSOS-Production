@@ -425,8 +425,8 @@ export const bsosBrand = {
   transition: 'var(--transition-normal)',
 };
 
-// Typography Class System
-export const typographyClasses = {
+// Typography System
+export const typography = {
   h1: 'text-3xl font-bold text-gray-900 dark:text-white',
   h2: 'text-2xl font-semibold text-gray-800 dark:text-gray-100',
   h3: 'text-xl font-semibold text-gray-800 dark:text-gray-100',
