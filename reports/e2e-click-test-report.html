@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSOS E2E Click Test Report</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 20px; background: #f8fafc; }
+        .header { background: #1e40af; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .pass { color: #059669; }
+        .fail { color: #dc2626; }
+        .warn { color: #d97706; }
+        .module { margin-bottom: 20px; }
+        .module h3 { margin: 0 0 10px 0; color: #374151; }
+        .test-item { padding: 8px 12px; margin: 4px 0; border-radius: 4px; border-left: 4px solid; }
+        .test-pass { background: #f0fdf4; border-color: #059669; }
+        .test-fail { background: #fef2f2; border-color: #dc2626; }
+        .progress-bar { width: 100%; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #059669; transition: width 0.3s ease; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚨 BSOS SURGICAL MODE - E2E Click Test Report</h1>
+        <p>Phase 10 Design System Integration Validation</p>
+        <p><strong>Generated:</strong> 2025-10-19T01:48:15.562Z</p>
+    </div>
+
+    <div class="summary">
+        <div class="card">
+            <h3>Overall Results</h3>
+            <div style="font-size: 2em; font-weight: bold; color: #dc2626">
+                NaN%
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: NaN%"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Test Statistics</h3>
+            <div class="pass">✅ Passed: 0</div>
+            <div class="fail">❌ Failed: 0</div>
+            <div class="warn">⚠️ Warnings: 0</div>
+            <div><strong>Total: 0</strong></div>
+        </div>
+    </div>
+
+    <div class="modules">
+        
+    </div>
+
+    
+        <div class="card">
+            <h3 style="color: #dc2626;">Errors</h3>
+            
+                <div class="test-item test-fail">
+                    <strong>CRITICAL_ERROR</strong>
+                    <div>net::ERR_CONNECTION_REFUSED at http://localhost:3000</div>
+                </div>
+            
+        </div>
+    
+</body>
+</html>

@@ -55,6 +55,7 @@
     "eslint": "^8",
     "eslint-config-next": "15.5.4",
     "prisma": "^5.20.0",
+    "puppeteer": "^24.25.0",
     "typescript": "^5"
   }
 }

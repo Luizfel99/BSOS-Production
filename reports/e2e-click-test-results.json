@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-10-19T01:48:15.562Z",
+  "summary": {
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "warnings": 0
+  },
+  "modules": {},
+  "errors": [
+    {
+      "type": "CRITICAL_ERROR",
+      "message": "net::ERR_CONNECTION_REFUSED at http://localhost:3000",
+      "stack": "Error: net::ERR_CONNECTION_REFUSED at http://localhost:3000\n    at navigate (C:\\Users\\luizf\\OneDrive\\Desktop\\Cleaning Menagement Plataforma\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\cdp\\Frame.js:184:27)\n    at async Deferred.race (C:\\Users\\luizf\\OneDrive\\Desktop\\Cleaning Menagement Plataforma\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\util\\Deferred.js:36:20)\n    at async CdpFrame.goto (C:\\Users\\luizf\\OneDrive\\Desktop\\Cleaning Menagement Plataforma\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\cdp\\Frame.js:150:25)\n    at async CdpPage.goto (C:\\Users\\luizf\\OneDrive\\Desktop\\Cleaning Menagement Plataforma\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\Page.js:572:20)\n    at async runE2EClickTests (C:\\Users\\luizf\\OneDrive\\Desktop\\Cleaning Menagement Plataforma\\tests\\e2e\\click-test.js:112:5)"
+    }
+  ]
+}
