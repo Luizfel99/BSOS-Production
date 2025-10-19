@@ -1,7 +1,7 @@
 ﻿{
   "version": 2,
-  "name": "bsos-platform-2025",
-  "alias": ["bsos-platform", "bsos-cleaning-management"],
+  "name": "bsos_production_app",
+  "alias": ["bsos-cleaning-platform"],
   "regions": ["iad1"],
   "builds": [
     {
