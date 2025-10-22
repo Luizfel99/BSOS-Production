@@ -66,16 +66,6 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
-  const secretKey = process.env.STRIPE_SECRET_KEY;
-  if (!secretKey) {
-    console.error("❌ Missing STRIPE_SECRET_KEY");
-    return NextResponse.json({ error: "Missing Stripe credentials" }, { status: 500 });
-  }
-
-  const stripe = new Stripe(secretKey, {
-    apiVersion: '2025-09-30.clover',
-  });
-
   try {
     const { id } = await params;
     const body = await request.json();
@@ -149,16 +139,6 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
-  const secretKey = process.env.STRIPE_SECRET_KEY;
-  if (!secretKey) {
-    console.error("❌ Missing STRIPE_SECRET_KEY");
-    return NextResponse.json({ error: "Missing Stripe credentials" }, { status: 500 });
-  }
-
-  const stripe = new Stripe(secretKey, {
-    apiVersion: '2025-09-30.clover',
-  });
-
   try {
     const { id } = await params;
     const invoice = await stripe.invoices.retrieve(id);
