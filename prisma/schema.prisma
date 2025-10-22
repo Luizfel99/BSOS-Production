@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,36 +8,34 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  role      UserRole @default(CLEANER)
-  phone     String?
-  avatar    String?
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  assignedTasks Task[] @relation("TaskAssignedTo")
-  createdTasks  Task[] @relation("TaskCreatedBy")
-  notes         TaskNote[]
+  id            String     @id @default(cuid())
+  name          String
+  email         String     @unique
+  role          UserRole   @default(CLEANER)
+  phone         String?
+  avatar        String?
+  active        Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   photos        Photo[]
+  notes         TaskNote[]
+  assignedTasks Task[]     @relation("TaskAssignedTo")
+  createdTasks  Task[]     @relation("TaskCreatedBy")
 
   @@map("users")
 }
 
 model TeamMember {
-  id           String   @id @default(cuid())
-  name         String
-  role         String   // "Cleaner" | "Supervisor" | "Manager"
-  email        String?  @unique
-  phone        String?
-  status       String   @default("Active") // "Active" | "Inactive"
-  assignedTasks Task[]  @relation("TeamTasks")
+  id                 String     @id @default(cuid())
+  name               String
+  role               String
+  email              String?    @unique
+  phone              String?
+  status             String     @default("Active")
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
   assignedProperties Property[] @relation("TeamProperties")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  assignedTasks      Task[]     @relation("TeamTasks")
 
   @@map("team_members")
 }
@@ -65,46 +60,42 @@ model Property {
   active               Boolean      @default(true)
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt
-
-  // Relations
-  tasks Task[]
-  assignedTeamMembers TeamMember[] @relation("TeamProperties")
+  tasks                Task[]
+  assignedTeamMembers  TeamMember[] @relation("TeamProperties")
 
   @@map("properties")
 }
 
 model Task {
-  id                String     @id @default(cuid())
-  title             String
-  description       String?
-  propertyId        String?
-  assignedTo        String?    // Changed from assignedCleanerId
-  scheduledDate     DateTime?  // Made optional, renamed from dueDate
-  dueDate           DateTime?  // Added dueDate field
-  estimatedDuration Int?       // Made optional, minutes
-  type              TaskType   @default(cleaning)
-  status            TaskStatus @default(pending)
-  priority          Priority   @default(medium)
-  materials         String?
-  instructions      String?
-  checklistCompleted Int       @default(0)
-  checklistTotal    Int        @default(0)
-  photosUploaded    Int        @default(0)
-  photosRequired    Int        @default(0)
-  integrationSource String?
-  guestCheckIn      DateTime?
-  guestCheckOut     DateTime?
-  createdBy         String?
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
-
-  // Relations
-  property Property? @relation(fields: [propertyId], references: [id])
-  assignedToUser User? @relation("TaskAssignedTo", fields: [assignedTo], references: [id])
-  createdByUser User? @relation("TaskCreatedBy", fields: [createdBy], references: [id])
-  notes TaskNote[]
-  photos Photo[]
-  checklists Checklist[]
+  id                  String       @id @default(cuid())
+  title               String
+  description         String?
+  propertyId          String?
+  assignedTo          String?
+  scheduledDate       DateTime?
+  dueDate             DateTime?
+  estimatedDuration   Int?
+  type                TaskType     @default(cleaning)
+  status              TaskStatus   @default(pending)
+  priority            Priority     @default(medium)
+  materials           String?
+  instructions        String?
+  checklistCompleted  Int          @default(0)
+  checklistTotal      Int          @default(0)
+  photosUploaded      Int          @default(0)
+  photosRequired      Int          @default(0)
+  integrationSource   String?
+  guestCheckIn        DateTime?
+  guestCheckOut       DateTime?
+  createdBy           String?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  checklists          Checklist[]
+  photos              Photo[]
+  notes               TaskNote[]
+  assignedToUser      User?        @relation("TaskAssignedTo", fields: [assignedTo], references: [id])
+  createdByUser       User?        @relation("TaskCreatedBy", fields: [createdBy], references: [id])
+  property            Property?    @relation(fields: [propertyId], references: [id])
   assignedTeamMembers TeamMember[] @relation("TeamTasks")
 
   @@map("tasks")
@@ -117,10 +108,8 @@ model TaskNote {
   content   String
   type      String   @default("field_note")
   createdAt DateTime @default(now())
-
-  // Relations
-  task Task @relation(fields: [taskId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  task      Task     @relation(fields: [taskId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@map("task_notes")
 }
@@ -135,83 +124,142 @@ model Photo {
   notes     String?
   metadata  Json?
   createdAt DateTime  @default(now())
-
-  // Relations
-  task Task @relation(fields: [taskId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  task      Task      @relation(fields: [taskId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
 
   @@map("photos")
 }
 
 model ChecklistTemplate {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   name        String
-  type        String   @unique
+  type        String      @unique
   description String?
-  items       Json // Array of checklist items
+  items       Json
   settings    Json?
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relations
-  checklists Checklist[]
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  checklists  Checklist[]
 
   @@map("checklist_templates")
 }
 
 model Checklist {
-  id           String            @id @default(cuid())
-  taskId       String
-  templateId   String
-  status       ChecklistStatus   @default(PENDING)
-  completedItems Json? // Array of completed items
-  qualityScore Int?
-  notes        String?
-  startedAt    DateTime?
-  completedAt  DateTime?
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
-
-  // Relations
-  task     Task              @relation(fields: [taskId], references: [id])
-  template ChecklistTemplate @relation(fields: [templateId], references: [id])
+  id             String            @id @default(cuid())
+  taskId         String
+  templateId     String
+  status         ChecklistStatus   @default(PENDING)
+  completedItems Json?
+  qualityScore   Int?
+  notes          String?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  task           Task              @relation(fields: [taskId], references: [id])
+  template       ChecklistTemplate @relation(fields: [templateId], references: [id])
 
   @@map("checklists")
 }
 
 model Integration {
-  id            String            @id @default(cuid())
-  name          String
-  platform      IntegrationType
-  apiKey        String?
-  webhookUrl    String?
-  syncFrequency Int               @default(60) // minutes
-  autoCreateTasks Boolean         @default(false)
-  status        IntegrationStatus @default(DISCONNECTED)
-  lastSync      DateTime?
-  settings      Json?
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  id              String            @id @default(cuid())
+  name            String
+  platform        IntegrationType
+  apiKey          String?
+  webhookUrl      String?
+  syncFrequency   Int               @default(60)
+  autoCreateTasks Boolean           @default(false)
+  status          IntegrationStatus @default(DISCONNECTED)
+  lastSync        DateTime?
+  settings        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 
   @@map("integrations")
 }
 
 model Statistics {
-  id              String   @id @default(cuid())
-  templateType    String
-  averageTime     Int // minutes
-  approvalRate    Float
-  completionRate  Float
-  totalCompleted  Int
-  periodStart     DateTime
-  periodEnd       DateTime
-  createdAt       DateTime @default(now())
+  id             String   @id @default(cuid())
+  templateType   String
+  averageTime    Int
+  approvalRate   Float
+  completionRate Float
+  totalCompleted Int
+  periodStart    DateTime
+  periodEnd      DateTime
+  createdAt      DateTime @default(now())
 
   @@map("statistics")
 }
 
-// Enums
+model Payment {
+  id                    String        @id @default(cuid())
+  stripePaymentIntentId String?       @unique
+  stripeInvoiceId       String?       @unique
+  stripeCustomerId      String?
+  amount                Int
+  currency              String        @default("usd")
+  status                PaymentStatus @default(PENDING)
+  paidAt                DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  stripeSubscriptionId String             @unique
+  stripeCustomerId     String
+  status               SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  canceledAt           DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  @@map("subscriptions")
+}
+
+model WebhookEvent {
+  id            String   @id @default(cuid())
+  stripeEventId String   @unique
+  type          String
+  processed     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@map("webhook_events")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      NotificationType @default(INFO)
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@map("notifications")
+}
+
+model Setting {
+  id        String      @id @default(cuid())
+  category  String
+  key       String
+  value     String?
+  type      SettingType @default(STRING)
+  encrypted Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@unique([category, key])
+  @@map("settings")
+}
+
 enum UserRole {
   ADMIN
   MANAGER
@@ -274,45 +322,6 @@ enum IntegrationStatus {
   ERROR
 }
 
-model Payment {
-  id                     String   @id @default(cuid())
-  stripePaymentIntentId  String?  @unique
-  stripeInvoiceId        String?  @unique
-  stripeCustomerId       String?
-  amount                 Int      // in cents
-  currency               String   @default("usd")
-  status                 PaymentStatus @default(PENDING)
-  paidAt                 DateTime?
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-
-  @@map("payments")
-}
-
-model Subscription {
-  id                     String   @id @default(cuid())
-  stripeSubscriptionId   String   @unique
-  stripeCustomerId       String
-  status                 SubscriptionStatus @default(ACTIVE)
-  currentPeriodStart     DateTime
-  currentPeriodEnd       DateTime
-  canceledAt             DateTime?
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-
-  @@map("subscriptions")
-}
-
-model WebhookEvent {
-  id            String   @id @default(cuid())
-  stripeEventId String   @unique
-  type          String
-  processed     Boolean  @default(false)
-  createdAt     DateTime @default(now())
-
-  @@map("webhook_events")
-}
-
 enum PaymentStatus {
   PENDING
   PAID
@@ -327,23 +336,6 @@ enum SubscriptionStatus {
   PAST_DUE
 }
 
-// ========================
-// NOTIFICATIONS MODULE
-// ========================
-
-model Notification {
-  id        String              @id @default(cuid())
-  userId    String
-  title     String
-  message   String
-  type      NotificationType    @default(INFO)
-  read      Boolean             @default(false)
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
-
-  @@map("notifications")
-}
-
 enum NotificationType {
   INFO
   WARNING
@@ -354,24 +346,6 @@ enum NotificationType {
   TASK_COMPLETED
   PROPERTY_UPDATED
   PAYMENT_RECEIVED
-}
-
-// ========================
-// SETTINGS MODULE
-// ========================
-
-model Setting {
-  id        String   @id @default(cuid())
-  category  String   // "general", "permissions", "integrations", "appearance"
-  key       String
-  value     String?
-  type      SettingType @default(STRING)
-  encrypted Boolean     @default(false)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-
-  @@unique([category, key])
-  @@map("settings")
 }
 
 enum SettingType {
