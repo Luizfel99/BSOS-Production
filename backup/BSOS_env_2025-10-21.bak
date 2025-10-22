@@ -1,0 +1,39 @@
+﻿# =====================================================
+#  BRIGHT & SHINE OPERATING SYSTEM (BSOS) - Local Development
+# =====================================================
+
+# ================================
+#  DATABASE CONFIGURATION (FROM VERCEL)
+# ================================
+DATABASE_URL="postgresql://neondb_owner:npg_tBvjOF67HqrI@ep-silent-rain-aegbxv5l-pooler.c-2.us-east-2.aws.neon.tech/neondb?channel_binding=require&sslmode=require"
+DATABASE_URL_UNPOOLED="postgresql://neondb_owner:npg_tBvjOF67HqrI@ep-silent-rain-aegbxv5l.c-2.us-east-2.aws.neon.tech/neondb?channel_binding=require&sslmode=require"
+
+# ================================
+#  APPLICATION SETTINGS
+# ================================
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
+
+# ================================
+#  SECURITY & AUTHENTICATION
+# ================================
+NEXTAUTH_URL=http://localhost:3000
+JWT_SECRET=SsneBkPc4rj0436XWZbIOLrIOem30rPZMjARl1WA5aQ=
+NEXTAUTH_SECRET=SsneBkPc4rj0436XWZbIOLrIOem30rPZMjARl1WA5aQ=
+WEBHOOK_SECRET=webhook_secret_for_development_testing
+ENCRYPTION_KEY=encryption_key_for_local_development
+
+# ================================
+#  STRIPE PAYMENT PROCESSING (TEST KEYS)
+# ================================
+STRIPE_PUBLISHABLE_KEY=pk_test_51QCt5dKKVmhAHfA0SnPDrPsUqbQHfeLXKJPvWG6T3wdGOPj4x1JyqCKRwxM3AYp0LceBK2QDCj5y1M0ZFcPJHzKA00uN8DU3Rj
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_51QCt5dKKVmhAHfA0SnPDrPsUqbQHfeLXKJPvWG6T3wdGOPj4x1JyqCKRwxM3AYp0LceBK2QDCj5y1M0ZFcPJHzKA00uN8DU3Rj
+STRIPE_SECRET_KEY=sk_test_51QCt5dKKVmhAHfA0vCdOFo6LsS8a4jx1NfAZWqPGbMkCvHdR6JJcJ6LqZ5tUoBOT3ykKdJxXsNcBqJf8M1VJqJqJ00xCJcM1VJ
+STRIPE_WEBHOOK_SECRET=whsec_test_local_development_webhook_secret
+
+# ================================
+#  PERFORMANCE & RATE LIMITING
+# ================================
+DEBUG=true
+RATE_LIMIT_ENABLED=false
+RATE_LIMIT_REQUESTS_PER_MINUTE=1000
