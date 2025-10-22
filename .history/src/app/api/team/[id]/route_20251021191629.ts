@@ -220,7 +220,7 @@ export async function DELETE(
     }
 
     // Check if team member exists
-    const existingMember = await prisma.teamMember.findUnique({
+    const existingMember = await prisma.user.findUnique({
       where: { id: params.id }
     });
 
@@ -231,12 +231,12 @@ export async function DELETE(
       );
     }
 
-    // Soft delete by setting status to Inactive instead of hard delete
+    // Soft delete by setting active to false instead of hard delete
     // This preserves data integrity for historical records
-    await prisma.teamMember.update({
+    await prisma.user.update({
       where: { id: params.id },
       data: { 
-        status: 'Inactive',
+        active: false,
         updatedAt: new Date()
       }
     });

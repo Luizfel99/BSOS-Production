@@ -49,11 +49,11 @@ export async function GET(request: NextRequest) {
     const whereClause: any = {};
     
     if (active !== null) {
-      whereClause.status = active === 'true' ? 'Active' : 'Inactive';
+      whereClause.active = active === 'true';
     }
     
     if (role) {
-      whereClause.role = role;
+      whereClause.role = role.toUpperCase();
     }
     
     if (search) {
@@ -63,23 +63,18 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    const teamMembers = await prisma.teamMember.findMany({
+    const teamMembers = await prisma.user.findMany({
       where: whereClause,
-      include: {
-        assignedTasks: {
-          select: {
-            id: true,
-            title: true,
-            status: true
-          }
-        },
-        assignedProperties: {
-          select: {
-            id: true,
-            name: true,
-            address: true
-          }
-        }
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        active: true,
+        createdAt: true,
+        updatedAt: true,
+        avatar: true
       },
       orderBy: {
         createdAt: 'desc'
@@ -119,44 +114,35 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = CreateTeamMemberSchema.parse(body);
 
-    // Check if email already exists (only if email provided)
-    if (validatedData.email) {
-      const existingMember = await prisma.teamMember.findUnique({
-        where: { email: validatedData.email }
-      });
+    // Check if email already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: validatedData.email }
+    });
 
-      if (existingMember) {
-        return NextResponse.json(
-          { error: 'Email já está em uso' },
-          { status: 400 }
-        );
-      }
+    if (existingUser) {
+      return NextResponse.json(
+        { error: 'Email já está em uso' },
+        { status: 400 }
+      );
     }
 
     // Create new team member
-    const newMember = await prisma.teamMember.create({
+    const newMember = await prisma.user.create({
       data: {
         name: validatedData.name,
         email: validatedData.email,
         phone: validatedData.phone,
         role: validatedData.role,
-        status: validatedData.status
+        active: validatedData.active
       },
-      include: {
-        assignedTasks: {
-          select: {
-            id: true,
-            title: true,
-            status: true
-          }
-        },
-        assignedProperties: {
-          select: {
-            id: true,
-            name: true,
-            address: true
-          }
-        }
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        active: true,
+        createdAt: true
       }
     });
 

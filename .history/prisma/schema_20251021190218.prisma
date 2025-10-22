@@ -68,7 +68,6 @@ model Property {
 
   // Relations
   tasks Task[]
-  assignedTeamMembers TeamMember[] @relation("TeamProperties")
 
   @@map("properties")
 }
@@ -105,7 +104,6 @@ model Task {
   notes TaskNote[]
   photos Photo[]
   checklists Checklist[]
-  assignedTeamMembers TeamMember[] @relation("TeamTasks")
 
   @@map("tasks")
 }

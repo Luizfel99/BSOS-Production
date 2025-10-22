@@ -208,9 +208,10 @@ export async function deleteTeamMember(id: string): Promise<void> {
 // Role utility functions
 export function getRoleDisplayName(role: TeamMember['role']): string {
   const roleNames = {
-    Cleaner: 'Faxineiro(a)',
-    Supervisor: 'Supervisor',
-    Manager: 'Gerente'
+    ADMIN: 'Administrador',
+    MANAGER: 'Gerente',
+    CLEANER: 'Faxineiro(a)',
+    CLIENT: 'Cliente'
   };
   
   return roleNames[role] || role;
@@ -218,22 +219,23 @@ export function getRoleDisplayName(role: TeamMember['role']): string {
 
 export function getRoleColor(role: TeamMember['role']): string {
   const roleColors = {
-    Cleaner: 'bg-green-100 text-green-800',
-    Supervisor: 'bg-blue-100 text-blue-800',
-    Manager: 'bg-purple-100 text-purple-800'
+    ADMIN: 'bg-purple-100 text-purple-800',
+    MANAGER: 'bg-blue-100 text-blue-800',
+    CLEANER: 'bg-green-100 text-green-800',
+    CLIENT: 'bg-orange-100 text-orange-800'
   };
   
   return roleColors[role] || 'bg-gray-100 text-gray-800';
 }
 
-export function getStatusColor(status: TeamMember['status']): string {
-  return status === 'Active' 
+export function getStatusColor(active: boolean): string {
+  return active 
     ? 'bg-green-100 text-green-800' 
     : 'bg-red-100 text-red-800';
 }
 
-export function getStatusDisplayName(status: TeamMember['status']): string {
-  return status === 'Active' ? 'Ativo' : 'Inativo';
+export function getStatusDisplayName(active: boolean): string {
+  return active ? 'Ativo' : 'Inativo';
 }
 
 // Export all functions and types

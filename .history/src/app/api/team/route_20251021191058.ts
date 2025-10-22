@@ -49,11 +49,11 @@ export async function GET(request: NextRequest) {
     const whereClause: any = {};
     
     if (active !== null) {
-      whereClause.status = active === 'true' ? 'Active' : 'Inactive';
+      whereClause.active = active === 'true';
     }
     
     if (role) {
-      whereClause.role = role;
+      whereClause.role = role.toUpperCase();
     }
     
     if (search) {

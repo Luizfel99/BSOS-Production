@@ -105,7 +105,6 @@ model Task {
   notes TaskNote[]
   photos Photo[]
   checklists Checklist[]
-  assignedTeamMembers TeamMember[] @relation("TeamTasks")
 
   @@map("tasks")
 }

@@ -43,25 +43,18 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const teamMember = await prisma.teamMember.findUnique({
+    const teamMember = await prisma.user.findUnique({
       where: { id: params.id },
-      include: {
-        assignedTasks: {
-          select: {
-            id: true,
-            title: true,
-            status: true,
-            dueDate: true
-          }
-        },
-        assignedProperties: {
-          select: {
-            id: true,
-            name: true,
-            address: true,
-            type: true
-          }
-        }
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        active: true,
+        createdAt: true,
+        updatedAt: true,
+        avatar: true
       }
     });
 
@@ -117,7 +110,7 @@ export async function PUT(
     const validatedData = UpdateTeamMemberSchema.parse(body);
 
     // Check if team member exists
-    const existingMember = await prisma.teamMember.findUnique({
+    const existingMember = await prisma.user.findUnique({
       where: { id: params.id }
     });
 
@@ -130,7 +123,7 @@ export async function PUT(
 
     // Check if email is being changed and if it already exists
     if (validatedData.email && validatedData.email !== existingMember.email) {
-      const emailExists = await prisma.teamMember.findUnique({
+      const emailExists = await prisma.user.findUnique({
         where: { email: validatedData.email }
       });
 
@@ -147,24 +140,17 @@ export async function PUT(
       Object.entries(validatedData).filter(([_, value]) => value !== undefined)
     );
 
-    const updatedMember = await prisma.teamMember.update({
+    const updatedMember = await prisma.user.update({
       where: { id: params.id },
       data: updateData,
-      include: {
-        assignedTasks: {
-          select: {
-            id: true,
-            title: true,
-            status: true
-          }
-        },
-        assignedProperties: {
-          select: {
-            id: true,
-            name: true,
-            address: true
-          }
-        }
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        active: true,
+        updatedAt: true
       }
     });
 
@@ -220,7 +206,7 @@ export async function DELETE(
     }
 
     // Check if team member exists
-    const existingMember = await prisma.teamMember.findUnique({
+    const existingMember = await prisma.user.findUnique({
       where: { id: params.id }
     });
 
@@ -231,12 +217,12 @@ export async function DELETE(
       );
     }
 
-    // Soft delete by setting status to Inactive instead of hard delete
+    // Soft delete by setting active to false instead of hard delete
     // This preserves data integrity for historical records
-    await prisma.teamMember.update({
+    await prisma.user.update({
       where: { id: params.id },
       data: { 
-        status: 'Inactive',
+        active: false,
         updatedAt: new Date()
       }
     });
