@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Alert } from '@/components/ui/Alert';
 import { 
   DollarSign,
   CreditCard,
@@ -96,14 +100,15 @@ export default function FinancePage() {
             <p className="text-gray-600 mb-6">
               No invoices yet. Crie sua primeira fatura para começar.
             </p>
-            <button
+            <Button
               onClick={handleCreateInvoice}
               disabled={loading}
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-6 py-3 flex items-center gap-2 mx-auto transition-colors disabled:opacity-50"
+              leftIcon={<Plus className="h-5 w-5" />}
+              variant="primary"
+              size="lg"
             >
-              <Plus className="h-5 w-5" />
               Criar Primera Fatura
-            </button>
+            </Button>
           </div>
         );
       
@@ -139,7 +144,7 @@ export default function FinancePage() {
   };
 
   return (
-    <ProtectedComponent requiredRoles={['ADMIN', 'MANAGER']}>
+    <ProtectedComponent allowedRoles={['ADMIN', 'MANAGER']}>
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -160,23 +165,23 @@ export default function FinancePage() {
                 </div>
                 
                 <div className="flex gap-3">
-                  <button
+                  <Button
                     onClick={handleSyncStripe}
                     disabled={loading}
-                    className="bg-purple-600 hover:bg-purple-700 text-white rounded-md px-4 py-2 flex items-center gap-2 transition-colors disabled:opacity-50"
+                    variant="secondary"
+                    leftIcon={<RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />}
                   >
-                    <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                     Sync Stripe
-                  </button>
+                  </Button>
                   
-                  <button
+                  <Button
                     onClick={handleCreateInvoice}
                     disabled={loading}
-                    className="bg-green-600 hover:bg-green-700 text-white rounded-md px-4 py-2 flex items-center gap-2 transition-colors disabled:opacity-50"
+                    variant="primary"
+                    leftIcon={<Plus className="h-4 w-4" />}
                   >
-                    <Plus className="h-4 w-4" />
-                    Create Invoice
-                  </button>
+                    Nova Fatura
+                  </Button>
                 </div>
               </div>
             </div>
@@ -197,8 +202,8 @@ export default function FinancePage() {
                     R$ {summary.totalIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </p>
                 </div>
-                <div className="bg-green-100 p-3 rounded-full">
-                  <TrendingUp className="h-6 w-6 text-green-600" />
+                <div className="bg-bsos-primary/10 p-3 rounded-bsos">
+                  <TrendingUp className="h-6 w-6 text-bsos-primary" />
                 </div>
               </div>
             </div>
@@ -295,124 +300,5 @@ export default function FinancePage() {
         </div>
       </div>
     </ProtectedComponent>
-  );
-}
-
-type FinanceTab = 'overview' | 'invoices' | 'transactions';
-
-export default function FinancePage() {
-  const [activeTab, setActiveTab] = useState<FinanceTab>('overview');
-  const { success, error } = useNotifications();
-
-  const tabs = [
-    {
-      id: 'overview' as FinanceTab,
-      label: 'Overview',
-      icon: TrendingUp,
-      description: 'Balance and financial summary'
-    },
-    {
-      id: 'invoices' as FinanceTab,
-      label: 'Invoices',
-      icon: FileText,
-      description: 'Manage invoices and billing'
-    },
-    {
-      id: 'transactions' as FinanceTab,
-      label: 'Transactions',
-      icon: CreditCard,
-      description: 'Payment history and records'
-    }
-  ];
-
-  const handleExportData = () => {
-    try {
-      // This would integrate with Stripe's API to export data
-      success('Export started! You will receive an email when ready.');
-    } catch (err) {
-      error('Failed to start export');
-    }
-  };
-
-  const handleCreateInvoice = () => {
-    try {
-      // This would open a modal or navigate to invoice creation
-      success('Opening invoice creation...');
-    } catch (err) {
-      error('Failed to open invoice creation');
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <DollarSign className="w-8 h-8 text-green-600" />
-                Finance Dashboard
-              </h1>
-              <p className="mt-1 text-gray-600">
-                Manage your financial data and Stripe integration
-              </p>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleExportData}
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <Download className="w-4 h-4" />
-                Export Data
-              </button>
-              
-              <button
-                onClick={handleCreateInvoice}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                Create Invoice
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation Tabs */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                    isActive
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'overview' && <BalanceOverview />}
-        {activeTab === 'invoices' && <InvoiceList />}
-        {activeTab === 'transactions' && <TransactionHistory />}
-      </div>
-    </div>
   );
 }

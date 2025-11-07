@@ -1,0 +1,358 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String
+  email         String     @unique
+  password      String
+  role          UserRole   @default(CLEANER)
+  phone         String?
+  avatar        String?
+  active        Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  photos        Photo[]
+  notes         TaskNote[]
+  assignedTasks Task[]     @relation("TaskAssignedTo")
+  createdTasks  Task[]     @relation("TaskCreatedBy")
+
+  @@map("users")
+}
+
+model TeamMember {
+  id                 String     @id @default(cuid())
+  name               String
+  role               String
+  email              String?    @unique
+  phone              String?
+  status             String     @default("Active")
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  assignedProperties Property[] @relation("TeamProperties")
+  assignedTasks      Task[]     @relation("TeamTasks")
+
+  @@map("team_members")
+}
+
+model Property {
+  id                   String       @id @default(cuid())
+  name                 String
+  address              String
+  type                 PropertyType @default(APARTMENT)
+  size                 String?
+  clientName           String?
+  contactEmail         String?
+  cleaningFrequency    String?
+  platform             String?
+  platformId           String?
+  ownerId              String?
+  keyLocation          String?
+  cleaningInstructions String?
+  amenities            String[]
+  bedrooms             Int?
+  bathrooms            Int?
+  active               Boolean      @default(true)
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  tasks                Task[]
+  assignedTeamMembers  TeamMember[] @relation("TeamProperties")
+
+  @@map("properties")
+}
+
+model Task {
+  id                  String       @id @default(cuid())
+  title               String
+  description         String?
+  propertyId          String?
+  assignedTo          String?
+  scheduledDate       DateTime?
+  dueDate             DateTime?
+  estimatedDuration   Int?
+  type                TaskType     @default(cleaning)
+  status              TaskStatus   @default(pending)
+  priority            Priority     @default(medium)
+  materials           String?
+  instructions        String?
+  checklistCompleted  Int          @default(0)
+  checklistTotal      Int          @default(0)
+  photosUploaded      Int          @default(0)
+  photosRequired      Int          @default(0)
+  integrationSource   String?
+  guestCheckIn        DateTime?
+  guestCheckOut       DateTime?
+  createdBy           String?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  checklists          Checklist[]
+  photos              Photo[]
+  notes               TaskNote[]
+  assignedToUser      User?        @relation("TaskAssignedTo", fields: [assignedTo], references: [id])
+  createdByUser       User?        @relation("TaskCreatedBy", fields: [createdBy], references: [id])
+  property            Property?    @relation(fields: [propertyId], references: [id])
+  assignedTeamMembers TeamMember[] @relation("TeamTasks")
+
+  @@map("tasks")
+}
+
+model TaskNote {
+  id        String   @id @default(cuid())
+  taskId    String
+  userId    String
+  content   String
+  type      String   @default("field_note")
+  createdAt DateTime @default(now())
+  task      Task     @relation(fields: [taskId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("task_notes")
+}
+
+model Photo {
+  id        String    @id @default(cuid())
+  taskId    String
+  userId    String
+  url       String
+  type      PhotoType
+  category  String?
+  notes     String?
+  metadata  Json?
+  createdAt DateTime  @default(now())
+  task      Task      @relation(fields: [taskId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@map("photos")
+}
+
+model ChecklistTemplate {
+  id          String      @id @default(cuid())
+  name        String
+  type        String      @unique
+  description String?
+  items       Json
+  settings    Json?
+  active      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  checklists  Checklist[]
+
+  @@map("checklist_templates")
+}
+
+model Checklist {
+  id             String            @id @default(cuid())
+  taskId         String
+  templateId     String
+  status         ChecklistStatus   @default(PENDING)
+  completedItems Json?
+  qualityScore   Int?
+  notes          String?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  task           Task              @relation(fields: [taskId], references: [id])
+  template       ChecklistTemplate @relation(fields: [templateId], references: [id])
+
+  @@map("checklists")
+}
+
+model Integration {
+  id              String            @id @default(cuid())
+  name            String
+  platform        IntegrationType
+  apiKey          String?
+  webhookUrl      String?
+  syncFrequency   Int               @default(60)
+  autoCreateTasks Boolean           @default(false)
+  status          IntegrationStatus @default(DISCONNECTED)
+  lastSync        DateTime?
+  settings        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@map("integrations")
+}
+
+model Statistics {
+  id             String   @id @default(cuid())
+  templateType   String
+  averageTime    Int
+  approvalRate   Float
+  completionRate Float
+  totalCompleted Int
+  periodStart    DateTime
+  periodEnd      DateTime
+  createdAt      DateTime @default(now())
+
+  @@map("statistics")
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  stripePaymentIntentId String?       @unique
+  stripeInvoiceId       String?       @unique
+  stripeCustomerId      String?
+  amount                Int
+  currency              String        @default("usd")
+  status                PaymentStatus @default(PENDING)
+  paidAt                DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  stripeSubscriptionId String             @unique
+  stripeCustomerId     String
+  status               SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  canceledAt           DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  @@map("subscriptions")
+}
+
+model WebhookEvent {
+  id            String   @id @default(cuid())
+  stripeEventId String   @unique
+  type          String
+  processed     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@map("webhook_events")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      NotificationType @default(INFO)
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@map("notifications")
+}
+
+model Setting {
+  id        String      @id @default(cuid())
+  category  String
+  key       String
+  value     String?
+  type      SettingType @default(STRING)
+  encrypted Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@unique([category, key])
+  @@map("settings")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  CLEANER
+  CLIENT
+}
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  STUDIO
+  COMMERCIAL
+}
+
+enum TaskType {
+  cleaning
+  maintenance
+  inspection
+  other
+}
+
+enum TaskStatus {
+  pending
+  in_progress
+  completed
+  cancelled
+}
+
+enum Priority {
+  low
+  medium
+  high
+  urgent
+}
+
+enum PhotoType {
+  BEFORE
+  AFTER
+  DETAIL
+  FINAL
+}
+
+enum ChecklistStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum IntegrationType {
+  AIRBNB
+  HOSTAWAY
+  TURNO
+  TASKBIRD
+}
+
+enum IntegrationStatus {
+  CONNECTED
+  DISCONNECTED
+  PENDING
+  ERROR
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELED
+  PAST_DUE
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  SUCCESS
+  ERROR
+  SYSTEM
+  TASK_ASSIGNED
+  TASK_COMPLETED
+  PROPERTY_UPDATED
+  PAYMENT_RECEIVED
+}
+
+enum SettingType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
+  ENCRYPTED
+}

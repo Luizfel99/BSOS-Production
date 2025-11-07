@@ -1,4 +1,4 @@
-import toast from 'react-hot-toast';
+﻿import toast from 'react-hot-toast';
 
 interface ToastOptions {
   duration?: number;
@@ -83,7 +83,7 @@ export const useNotifications = (): NotificationHook => {
     toast(message, {
       duration: options?.duration || 4000,
       position: options?.position || 'top-right',
-      icon: 'ℹ️',
+      icon: 'â„¹ï¸',
       style: {
         background: '#3b82f6',
         color: '#fff',
@@ -100,7 +100,7 @@ export const useNotifications = (): NotificationHook => {
     toast(message, {
       duration: options?.duration || 4000,
       position: options?.position || 'top-right',
-      icon: '⚠️',
+      icon: 'âš ï¸',
       style: {
         background: '#f59e0b',
         color: '#fff',
@@ -181,140 +181,3 @@ export const useNotifications = (): NotificationHook => {
   };
 };
 
-// Utility functions for common operations
-export const showAuthNotifications = {
-  loginSuccess: (username: string) => {
-    const { success } = useNotifications();
-    success(`Bem-vindo, ${username}! Login realizado com sucesso.`);
-  },
-  
-  loginError: (error: string) => {
-    const { error: showError } = useNotifications();
-    showError(`Erro no login: ${error}`);
-  },
-  
-  logoutSuccess: () => {
-    const { info } = useNotifications();
-    info('Logout realizado com sucesso. Até logo!');
-  },
-  
-  sessionExpired: () => {
-    const { warning } = useNotifications();
-    warning('Sua sessão expirou. Faça login novamente.');
-  },
-};
-
-export const showDataNotifications = {
-  saveSuccess: (item: string) => {
-    const { success } = useNotifications();
-    success(`${item} salvo com sucesso!`);
-  },
-  
-  updateSuccess: (item: string) => {
-    const { success } = useNotifications();
-    success(`${item} atualizado com sucesso!`);
-  },
-  
-  deleteSuccess: (item: string) => {
-    const { success } = useNotifications();
-    success(`${item} removido com sucesso!`);
-  },
-  
-  saveError: (item: string, error: string) => {
-    const { error: showError } = useNotifications();
-    showError(`Erro ao salvar ${item}: ${error}`);
-  },
-  
-  loadError: (item: string) => {
-    const { error } = useNotifications();
-    error(`Erro ao carregar ${item}. Tente novamente.`);
-  },
-  
-  networkError: () => {
-    const { error } = useNotifications();
-    error('Erro de conexão. Verifique sua internet e tente novamente.');
-  },
-};
-
-export const showTaskNotifications = {
-  taskCompleted: (taskName: string) => {
-    const { success } = useNotifications();
-    success(`Tarefa "${taskName}" concluída com sucesso! 🎉`);
-  },
-  
-  taskAssigned: (taskName: string, assignee: string) => {
-    const { info } = useNotifications();
-    info(`Tarefa "${taskName}" atribuída para ${assignee}`);
-  },
-  
-  taskOverdue: (taskName: string) => {
-    const { warning } = useNotifications();
-    warning(`Atenção: Tarefa "${taskName}" está atrasada!`);
-  },
-  
-  taskCancelled: (taskName: string) => {
-    const { info } = useNotifications();
-    info(`Tarefa "${taskName}" foi cancelada`);
-  },
-};
-
-export const showUploadNotifications = {
-  uploadProgress: (filename: string) => {
-    const { loading } = useNotifications();
-    return loading(`Enviando ${filename}...`);
-  },
-  
-  uploadSuccess: (filename: string) => {
-    const { success } = useNotifications();
-    success(`${filename} enviado com sucesso! 📁`);
-  },
-  
-  uploadError: (filename: string, error: string) => {
-    const { error: showError } = useNotifications();
-    showError(`Erro ao enviar ${filename}: ${error}`);
-  },
-  
-  fileSizeError: (maxSize: string) => {
-    const { warning } = useNotifications();
-    warning(`Arquivo muito grande. Tamanho máximo: ${maxSize}`);
-  },
-  
-  fileTypeError: (allowedTypes: string) => {
-    const { warning } = useNotifications();
-    warning(`Tipo de arquivo não permitido. Tipos aceitos: ${allowedTypes}`);
-  },
-};
-
-export const showValidationNotifications = {
-  required: (field: string) => {
-    const { warning } = useNotifications();
-    warning(`${field} é obrigatório`);
-  },
-  
-  invalid: (field: string) => {
-    const { warning } = useNotifications();
-    warning(`${field} inválido`);
-  },
-  
-  minLength: (field: string, min: number) => {
-    const { warning } = useNotifications();
-    warning(`${field} deve ter pelo menos ${min} caracteres`);
-  },
-  
-  maxLength: (field: string, max: number) => {
-    const { warning } = useNotifications();
-    warning(`${field} não pode ter mais de ${max} caracteres`);
-  },
-  
-  emailInvalid: () => {
-    const { warning } = useNotifications();
-    warning('E-mail inválido. Verifique o formato.');
-  },
-  
-  passwordWeak: () => {
-    const { warning } = useNotifications();
-    warning('Senha muito fraca. Use pelo menos 8 caracteres com letras e números.');
-  },
-};
-
-export default useNotifications;
