@@ -12,13 +12,11 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title = "Dashboard", subtitle }) => {
   const { user, logout } = useAuth();
-  const router = useRouter();
 
   const handleLogout = () => {
-    console.log("[BSOS-Auth] Logout button clicked");
-    logout();
+    console.info("[BSOS-Auth] Logout button clicked");
     toast.success("Logged out successfully.");
-    router.push("/login");
+    logout(); // This will clear session and redirect to /login
   };
 
   return (

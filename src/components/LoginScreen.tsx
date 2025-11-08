@@ -51,23 +51,41 @@ export default function LoginScreen() {
     };
     
     const creds = demoAccounts[role];
-    if (!creds) return;
+    if (!creds) {
+      console.error('[LoginScreen] Unknown demo role:', role);
+      toast.error('Demo role not found.');
+      return;
+    }
 
     setLoading(true);
     const loadingToast = toast.loading(`Logging in as ${role}...`);
 
+    // Timeout fallback - if login takes more than 10 seconds, show error
+    const timeoutId = setTimeout(() => {
+      toast.dismiss(loadingToast);
+      toast.error('Login timeout. Please try again.');
+      setLoading(false);
+    }, 10000);
+
     try {
+      console.info('[LoginScreen] Demo login attempt:', { role, email: creds.email });
       const success = await login(creds.email, creds.password);
+      clearTimeout(timeoutId);
       toast.dismiss(loadingToast);
       
       if (success) {
+        console.info('[LoginScreen] Demo login successful:', role);
         toast.success(`Welcome ${role}!`);
+        // Note: AuthContext will handle redirect to dashboard
       } else {
-        toast.error('Demo login failed.');
+        console.error('[LoginScreen] Demo login failed:', role);
+        toast.error('Demo login failed. Please try again.');
       }
     } catch (err) {
+      clearTimeout(timeoutId);
       toast.dismiss(loadingToast);
-      toast.error('Demo login error.');
+      console.error('[LoginScreen] Demo login error:', err);
+      toast.error('Demo login error. Please try again.');
     } finally {
       setLoading(false);
     }

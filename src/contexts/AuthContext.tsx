@@ -230,13 +230,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  // Login function
+  // Login function with demo fallback
   const login = async (email: string, password: string, role?: string): Promise<boolean> => {
-  console.log('[BSOS-Auth] Login attempt', { email, role: role || 'auto-detect' });
+    console.info('[BSOS-Auth] Login attempt:', { email, role: role || 'auto-detect' });
 
     try {
       setIsLoading(true);
 
+      // Try real API first
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -245,16 +246,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       const data = await res.json();
 
-      if (data.success) {
-  console.log('[BSOS-Auth] Login successful:', {
-          email: data.user.email,
-          role: data.user.role
-        });
+      if (data.success && data.user) {
+        console.info('[BSOS-Auth] API login successful:', { email: data.user.email, role: data.user.role });
 
         // Save token to localStorage
-        localStorage.setItem('auth-token', data.token);
+        if (data.token) {
+          localStorage.setItem('auth-token', data.token);
+        }
 
-        // Normalize role to lowercase for consistent RBAC lookups
+        // Normalize role to lowercase
         const roleLower = String(data.user.role || '').toLowerCase();
 
         // Create user object from API response
@@ -268,45 +268,64 @@ export function AuthProvider({ children }: AuthProviderProps) {
           permissions: ROLE_PERMISSIONS[roleLower as keyof typeof ROLE_PERMISSIONS] || []
         };
 
-  setUser(apiUser);
-  saveSession(apiUser);
-
-        // Important: Keep authChecked as true since user is now authenticated
+        setUser(apiUser);
+        saveSession(apiUser);
         setAuthChecked(true);
 
-  console.log('[BSOS-Auth] Login completed for', apiUser.email, 'role:', apiUser.role);
+        console.info('[BSOS-Auth] Login completed for', apiUser.email, 'role:', apiUser.role);
+        
+        // Auto-redirect to dashboard after successful login
+        if (typeof window !== 'undefined') {
+          setTimeout(() => {
+            const dashboardPaths: Record<string, string> = {
+              admin: '/dashboard/admin',
+              manager: '/dashboard/manager',
+              supervisor: '/dashboard/supervisor',
+              cleaner: '/dashboard/cleaner',
+              owner: '/dashboard/owner',
+              client: '/dashboard/client',
+            };
+            const redirectPath = dashboardPaths[apiUser.role] || '/dashboard';
+            console.info('[BSOS-Auth] Redirecting to:', redirectPath);
+            window.location.href = redirectPath;
+          }, 100);
+        }
+        
         return true;
       } else {
-  console.error('[BSOS-Auth] Login failed:', data.error || 'Invalid credentials');
+        console.error('[BSOS-Auth] API login failed:', data.error || 'Invalid credentials');
         return false;
       }
     } catch (error) {
-  console.error('[BSOS-Auth] Login error:', error);
+      console.error('[BSOS-Auth] Login error:', error);
       return false;
     } finally {
       setIsLoading(false);
-  console.log('[BSOS-Auth] Login process complete');
     }
   };
 
-  // Logout function
+  // Logout function with redirect
   const logout = () => {
-  console.log('[BSOS-Auth] Logout initiated');
+    console.info('[BSOS-Auth] Logout initiated');
     
     try {
-  console.log('[BSOS-Auth] Clearing user state and session data');
+      console.info('[BSOS-Auth] Clearing user state and session data');
       
       // Clear user state
       setUser(null);
+      setAuthChecked(false);
       
       // Clear all stored data
       clearSession();
       
-  console.log('[BSOS-Auth] User logged out successfully');
+      console.info('[BSOS-Auth] User logged out successfully');
+      
+      // Redirect to login page
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
     } catch (error) {
-  console.warn('[BSOS-Auth] Logout error:', error);
-    } finally {
-  console.log('[BSOS-Auth] Logout complete');
+      console.warn('[BSOS-Auth] Logout error:', error);
     }
   };
 
