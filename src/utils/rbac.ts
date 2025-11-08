@@ -76,38 +76,56 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     { module: 'tasks', actions: ['view'] },
     { module: 'reports', actions: ['view'] },
     { module: 'dashboard', actions: ['view', 'access'] }
+  ],
+  admin: [
+    // Admin has full access to all modules and actions
+    { module: 'core', actions: ['view', 'create', 'update', 'delete', 'approve', 'reject', 'upload_photo', 'checklist', 'feedback', 'audit'] },
+    { module: 'manager', actions: ['view', 'create', 'update', 'delete', 'approve_payment'] },
+    { module: 'client', actions: ['view', 'evaluate', 'message'] },
+    { module: 'finance', actions: ['view', 'create', 'update', 'delete', 'view_finance', 'approve_payment'] },
+    { module: 'analytics', actions: ['view', 'export', 'configure', 'access_analytics'] },
+    { module: 'tasks', actions: ['view', 'create', 'update', 'delete', 'approve', 'reject'] },
+    { module: 'employees', actions: ['view', 'create', 'update', 'delete', 'manage_users'] },
+    { module: 'properties', actions: ['view', 'create', 'update', 'delete'] },
+    { module: 'reports', actions: ['view', 'export', 'view_reports'] },
+    { module: 'integrations', actions: ['view', 'create', 'update', 'delete', 'manage_integrations', 'configure'] },
+    { module: 'templates', actions: ['view', 'create', 'update', 'delete', 'edit_templates'] },
+    { module: 'settings', actions: ['view', 'create', 'update', 'delete', 'configure'] },
+    { module: 'users', actions: ['view', 'create', 'update', 'delete', 'manage_users'] },
+    { module: 'payments', actions: ['view', 'create', 'update', 'delete', 'approve_payment'] },
+    { module: 'dashboard', actions: ['view', 'access'] }
   ]
 };
 
 // Feature visibility matrix based on roles
 export const FEATURE_ACCESS: Record<string, UserRole[]> = {
   // Core features
-  'task-management': ['cleaner', 'supervisor', 'manager', 'owner'],
-  'photo-upload': ['cleaner', 'supervisor', 'manager', 'owner'],
-  'checklist': ['cleaner', 'supervisor', 'manager', 'owner'],
+  'task-management': ['cleaner', 'supervisor', 'manager', 'owner', 'admin'],
+  'photo-upload': ['cleaner', 'supervisor', 'manager', 'owner', 'admin'],
+  'checklist': ['cleaner', 'supervisor', 'manager', 'owner', 'admin'],
   
   // Management features
-  'employee-management': ['supervisor', 'manager', 'owner'],
-  'property-management': ['manager', 'owner', 'client'],
-  'payment-approval': ['manager', 'owner'],
-  'template-editing': ['manager', 'owner'],
+  'employee-management': ['supervisor', 'manager', 'owner', 'admin'],
+  'property-management': ['manager', 'owner', 'client', 'admin'],
+  'payment-approval': ['manager', 'owner', 'admin'],
+  'template-editing': ['manager', 'owner', 'admin'],
   
   // Analytics and reporting
-  'analytics-dashboard': ['supervisor', 'manager', 'owner'],
-  'financial-reports': ['manager', 'owner'],
-  'performance-reports': ['supervisor', 'manager', 'owner'],
-  'export-data': ['manager', 'owner'],
+  'analytics-dashboard': ['supervisor', 'manager', 'owner', 'admin'],
+  'financial-reports': ['manager', 'owner', 'admin'],
+  'performance-reports': ['supervisor', 'manager', 'owner', 'admin'],
+  'export-data': ['manager', 'owner', 'admin'],
   
   // Client features
-  'client-portal': ['client', 'owner'],
-  'service-evaluation': ['client'],
-  'property-communication': ['client', 'manager', 'owner'],
+  'client-portal': ['client', 'owner', 'admin'],
+  'service-evaluation': ['client', 'admin'],
+  'property-communication': ['client', 'manager', 'owner', 'admin'],
   
   // System administration
-  'user-management': ['owner'],
-  'system-settings': ['owner'],
-  'integration-management': ['manager', 'owner'],
-  'audit-logs': ['supervisor', 'manager', 'owner']
+  'user-management': ['owner', 'admin'],
+  'system-settings': ['owner', 'admin'],
+  'integration-management': ['manager', 'owner', 'admin'],
+  'audit-logs': ['supervisor', 'manager', 'owner', 'admin']
 };
 
 // Navigation items based on roles
@@ -116,7 +134,8 @@ export const NAVIGATION_ACCESS: Record<UserRole, string[]> = {
   supervisor: ['dashboard', 'tasks', 'team', 'reports', 'analytics', 'profile'],
   manager: ['dashboard', 'tasks', 'team', 'properties', 'reports', 'analytics', 'integrations', 'profile'],
   owner: ['dashboard', 'tasks', 'team', 'properties', 'reports', 'analytics', 'finance', 'settings', 'integrations', 'profile'],
-  client: ['dashboard', 'properties', 'services', 'messages', 'profile']
+  client: ['dashboard', 'properties', 'services', 'messages', 'profile'],
+  admin: ['dashboard', 'tasks', 'team', 'properties', 'reports', 'analytics', 'finance', 'settings', 'integrations', 'users', 'profile']
 };
 
 /**
@@ -124,9 +143,11 @@ export const NAVIGATION_ACCESS: Record<UserRole, string[]> = {
  */
 export function hasPermission(user: User | null, module: Module, action: Action): boolean {
   if (!user) return false;
-  
-  const userPermissions = user.permissions || ROLE_PERMISSIONS[user.role] || [];
+  // Normalize role for lookups (DB may store uppercase)
+  const roleKey = (user.role as string).toLowerCase() as UserRole;
+  const userPermissions = user.permissions || ROLE_PERMISSIONS[roleKey] || [];
   const modulePermission = userPermissions.find(p => p.module === module);
+  console.debug('[RBAC] hasPermission check', { role: roleKey, module, action, foundActions: modulePermission?.actions });
   
   return modulePermission?.actions.includes(action) || false;
 }
@@ -138,7 +159,11 @@ export function canAccessFeature(user: User | null, feature: string): boolean {
   if (!user) return false;
   
   const allowedRoles = FEATURE_ACCESS[feature];
-  return allowedRoles ? allowedRoles.includes(user.role) : false;
+  if (!allowedRoles) return false;
+  
+  const userRoleLower = user.role.toLowerCase();
+  const allowedRolesLower = allowedRoles.map(r => r.toLowerCase());
+  return allowedRolesLower.includes(userRoleLower);
 }
 
 /**
@@ -146,8 +171,8 @@ export function canAccessFeature(user: User | null, feature: string): boolean {
  */
 export function getAccessibleNavigation(user: User | null): string[] {
   if (!user) return [];
-  
-  return NAVIGATION_ACCESS[user.role] || [];
+  const roleKey = (user.role as string).toLowerCase() as UserRole;
+  return NAVIGATION_ACCESS[roleKey] || [];
 }
 
 /**
@@ -171,7 +196,11 @@ export function canAccessRoute(user: User | null, route: string): boolean {
   };
   
   const allowedRoles = routePermissions[route];
-  return allowedRoles ? allowedRoles.includes(user.role) : true;
+  if (!allowedRoles) return true;
+  
+  const userRoleLower = user.role.toLowerCase();
+  const allowedRolesLower = allowedRoles.map(r => r.toLowerCase());
+  return allowedRolesLower.includes(userRoleLower);
 }
 
 /**
@@ -203,10 +232,15 @@ export function getRoleDashboardConfig(role: UserRole) {
       defaultView: 'services',
       widgets: ['my-properties', 'service-history', 'upcoming-cleanings', 'messages'],
       actions: ['view-properties', 'schedule-services', 'rate-services', 'contact-support']
+    },
+    admin: {
+      defaultView: 'admin',
+      widgets: ['system-overview', 'user-management', 'system-health', 'audit-logs', 'performance-dashboard'],
+      actions: ['full-system-access', 'user-management', 'system-configuration', 'audit-review']
     }
   };
-  
-  return dashboardConfigs[role];
+  const roleKey = (role as string).toLowerCase() as UserRole;
+  return dashboardConfigs[roleKey];
 }
 
 /**
@@ -226,7 +260,9 @@ export function filterMenuByPermissions(user: User | null, menuItems: any[]): an
     }
     
     if (item.allowedRoles) {
-      return item.allowedRoles.includes(user.role);
+      const userRoleLower = user.role.toLowerCase();
+      const allowedRolesLower = item.allowedRoles.map(r => r.toLowerCase());
+      return allowedRolesLower.includes(userRoleLower);
     }
     
     return true; // Default allow if no restrictions specified
@@ -238,16 +274,16 @@ export function filterMenuByPermissions(user: User | null, menuItems: any[]): an
  */
 export function getUserCapabilityLevel(user: User | null): 'basic' | 'intermediate' | 'advanced' | 'admin' {
   if (!user) return 'basic';
-  
   const capabilityMap = {
     cleaner: 'basic',
     client: 'basic',
     supervisor: 'intermediate',
     manager: 'advanced',
-    owner: 'admin'
+    owner: 'admin',
+    admin: 'admin'
   } as const;
-  
-  return capabilityMap[user.role];
+  const roleKey = (user.role as string).toLowerCase() as UserRole;
+  return capabilityMap[roleKey];
 }
 
 /**
@@ -263,7 +299,6 @@ export function shouldShowAdvancedFeatures(user: User | null): boolean {
  */
 export function getRoleBasedHelp(user: User | null) {
   if (!user) return null;
-  
   const helpContent = {
     cleaner: {
       quickActions: ['Upload photos', 'Complete checklist', 'Update task status'],
@@ -289,8 +324,13 @@ export function getRoleBasedHelp(user: User | null) {
       quickActions: ['Schedule cleaning', 'Rate service', 'Contact support'],
       helpTopics: ['Service booking', 'Property management', 'Billing questions'],
       supportContact: 'customer_service'
+    },
+    admin: {
+      quickActions: ['Manage users', 'System configuration', 'Review audit logs', 'Global settings'],
+      helpTopics: ['User administration', 'System configuration', 'Security & compliance', 'Advanced features'],
+      supportContact: 'technical_support'
     }
   };
-  
-  return helpContent[user.role];
+  const roleKey = (user.role as string).toLowerCase() as UserRole;
+  return helpContent[roleKey];
 }

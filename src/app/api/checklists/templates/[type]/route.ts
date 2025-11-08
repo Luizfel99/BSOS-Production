@@ -34,9 +34,9 @@ export async function GET(
   } catch (error) {
     console.error('Error fetching template:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Failed to fetch template' 
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch template'
       },
       { status: 500 }
     );
@@ -79,9 +79,9 @@ export async function PUT(
   } catch (error) {
     console.error('Error updating template:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Failed to update template' 
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to update template'
       },
       { status: 500 }
     );
@@ -108,9 +108,9 @@ export async function DELETE(
   } catch (error) {
     console.error('Error deactivating template:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Failed to deactivate template' 
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to deactivate template'
       },
       { status: 500 }
     );

@@ -10,7 +10,7 @@ type User = {
   [k: string]: any;
 };
 
-export default function DashboardPage() {
+function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [stats, setStats] = useState({ pending: 0, progress: 0, done: 0 });
@@ -110,10 +110,7 @@ export default function DashboardPage() {
     </div>
   );
 }
-"use client";
-
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+ 
 
 type Stats = {
   pending: number;
@@ -121,7 +118,7 @@ type Stats = {
   done: number;
 };
 
-export default function DashboardPage() {
+function DashboardPageV2() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -179,10 +176,10 @@ export default function DashboardPage() {
         </header>
 
         <section className="mb-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card title="Pending" value={loading ? '—' : stats?.pending ?? '—'} color="amber" />
-            <Card title="In Progress" value={loading ? '—' : stats?.progress ?? '—'} color="sky" />
-            <Card title="Done" value={loading ? '—' : stats?.done ?? '—'} color="green" />
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <LocalCard title="Pending" value={loading ? '—' : stats?.pending ?? '—'} color="amber" />
+            <LocalCard title="In Progress" value={loading ? '—' : stats?.progress ?? '—'} color="sky" />
+            <LocalCard title="Done" value={loading ? '—' : stats?.done ?? '—'} color="green" />
           </div>
         </section>
 
@@ -206,7 +203,7 @@ export default function DashboardPage() {
   );
 }
 
-function Card({ title, value, color = 'sky' }: { title: string; value: string | number; color?: string }) {
+function LocalCard({ title, value, color = 'sky' }: { title: string; value: string | number; color?: string }) {
   const colorMap: Record<string, string> = {
     sky: 'bg-sky-100 text-sky-700',
     green: 'bg-green-100 text-green-700',
@@ -233,15 +230,12 @@ function PlaceholderCard({ title, subtitle }: { title: string; subtitle?: string
  * Example Protected Dashboard Page
  * Demonstrates RBAC implementation with different content based on user role
  */
-
-'use client';
-
+ 
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedComponent, usePermissions } from '@/components/ProtectedComponent';
 import RouteGuard from '@/components/RouteGuard';
 import MobileNavigation from '@/components/MobileNavigation';
 import { useNotifications } from '@/hooks/useNotifications';
-import { useRouter } from 'next/navigation';
 import { 
   Users, 
   ClipboardList, 
@@ -254,7 +248,7 @@ import {
   Calendar,
   TrendingUp
 } from 'lucide-react';
-import { useState } from 'react';
+ 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { typographyClasses } from '@/config/theme';
@@ -399,7 +393,8 @@ const QuickActions = () => {
         
         {/* Show placeholder when no actions are available */}
         {actions.every((action, index) => {
-          const hasAccess = user?.role && ['owner', 'manager'].includes(user.role);
+          const userRoleLower = user?.role?.toLowerCase();
+          const hasAccess = userRoleLower && ['owner', 'manager'].includes(userRoleLower);
           return !hasAccess;
         }) && (
           <div className="col-span-full text-center py-8 text-gray-500">
@@ -542,6 +537,11 @@ export default function ProtectedDashboardExample() {
   const [activeTab, setActiveTab] = useState('overview');
   const [activeNavItem, setActiveNavItem] = useState('dashboard');
 
+  // Debug instrumentation
+  React.useEffect(() => {
+    console.debug('[Dashboard] Mounted with user:', user);
+  }, [user]);
+
   // Show loading while checking authentication
   if (!authChecked) {
     return (
@@ -575,11 +575,6 @@ export default function ProtectedDashboardExample() {
   // This component itself is protected by RouteGuard
   return (
     <RouteGuard>
-      <ProtectedComponent
-        module="dashboard"
-        action="access"
-        fallback="detailed"
-      >
         <MobileNavigation
           activeItem={activeNavItem}
           onItemClick={handleNavItemClick}
@@ -620,16 +615,7 @@ export default function ProtectedDashboardExample() {
                 <ProtectedComponent
                   module="dashboard"
                   action="view"
-                  fallback={
-                    <div className="bg-gradient-to-r from-gray-500 to-gray-600 rounded-lg p-6 text-white">
-                      <h2 className="text-xl font-semibold mb-2">
-                        Bem-vindo ao Sistema!
-                      </h2>
-                      <p className="opacity-90">
-                        Você tem acesso limitado ao dashboard. Entre em contato com seu supervisor para mais informações.
-                      </p>
-                    </div>
-                  }
+                  fallback={null}
                 >
                   <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg p-6 text-white">
                     <h2 className="text-xl font-semibold mb-2">
@@ -637,11 +623,11 @@ export default function ProtectedDashboardExample() {
                     </h2>
                     <p className="opacity-90">
                       Você está logado como <span className="font-medium capitalize">{user?.role}</span>.
-                      {user?.role === 'owner' && ' Você tem acesso completo ao sistema.'}
-                      {user?.role === 'supervisor' && ' Gerencie sua equipe e monitore as operações.'}
-                      {user?.role === 'cleaner' && ' Veja suas tarefas e atualize o progresso.'}
-                      {user?.role === 'client' && ' Gerencie suas propriedades e agendamentos.'}
-                      {user?.role === 'client' && ' Acompanhe seus serviços e faça novos agendamentos.'}
+                      {user?.role?.toLowerCase() === 'owner' && ' Você tem acesso completo ao sistema.'}
+                      {user?.role?.toLowerCase() === 'supervisor' && ' Gerencie sua equipe e monitore as operações.'}
+                      {user?.role?.toLowerCase() === 'cleaner' && ' Veja suas tarefas e atualize o progresso.'}
+                      {user?.role?.toLowerCase() === 'client' && ' Gerencie suas propriedades e agendamentos.'}
+                      {user?.role?.toLowerCase() === 'manager' && ' Acompanhe seus serviços e faça novos agendamentos.'}
                     </p>
                   </div>
                 </ProtectedComponent>
@@ -727,7 +713,6 @@ export default function ProtectedDashboardExample() {
             </div>
           </div>
         </MobileNavigation>
-      </ProtectedComponent>
     </RouteGuard>
   );
 }

@@ -11,7 +11,15 @@ export const getStripeServer = (): Stripe => {
       throw new Error('STRIPE_SECRET_KEY is not configured');
     }
     stripeInstance = new Stripe(secretKey, {
-      apiVersion: '2025-09-30.clover',
+      // apiVersion kept as the runtime literal. If your TypeScript Stripe
+      // typings still complain about union-literal types, prefer updating
+      // the installed Stripe SDK version or leave a targeted cast at the
+      // call-site instead of a global workaround.
+  // use the apiVersion string that matches the installed Stripe types
+  // to keep strict typing happy. Change only if you intentionally need
+  // a different runtime API version and update @types/stripe or stripe
+  // package accordingly.
+  apiVersion: '2025-10-29.clover',
       typescript: true,
     });
   }

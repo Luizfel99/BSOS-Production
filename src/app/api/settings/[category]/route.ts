@@ -2,6 +2,7 @@
 // SURGICAL MODE: Granular settings management per category
 
 import { NextRequest, NextResponse } from 'next/server';
+// Use the generated Prisma enum type for UserRole now that the schema includes it
 import { UserRole } from '@prisma/client';
 import { 
   getSettingsByCategory,

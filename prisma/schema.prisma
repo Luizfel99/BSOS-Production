@@ -12,6 +12,211 @@ model User {
   name         String
   email        String   @unique
   passwordHash String
-  role         String   @default("Owner")
+  role         UserRole @default(CLEANER)
+  active       Boolean  @default(true)
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Property {
+  id                String   @id @default(cuid())
+  name              String?
+  address           String?
+  contactEmail      String?
+  type              String? // APARTMENT | HOUSE | ... (kept as string for now)
+  size              String?
+  clientName        String?
+  cleaningFrequency String?
+  tenantId          String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Task {
+  id                String   @id @default(cuid())
+  title             String
+  description       String?
+  propertyId        String?
+  assignedToId      String?
+  status            String? // e.g., OPEN, IN_PROGRESS, DONE
+  estimatedDuration Int?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model TaskNote {
+  id        String   @id @default(cuid())
+  taskId    String
+  authorId  String?
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  url       String
+  caption   String?
+  model     String? // polymorphic: 'task' | 'property' | etc.
+  modelId   String?
+  createdAt DateTime @default(now())
+}
+
+model ChecklistTemplate {
+  id        String   @id @default(cuid())
+  type      String
+  title     String?
+  data      Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Checklist {
+  id         String   @id @default(cuid())
+  templateId String?
+  taskId     String?
+  completed  Boolean  @default(false)
+  data       Json?
+  createdAt  DateTime @default(now())
+}
+
+model Payment {
+  id         String   @id @default(cuid())
+  amount     Int
+  currency   String   @default("usd")
+  status     String?
+  stripeId   String?
+  userId     String?
+  propertyId String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String?
+  stripeId  String?
+  status    String?
+  priceId   String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+}
+
+model WebhookEvent {
+  id         String   @id @default(cuid())
+  type       String
+  payload    Json
+  receivedAt DateTime @default(now())
+}
+
+model Integration {
+  id        String   @id @default(cuid())
+  provider  String
+  config    Json?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model Cleaning {
+  id           String    @id @default(cuid())
+  propertyId   String?
+  assignedToId String?
+  status       String?
+  scheduledAt  DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model Tenant {
+  id        String   @id @default(cuid())
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+model Statistic {
+  id        String   @id @default(cuid())
+  key       String
+  value     Json?
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  id        String      @id @default(cuid())
+  category  String
+  key       String
+  value     String
+  type      SettingType @default(STRING)
+  encrypted Boolean     @default(false)
+  updatedAt DateTime    @updatedAt
+
+  @@unique([category, key], name: "category_key")
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  userId    String
+  role      String?
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  title     String?
+  body      String?
+  message   String?
+  type      NotificationType @default(INFO)
+  updatedAt DateTime         @updatedAt
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+}
+
+enum UserRole {
+  CLEANER
+  SUPERVISOR
+  MANAGER
+  OWNER
+  CLIENT
+  ADMIN
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  SUCCESS
+  ERROR
+  SYSTEM
+  TASK_ASSIGNED
+  TASK_COMPLETED
+  PROPERTY_UPDATED
+  PAYMENT_RECEIVED
+}
+
+enum SettingType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
+  ENCRYPTED
+}
+
+model Usage {
+  id        String   @id @default(cuid())
+  tenantId  String?
+  metric    String
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Invoice {
+  id        String   @id @default(cuid())
+  amount    Int
+  currency  String   @default("usd")
+  status    String?
+  stripeId  String?
+  createdAt DateTime @default(now())
 }

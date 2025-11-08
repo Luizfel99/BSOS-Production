@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
   }
 
   const stripe = new Stripe(secretKey, {
-    apiVersion: '2025-09-30.clover',
+    // defensive cast to avoid TypeScript union literal mismatch for apiVersion
+  apiVersion: '2025-10-29.clover',
   });
 
   try {

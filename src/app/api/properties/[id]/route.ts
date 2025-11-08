@@ -57,7 +57,7 @@ export async function GET(
     }
 
     // Role-based access control
-    if (currentUser.role === 'CLEANER' && !property.active) {
+  if (currentUser.role?.toLowerCase() === 'cleaner' && !property.active) {
       return NextResponse.json(
         { error: 'Property not accessible' },
         { status: 403 }

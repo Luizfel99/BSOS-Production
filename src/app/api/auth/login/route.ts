@@ -1,85 +1,74 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-
-const SECRET = process.env.NEXTAUTH_SECRET || "bsos_dev_secret";
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export async function POST(req: Request) {
   try {
-    console.log("Login attempt started");
-
     const { email, password } = await req.json();
-    console.log("Received email:", email);
 
     if (!email || !password) {
-      return NextResponse.json(
-        { error: "Email and password are required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing credentials' }, { status: 400 });
     }
 
-    console.log("Checking Prisma connection...");
     const user = await prisma.user.findUnique({
       where: { email },
       select: {
         id: true,
         name: true,
         email: true,
-        passwordHash: true,  // ✅ correto
+        passwordHash: true,
         role: true,
-        phone: true,
-        avatar: true,
         active: true,
-        createdAt: true,
-      }
+      },
     });
 
-    console.log("User found:", user ? "yes" : "no");
-
     if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
+      console.error(`❌ Login failed: User not found (${email})`);
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
     if (!user.active) {
-      return NextResponse.json(
-        { error: "Account is deactivated" },
-        { status: 403 }
-      );
+      console.error(`🚫 Login failed: Inactive user (${email})`);
+      return NextResponse.json({ error: 'User inactive' }, { status: 403 });
     }
 
-    const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 }
-      );
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
+      console.error(`🔑 Invalid password for ${email}`);
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
+
+    // ✅ Normaliza o role (ADMIN -> admin)
+    const normalizedRole = user.role.toLowerCase();
 
     const token = jwt.sign(
-      { id: user.id, role: user.role },
-      SECRET,
-      { expiresIn: "7d" }
+      {
+        id: user.id,
+        email: user.email,
+        role: normalizedRole,
+      },
+      process.env.JWT_SECRET!,
+      { expiresIn: '7d' }
     );
 
-    // Remove password from response
-    const { password: _, ...userWithoutPassword } = user;
+    console.log(`✅ Login success: ${email} (${normalizedRole})`);
 
     return NextResponse.json({
       success: true,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: normalizedRole,
+      },
       token,
-      user: userWithoutPassword,
     });
-  } catch (err) {
-    console.error("Login error:", err);
-    // In development return the error message to help debugging
-    if (process.env.NODE_ENV !== 'production') {
-      const message = err instanceof Error ? err.message : String(err);
-      return NextResponse.json({ error: 'Internal server error', detail: message }, { status: 500 });
-    }
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  } catch (error: any) {
+    console.error('❌ Internal error in /api/auth/login:', error);
+    return NextResponse.json(
+      { error: 'Internal server error', detail: error.message },
+      { status: 500 }
+    );
   }
 }

@@ -8,29 +8,12 @@ import toast from 'react-hot-toast';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { login, user, authChecked, isHydrated } = useAuth();
+  const { login } = useAuth();
   const { t, i18n } = useTranslation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Only redirect if auth is fully checked and hydrated
-    if (isHydrated && authChecked && user && user.role) {
-      const redirectPaths: Record<string, string> = {
-        admin: '/dashboard/admin',
-        manager: '/dashboard/manager',
-        supervisor: '/dashboard/supervisor',
-        cleaner: '/dashboard/cleaner',
-        owner: '/dashboard/owner',
-        client: '/dashboard/client',
-      };
-      const redirectPath = redirectPaths[user.role] || '/dashboard';
-      console.log('[LoginScreen] Redirecting', user.role, 'to', redirectPath);
-      router.push(redirectPath);
-    }
-  }, [user, authChecked, isHydrated, router]);
 
   const handleLanguageChange = (lang: string) => {
     i18n.changeLanguage(lang);

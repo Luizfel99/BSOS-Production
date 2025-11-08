@@ -44,8 +44,10 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const { success, info } = useNotifications();
   const { navigate } = useNavigation();
 
-  // Get navigation items based on user role
-  const navigationItems = items || getNavigationForRole(authUser?.role || 'CLEANER');
+  // Get navigation items based on user role (normalized)
+  const roleKey = (authUser?.role || 'cleaner').toLowerCase();
+  const navigationItems = items || getNavigationForRole(roleKey);
+  console.debug('[MobileNavigation] role:', authUser?.role, 'normalized:', roleKey, 'items:', navigationItems.map(i => i.id));
 
   const handleItemClick = (itemId: string) => {
     navigate(itemId);
@@ -143,7 +145,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
               </div>
               <div className="ml-3 flex-1">
                 <p className="text-sm font-medium text-gray-900">{user?.name || 'Usuario'}</p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role || 'Cleaning Professional'}</p>
+                    <p className="text-xs text-gray-500 capitalize">{(user?.role || 'cleaner').toLowerCase()}</p>
               </div>
             </div>
             
@@ -223,7 +225,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   </div>
                   <div className="ml-3 min-w-0 flex-1">
                     <p className="text-sm font-medium text-gray-900 truncate">{user?.name || 'Usuario'}</p>
-                    <p className="text-xs text-gray-500 truncate capitalize">{user?.role || 'Cleaning Professional'}</p>
+                    <p className="text-xs text-gray-500 truncate capitalize">{(user?.role || 'cleaner').toLowerCase()}</p>
                   </div>
                 </div>
                 

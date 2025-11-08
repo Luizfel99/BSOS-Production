@@ -147,9 +147,11 @@ export const ProtectedComponent: React.FC<ProtectedComponentProps> = ({
     hasAccess = canAccessRoute(user, route);
   }
   
-  // Role-based access check
+  // Role-based access check (case-insensitive)
   else if (allowedRoles) {
-    hasAccess = user?.role ? allowedRoles.includes(user.role) : false;
+    const userRoleLower = user?.role?.toLowerCase();
+    const allowedRolesLower = allowedRoles.map(r => r.toLowerCase());
+    hasAccess = userRoleLower ? allowedRolesLower.includes(userRoleLower) : false;
   }
 
   // If user has access, render children
@@ -171,6 +173,9 @@ export const ProtectedComponent: React.FC<ProtectedComponentProps> = ({
     }
     if (fallback === "minimal") {
       return <NoAccessMessage variant="minimal" />;
+    }
+    if (fallback === "detailed") {
+      return <NoAccessMessage variant="detailed" />;
     }
     return <>{fallback}</>;
   }
@@ -204,7 +209,9 @@ export const usePermissions = () => {
 
   const checkRole = (allowedRoles: string[]): boolean => {
     if (!isHydrated || !user || !isAuthenticated) return false;
-    return allowedRoles.includes(user.role);
+    const userRoleLower = user.role.toLowerCase();
+    const allowedRolesLower = allowedRoles.map(r => r.toLowerCase());
+    return allowedRolesLower.includes(userRoleLower);
   };
 
   return {

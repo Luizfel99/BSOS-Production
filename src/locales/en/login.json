@@ -1,0 +1,10 @@
+{
+  "title": "Welcome back to BSOS",
+  "subtitle": "Log in to manage your operations and properties.",
+  "email": "Email address",
+  "password": "Password",
+  "button": "Sign In",
+  "loading": "Authenticating...",
+  "invalid": "Invalid credentials.",
+  "success": "Login successful! Redirecting..."
+}

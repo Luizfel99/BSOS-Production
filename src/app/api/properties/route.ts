@@ -76,10 +76,10 @@ export async function GET(request: NextRequest) {
     const where: any = {};
 
     // Role-based filtering
-    if (currentUser.role === 'CLEANER') {
+  if (currentUser.role?.toLowerCase() === 'cleaner') {
       // Cleaners can only see active properties
       where.active = true;
-    } else if (currentUser.role === 'SUPERVISOR') {
+  } else if (currentUser.role?.toLowerCase() === 'supervisor') {
       // Supervisors can see all properties but limited access
       where.active = filters.active !== undefined ? filters.active : true;
     } else {
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check permissions
-    if (!['ADMIN', 'MANAGER'].includes(currentUser.role)) {
+  if (!['admin', 'manager'].includes(currentUser.role?.toLowerCase() || '')) {
       return NextResponse.json(
         { error: 'Insufficient permissions to create properties' },
         { status: 403 }
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
         ...validatedData,
         // If no ownerId provided, assign to current user if they're owner/manager
         ownerId: validatedData.ownerId || (
-          ['OWNER', 'MANAGER'].includes(currentUser.role) ? currentUser.id : undefined
+          ['owner', 'manager'].includes(currentUser.role?.toLowerCase() || '') ? currentUser.id : undefined
         ),
       }
     });

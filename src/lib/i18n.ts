@@ -44,8 +44,12 @@ const en = {
 
     // Authentication
     auth: {
+      where_cleaning_meets_intelligence: "Where Cleaning Meets Intelligence",
       email: "Email",
       password: "Password",
+      sign_in: "Sign In",
+      demo_login: "Demo Login",
+      loading: "Loading...",
       login: "Login",
       logout: "Logout",
       emailPlaceholder: "Enter your email",
@@ -77,7 +81,8 @@ const en = {
       manager: "Manager",
       owner: "Owner",
       client: "Client",
-      cleaner: "Cleaner"
+      cleaner: "Cleaner",
+      admin: "Admin"
     },
 
     // Language
@@ -130,7 +135,12 @@ const en = {
       quickActions: "Quick Actions",
       recentActivity: "Recent Activity",
       upcomingCleanings: "Upcoming Cleanings",
-      performanceMetrics: "Performance Metrics"
+      performanceMetrics: "Performance Metrics",
+      adminDashboard: "Admin Dashboard",
+      adminDemo: "Admin Demo",
+      manageCleaners: "Manage Cleaners",
+      propertyOverview: "Property Overview",
+      reportsInsights: "Reports & Insights"
     },
 
     // Administrative Panel
@@ -420,8 +430,12 @@ const ptBR = {
 
     // Authentication
     auth: {
+      where_cleaning_meets_intelligence: "Onde a Limpeza Encontra a Inteligência",
       email: "Email",
       password: "Senha",
+      sign_in: "Entrar",
+      demo_login: "Login de Demonstração",
+      loading: "Carregando...",
       login: "Entrar",
       logout: "Sair",
       emailPlaceholder: "Digite seu email",
@@ -453,7 +467,8 @@ const ptBR = {
       manager: "Gerente",
       owner: "Proprietário",
       client: "Cliente",
-      cleaner: "Funcionário"
+      cleaner: "Funcionário",
+      admin: "Administrador"
     },
 
     // Navigation
@@ -500,7 +515,12 @@ const ptBR = {
       quickActions: "Ações Rápidas",
       recentActivity: "Atividade Recente",
       upcomingCleanings: "Próximas Limpezas",
-      performanceMetrics: "Métricas de Performance"
+      performanceMetrics: "Métricas de Performance",
+      adminDashboard: "Painel Administrativo",
+      adminDemo: "Admin Demo",
+      manageCleaners: "Gerenciar Funcionários",
+      propertyOverview: "Visão Geral de Propriedades",
+      reportsInsights: "Relatórios e Insights"
     },
 
     // Administrative Panel
@@ -799,8 +819,12 @@ const es = {
 
     // Authentication
     auth: {
+      where_cleaning_meets_intelligence: "Donde la Limpieza Encuentra la Inteligencia",
       email: "Email",
       password: "Contraseña",
+      sign_in: "Iniciar Sesión",
+      demo_login: "Inicio de Sesión de Demostración",
+      loading: "Cargando...",
       login: "Iniciar Sesión",
       logout: "Cerrar Sesión",
       emailPlaceholder: "Ingrese su email",
@@ -830,7 +854,8 @@ const es = {
       manager: "Gerente",
       owner: "Propietario",
       client: "Cliente",
-      cleaner: "Empleado"
+      cleaner: "Empleado",
+      admin: "Administrador"
     },
 
     // Navigation
@@ -877,7 +902,12 @@ const es = {
       quickActions: "Acciones Rápidas",
       recentActivity: "Actividad Reciente",
       upcomingCleanings: "Próximas Limpiezas",
-      performanceMetrics: "Métricas de Rendimiento"
+      performanceMetrics: "Métricas de Rendimiento",
+      adminDashboard: "Panel Administrativo",
+      adminDemo: "Admin Demo",
+      manageCleaners: "Gestionar Empleados",
+      propertyOverview: "Resumen de Propiedades",
+      reportsInsights: "Informes y Análisis"
     },
 
     // Administrative Panel
