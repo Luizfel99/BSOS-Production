@@ -131,30 +131,52 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Hydration effect - runs first to prevent mismatches
   useEffect(() => {
     setIsHydrated(true);
-    
-    // Determine user intent based on current URL
-    if (typeof window !== 'undefined') {
-      const currentPath = window.location.pathname;
-      const searchParams = new URLSearchParams(window.location.search);
-      
-      // Auto-redirect should happen for:
-      // 1. Protected routes (user came from middleware redirect)
-      // 2. Direct dashboard access
-      // 3. Any route that's not the login page or root
-      const isLoginIntent = currentPath === '/' || currentPath === '/login';
-      const hasRedirectParam = searchParams.has('redirect') || searchParams.has('from');
-      
-      // Only auto-redirect if user didn't intend to visit login page
-      setShouldAutoRedirect(!isLoginIntent || hasRedirectParam);
-      
-      console.log('🎯 User intent determined:', {
-        currentPath,
-        isLoginIntent,
-        hasRedirectParam,
-        shouldAutoRedirect: !isLoginIntent || hasRedirectParam
-      });
-    }
+    console.log('[BSOS-Auth] Client hydrated');
   }, []);
+
+  // Simplified session restoration - no loading screen
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    const savedUser = localStorage.getItem(STORAGE_KEYS.USER);
+    const savedTimestamp = localStorage.getItem(STORAGE_KEYS.TIMESTAMP);
+
+    console.log('[BSOS-Auth] Checking session:', { hasUser: !!savedUser, hasTimestamp: !!savedTimestamp });
+
+    if (savedUser && savedTimestamp) {
+      try {
+        // Check session expiry
+        const sessionAge = Date.now() - parseInt(savedTimestamp);
+        const isExpired = sessionAge > SESSION_TIMEOUT;
+
+        if (isExpired) {
+          console.log('[BSOS-Auth] Session expired, clearing');
+          clearSession();
+        } else {
+          // Restore session
+          const parsed = JSON.parse(savedUser);
+          
+          // Normalize role
+          const normalizedRole = String(parsed.role || '').toLowerCase();
+          parsed.role = normalizedRole;
+          
+          // Ensure permissions
+          if (!Array.isArray(parsed.permissions) || parsed.permissions.length === 0) {
+            parsed.permissions = ROLE_PERMISSIONS[normalizedRole as keyof typeof ROLE_PERMISSIONS] || [];
+          }
+
+          console.log('[BSOS-Auth] Session restored:', { email: parsed.email, role: parsed.role });
+          setUser(parsed);
+        }
+      } catch (err) {
+        console.error('[BSOS-Auth] Session restore failed:', err);
+        clearSession();
+      }
+    }
+
+    setAuthChecked(true);
+    setIsLoading(false);
+  }, [isHydrated]);
 
   // Helper function to set cookies for middleware
   const setCookies = (userData: User) => {
@@ -208,123 +230,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  // Verify and restore session on mount
-  useEffect(() => {
-    // Only run session verification after hydration is complete
-    if (!isHydrated) return;
-    
-    const verifySession = async () => {
-  console.log('[BSOS-Auth] Starting session verification');
-      
-      try {
-        // Check if we're in a browser environment (double check)
-        if (typeof window === 'undefined') {
-          console.log('⚠️ Not in browser environment, skipping session verification');
-          setAuthChecked(true);
-          setIsLoading(false);
-          return;
-        }
-
-        const storedUser = localStorage.getItem(STORAGE_KEYS.USER);
-        const storedTimestamp = localStorage.getItem(STORAGE_KEYS.TIMESTAMP);
-        const storedRole = localStorage.getItem(STORAGE_KEYS.ROLE);
-
-        // Debug session data
-  console.log('[BSOS-Auth] Session data found:', {
-          hasUser: !!storedUser,
-          hasTimestamp: !!storedTimestamp,
-          hasRole: !!storedRole,
-          timestamp: storedTimestamp ? new Date(parseInt(storedTimestamp)) : null
-        });
-
-        if (!storedUser || !storedTimestamp) {
-          console.log('[BSOS-Auth] No stored session found');
-          setAuthChecked(true);
-          setIsLoading(false);
-          return;
-        }
-
-        // Check session expiry
-        const sessionAge = Date.now() - parseInt(storedTimestamp);
-        const isExpired = sessionAge > SESSION_TIMEOUT;
-        
-  console.log('[BSOS-Auth] Session age check:', {
-          ageInHours: Math.round(sessionAge / (1000 * 60 * 60)),
-          maxAgeInHours: Math.round(SESSION_TIMEOUT / (1000 * 60 * 60)),
-          isExpired
-        });
-
-        if (isExpired) {
-          console.log('[BSOS-Auth] Session expired, clearing data');
-          clearSession();
-          setAuthChecked(true);
-          setIsLoading(false);
-          return;
-        }
-
-        // Parse and validate user data
-        let parsedUser;
-        try {
-          parsedUser = JSON.parse(storedUser);
-        } catch (parseError) {
-          console.error('[BSOS-Auth] Failed to parse stored user data:', parseError);
-          clearSession();
-          setAuthChecked(true);
-          setIsLoading(false);
-          return;
-        }
-        
-        // Validate user structure
-        if (!parsedUser?.id || !parsedUser?.role || !parsedUser?.email) {
-          console.log('[BSOS-Auth] Invalid user data structure:', parsedUser);
-          clearSession();
-          setAuthChecked(true);
-          setIsLoading(false);
-          return;
-        }
-
-        // Validate and normalize role
-        const validRoles = ['cleaner', 'supervisor', 'manager', 'owner', 'client', 'admin'];
-        const userRoleLower = parsedUser.role?.toLowerCase();
-        if (!userRoleLower || !validRoles.includes(userRoleLower)) {
-          console.log('[BSOS-Auth] Invalid user role:', parsedUser.role);
-          clearSession();
-          setAuthChecked(true);
-          setIsLoading(false);
-          return;
-        }
-
-        // Normalize stored user role and permissions (handles sessions created before normalization)
-        parsedUser.role = userRoleLower;
-        if (!Array.isArray(parsedUser.permissions) || parsedUser.permissions.length === 0) {
-          parsedUser.permissions = ROLE_PERMISSIONS[userRoleLower as keyof typeof ROLE_PERMISSIONS] || [];
-        }
-
-        // Restore session successfully
-  console.log('[BSOS-Auth] Valid session found, restoring user:', {
-          email: parsedUser.email,
-          role: parsedUser.role,
-          id: parsedUser.id
-        });
-        
-        setUser(parsedUser);
-        
-        // Refresh session timestamp to extend session
-        saveSession(parsedUser);
-        
-      } catch (error) {
-  console.error('[BSOS-Auth] Session verification failed:', error);
-        clearSession();
-      } finally {
-        setIsLoading(false);
-        setAuthChecked(true);
-  console.log('[BSOS-Auth] Session verification complete');
-      }
-    };
-
-    verifySession();
-  }, [isHydrated]);
-
   // Login function
   const login = async (email: string, password: string, role?: string): Promise<boolean> => {
   console.log('[BSOS-Auth] Login attempt', { email, role: role || 'auto-detect' });
@@ -368,9 +273,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         // Important: Keep authChecked as true since user is now authenticated
         setAuthChecked(true);
-
-        // Add a small delay to ensure state has propagated before resolving
-        await new Promise(resolve => setTimeout(resolve, 100));
 
   console.log('[BSOS-Auth] Login completed for', apiUser.email, 'role:', apiUser.role);
         return true;
