@@ -28,7 +28,12 @@ export const PROTECTED_ROUTES: RouteProtectionConfig[] = [
   // Dashboard routes
   {
     path: '/dashboard',
-    allowedRoles: ['cleaner', 'supervisor', 'manager', 'owner', 'client']
+    allowedRoles: ['cleaner', 'supervisor', 'manager', 'owner', 'client', 'admin']
+  },
+  {
+    path: '/dashboard/admin',
+    allowedRoles: ['admin'],
+    requiredPermission: { module: 'dashboard', action: 'access' }
   },
   
   // Task management routes
@@ -111,7 +116,7 @@ export const PROTECTED_ROUTES: RouteProtectionConfig[] = [
   },
   {
     path: '/admin',
-    allowedRoles: ['owner'],
+    allowedRoles: ['owner', 'admin'],
     requiredPermission: { module: 'users', action: 'manage_users' }
   },
   
@@ -261,13 +266,18 @@ export const useRouteGuard = () => {
         return;
       }
 
-      // If user is not authenticated, redirect to login with small delay
+      // If user is not authenticated, redirect to login
+      // Use replace() only for forced redirects to avoid cluttering browser history
       if (!user || !isAuthenticated) {
+        console.log('[BSOS-Auth] Unauthenticated access attempt to', pathname, '-> redirect /login');
         setTimeout(() => {
-          router.push('/login');
-        }, 100);
+          router.replace('/login');
+        }, 50);
         return;
       }
+
+      // Debug current user + pathname
+      console.debug('[RouteGuard] Checking access', { pathname, userRole: user?.role, authChecked, isLoading });
 
       // Find route configuration
       const routeConfig = PROTECTED_ROUTES.find(route => {
@@ -288,9 +298,13 @@ export const useRouteGuard = () => {
       let deniedReason = '';
       let requiredRoles: string[] = [];
 
-      // Check role-based access
+      // Check role-based access (case-insensitive comparison)
       if (routeConfig.allowedRoles) {
-        if (!user?.role || !routeConfig.allowedRoles.includes(user.role)) {
+        const userRoleLower = user?.role?.toLowerCase();
+        const allowedRolesLower = routeConfig.allowedRoles.map(r => r.toLowerCase());
+        const roleMatch = !!userRoleLower && allowedRolesLower.includes(userRoleLower);
+        console.debug('[RouteGuard] Role check', { userRoleLower, allowedRolesLower, roleMatch });
+        if (!roleMatch) {
           access = false;
           deniedReason = `Esta página requer um dos seguintes perfis: ${routeConfig.allowedRoles.join(', ')}`;
           requiredRoles = routeConfig.allowedRoles;
@@ -300,7 +314,9 @@ export const useRouteGuard = () => {
       // Check permission-based access
       if (access && routeConfig.requiredPermission) {
         const { module, action } = routeConfig.requiredPermission;
-        if (!hasPermission(user, module, action)) {
+        const permissionOk = hasPermission(user, module, action);
+        console.debug('[RouteGuard] Permission check', { module, action, permissionOk });
+        if (!permissionOk) {
           access = false;
           deniedReason = `Você não tem permissão para realizar a ação '${action}' no módulo '${module}'`;
         }
@@ -322,8 +338,9 @@ export const useRouteGuard = () => {
           requiredRoles
         });
 
-        // If redirect is specified, redirect instead of showing access denied
+        // If redirect is specified, use push to allow back navigation
         if (routeConfig.redirectTo) {
+          console.log('[BSOS-Auth] Access denied, redirecting to', routeConfig.redirectTo);
           router.push(routeConfig.redirectTo);
           return;
         }

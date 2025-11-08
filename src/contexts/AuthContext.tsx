@@ -16,7 +16,7 @@ import {
   Action
 } from '@/utils/rbac';
 
-export type UserRole = 'cleaner' | 'supervisor' | 'manager' | 'owner' | 'client';
+export type UserRole = 'cleaner' | 'supervisor' | 'manager' | 'owner' | 'client' | 'admin';
 
 export interface User {
   id: string;
@@ -184,24 +184,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const saveSession = (userData: User) => {
     try {
       const timestamp = Date.now().toString();
+      console.log('[BSOS-Auth] Saving session', { email: userData.email, role: userData.role, timestamp });
       localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData));
       localStorage.setItem(STORAGE_KEYS.TIMESTAMP, timestamp);
       localStorage.setItem(STORAGE_KEYS.ROLE, userData.role);
       setCookies(userData);
     } catch (error) {
-      console.error('Failed to save session:', error);
+      console.error('[BSOS-Auth] Failed to save session:', error);
     }
   };
 
   // Helper function to clear session
   const clearSession = () => {
     try {
+      console.log('[BSOS-Auth] Clearing session');
       localStorage.removeItem(STORAGE_KEYS.USER);
       localStorage.removeItem(STORAGE_KEYS.TIMESTAMP);
       localStorage.removeItem(STORAGE_KEYS.ROLE);
+      localStorage.removeItem('auth-token');
       clearCookies();
     } catch (error) {
-      console.warn('Failed to clear session:', error);
+      console.warn('[BSOS-Auth] Failed to clear session:', error);
     }
   };
 
@@ -211,7 +214,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (!isHydrated) return;
     
     const verifySession = async () => {
-      console.log('🔐 Starting session verification...');
+  console.log('[BSOS-Auth] Starting session verification');
       
       try {
         // Check if we're in a browser environment (double check)
@@ -227,7 +230,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const storedRole = localStorage.getItem(STORAGE_KEYS.ROLE);
 
         // Debug session data
-        console.log('📊 Session data found:', {
+  console.log('[BSOS-Auth] Session data found:', {
           hasUser: !!storedUser,
           hasTimestamp: !!storedTimestamp,
           hasRole: !!storedRole,
@@ -235,7 +238,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
 
         if (!storedUser || !storedTimestamp) {
-          console.log('❌ No stored session found');
+          console.log('[BSOS-Auth] No stored session found');
           setAuthChecked(true);
           setIsLoading(false);
           return;
@@ -245,14 +248,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const sessionAge = Date.now() - parseInt(storedTimestamp);
         const isExpired = sessionAge > SESSION_TIMEOUT;
         
-        console.log('⏰ Session age check:', {
+  console.log('[BSOS-Auth] Session age check:', {
           ageInHours: Math.round(sessionAge / (1000 * 60 * 60)),
           maxAgeInHours: Math.round(SESSION_TIMEOUT / (1000 * 60 * 60)),
           isExpired
         });
 
         if (isExpired) {
-          console.log('⏰ Session expired, clearing data');
+          console.log('[BSOS-Auth] Session expired, clearing data');
           clearSession();
           setAuthChecked(true);
           setIsLoading(false);
@@ -264,7 +267,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         try {
           parsedUser = JSON.parse(storedUser);
         } catch (parseError) {
-          console.error('❌ Failed to parse stored user data:', parseError);
+          console.error('[BSOS-Auth] Failed to parse stored user data:', parseError);
           clearSession();
           setAuthChecked(true);
           setIsLoading(false);
@@ -273,25 +276,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
         
         // Validate user structure
         if (!parsedUser?.id || !parsedUser?.role || !parsedUser?.email) {
-          console.log('❌ Invalid user data structure:', parsedUser);
+          console.log('[BSOS-Auth] Invalid user data structure:', parsedUser);
           clearSession();
           setAuthChecked(true);
           setIsLoading(false);
           return;
         }
 
-        // Validate role
-        const validRoles = ['cleaner', 'supervisor', 'manager', 'owner', 'client'];
-        if (!validRoles.includes(parsedUser.role)) {
-          console.log('❌ Invalid user role:', parsedUser.role);
+        // Validate and normalize role
+        const validRoles = ['cleaner', 'supervisor', 'manager', 'owner', 'client', 'admin'];
+        const userRoleLower = parsedUser.role?.toLowerCase();
+        if (!userRoleLower || !validRoles.includes(userRoleLower)) {
+          console.log('[BSOS-Auth] Invalid user role:', parsedUser.role);
           clearSession();
           setAuthChecked(true);
           setIsLoading(false);
           return;
+        }
+
+        // Normalize stored user role and permissions (handles sessions created before normalization)
+        parsedUser.role = userRoleLower;
+        if (!Array.isArray(parsedUser.permissions) || parsedUser.permissions.length === 0) {
+          parsedUser.permissions = ROLE_PERMISSIONS[userRoleLower as keyof typeof ROLE_PERMISSIONS] || [];
         }
 
         // Restore session successfully
-        console.log('✅ Valid session found, restoring user:', {
+  console.log('[BSOS-Auth] Valid session found, restoring user:', {
           email: parsedUser.email,
           role: parsedUser.role,
           id: parsedUser.id
@@ -303,12 +313,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         saveSession(parsedUser);
         
       } catch (error) {
-        console.error('💥 Session verification failed:', error);
+  console.error('[BSOS-Auth] Session verification failed:', error);
         clearSession();
       } finally {
         setIsLoading(false);
         setAuthChecked(true);
-        console.log('🏁 Session verification complete');
+  console.log('[BSOS-Auth] Session verification complete');
       }
     };
 
@@ -317,7 +327,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Login function
   const login = async (email: string, password: string, role?: string): Promise<boolean> => {
-    console.log('🔑 Login attempt started:', { email, role: role || 'auto-detect' });
+  console.log('[BSOS-Auth] Login attempt', { email, role: role || 'auto-detect' });
 
     try {
       setIsLoading(true);
@@ -331,7 +341,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const data = await res.json();
 
       if (data.success) {
-        console.log('✅ Login successful:', {
+  console.log('[BSOS-Auth] Login successful:', {
           email: data.user.email,
           role: data.user.role
         });
@@ -339,19 +349,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Save token to localStorage
         localStorage.setItem('auth-token', data.token);
 
+        // Normalize role to lowercase for consistent RBAC lookups
+        const roleLower = String(data.user.role || '').toLowerCase();
+
         // Create user object from API response
         const apiUser: User = {
           id: data.user.id,
           name: data.user.name,
           email: data.user.email,
-          role: data.user.role as UserRole,
+          role: roleLower as UserRole,
           phone: data.user.phone,
           avatar: data.user.avatar,
-          permissions: ROLE_PERMISSIONS[data.user.role as keyof typeof ROLE_PERMISSIONS] || []
+          permissions: ROLE_PERMISSIONS[roleLower as keyof typeof ROLE_PERMISSIONS] || []
         };
 
-        setUser(apiUser);
-        saveSession(apiUser);
+  setUser(apiUser);
+  saveSession(apiUser);
 
         // Important: Keep authChecked as true since user is now authenticated
         setAuthChecked(true);
@@ -359,27 +372,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Add a small delay to ensure state has propagated before resolving
         await new Promise(resolve => setTimeout(resolve, 100));
 
-        console.log('🎉 Login completed successfully for user:', apiUser.email, 'Role:', apiUser.role);
+  console.log('[BSOS-Auth] Login completed for', apiUser.email, 'role:', apiUser.role);
         return true;
       } else {
-        console.error('❌ Login failed:', data.error || 'Invalid credentials');
+  console.error('[BSOS-Auth] Login failed:', data.error || 'Invalid credentials');
         return false;
       }
     } catch (error) {
-      console.error('💥 Login error:', error);
+  console.error('[BSOS-Auth] Login error:', error);
       return false;
     } finally {
       setIsLoading(false);
-      console.log('🏁 Login process complete');
+  console.log('[BSOS-Auth] Login process complete');
     }
   };
 
   // Logout function
   const logout = () => {
-    console.log('🚪 Logout initiated');
+  console.log('[BSOS-Auth] Logout initiated');
     
     try {
-      console.log('🧹 Clearing user state and session data');
+  console.log('[BSOS-Auth] Clearing user state and session data');
       
       // Clear user state
       setUser(null);
@@ -387,11 +400,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Clear all stored data
       clearSession();
       
-      console.log('✅ User logged out successfully');
+  console.log('[BSOS-Auth] User logged out successfully');
     } catch (error) {
-      console.warn('⚠️ Logout error:', error);
+  console.warn('[BSOS-Auth] Logout error:', error);
     } finally {
-      console.log('🏁 Logout complete');
+  console.log('[BSOS-Auth] Logout complete');
     }
   };
 
