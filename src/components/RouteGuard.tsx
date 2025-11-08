@@ -254,6 +254,13 @@ export const useRouteGuard = () => {
 
   useEffect(() => {
     const checkRouteAccess = () => {
+      // Allow public routes without checking
+      if (pathname === '/login' || pathname === '/') {
+        setHasAccess(true);
+        setIsChecking(false);
+        return;
+      }
+
       // Wait for hydration first
       if (!isHydrated) {
         setIsChecking(true);
@@ -365,16 +372,9 @@ export const RouteGuard: React.FC<{ children: React.ReactNode }> = ({ children }
   const { isChecking, hasAccess, accessDeniedInfo, userRole } = useRouteGuard();
   const pathname = usePathname();
 
-  // Show loading while checking access
+  // No loading screen - return null while checking to avoid flash
   if (isChecking) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Verificando permissões...</p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   // Show access denied if no access
