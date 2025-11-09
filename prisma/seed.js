@@ -1,89 +1,40 @@
-// prisma/seed.js
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
-
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('🌱 Starting database seed...');
-    
-    // Password for all demo accounts: 'demo'
-    const demoPasswordHash = await bcrypt.hash('demo', 10);
-    // Password for admin: 'admin123'
-    const adminPasswordHash = await bcrypt.hash('admin123', 10);
+  console.log('🌱 Starting database seed...');
+  const roles = ['admin', 'owner', 'manager', 'supervisor', 'cleaner'];
+  const users = [];
 
-    // Create admin user
-    const admin = await prisma.user.upsert({
-        where: { email: 'admin@bsos.com' },
-        update: {},
-        create: {
-            name: 'System Administrator',
-            email: 'admin@bsos.com',
-            passwordHash: adminPasswordHash,
-            role: 'ADMIN',
-            active: true,
-        },
+  for (const role of roles) {
+    const passwordHash = await bcrypt.hash('admin123', 10);
+    users.push({
+      name: `${role.charAt(0).toUpperCase() + role.slice(1)} Demo`,
+      email: `${role}@bsos.com`,
+      passwordHash,
+      role,
+      createdAt: new Date(),
     });
-    console.log('✅ Admin user created:', admin.email);
+  }
 
-    // Create demo users matching LoginScreen demo accounts
-    const demoUsers = [
-        {
-            email: 'maria@cleaner.com',
-            name: 'Maria Silva',
-            role: 'CLEANER',
-        },
-        {
-            email: 'joao@supervisor.com',
-            name: 'João Santos',
-            role: 'SUPERVISOR',
-        },
-        {
-            email: 'ana@manager.com',
-            name: 'Ana Costa',
-            role: 'MANAGER',
-        },
-        {
-            email: 'pedro@owner.com',
-            name: 'Pedro Oliveira',
-            role: 'OWNER',
-        },
-        {
-            email: 'carlos@client.com',
-            name: 'Carlos Mendes',
-            role: 'CLIENT',
-        },
-    ];
+  for (const u of users) {
+    await prisma.user.upsert({
+      where: { email: u.email },
+      update: u,
+      create: u,
+    });
+  }
 
-    for (const userData of demoUsers) {
-        const user = await prisma.user.upsert({
-            where: { email: userData.email },
-            update: {},
-            create: {
-                name: userData.name,
-                email: userData.email,
-                passwordHash: demoPasswordHash,
-                role: userData.role,
-                active: true,
-            },
-        });
-        console.log('✅ Demo user created:', user.email, '-', user.role);
-    }
-
-    console.log('\n🎉 Database seeding completed successfully!');
-    console.log('\n📝 Login credentials:');
-    console.log('   Admin: admin@bsos.com / admin123');
-    console.log('   Demo users: <email> / demo');
-    console.log('   Examples:');
-    console.log('   - maria@cleaner.com / demo');
-    console.log('   - joao@supervisor.com / demo');
-    console.log('   - ana@manager.com / demo');
+  console.log('✅ Demo users seeded successfully!');
 }
 
 main()
-    .then(() => prisma.$disconnect())
-    .catch((e) => {
-        console.error('❌ Error seeding database:', e);
-        prisma.$disconnect();
-        process.exit(1);
-    });
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error('❌ Error seeding database:', e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
