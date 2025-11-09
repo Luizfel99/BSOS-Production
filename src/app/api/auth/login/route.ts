@@ -19,18 +19,12 @@ export async function POST(req: Request) {
         email: true,
         passwordHash: true,
         role: true,
-        active: true,
       },
     });
 
     if (!user) {
       console.error(`❌ Login failed: User not found (${email})`);
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-    }
-
-    if (!user.active) {
-      console.error(`🚫 Login failed: Inactive user (${email})`);
-      return NextResponse.json({ error: 'User inactive' }, { status: 403 });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
