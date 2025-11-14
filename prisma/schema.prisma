@@ -1,3 +1,4 @@
+// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,56 +9,11 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  name          String
-  email         String         @unique
-  passwordHash  String
-  role          String         @default("Owner")
-  createdAt     DateTime       @default(now())
-  assignedTasks Assignment[]
-  notifications Notification[]
-}
-
-model Property {
-  id        String   @id @default(cuid())
-  name      String
-  address   String
-  createdAt DateTime @default(now())
-  tasks     Task[]
-}
-
-model Task {
-  id          String       @id @default(cuid())
-  title       String
-  description String?
-  status      String       @default("PENDING")
-  priority    String       @default("MEDIUM")
-  dueDate     DateTime?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  propertyId  String?
-  assignments Assignment[]
-  property    Property?    @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-}
-
-model Assignment {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  taskId    String
-  userId    String
-  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([taskId, userId])
-}
-
-model Notification {
-  id        String   @id @default(cuid())
-  title     String
-  message   String
-  type      String   @default("INFO")
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         String
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
 }

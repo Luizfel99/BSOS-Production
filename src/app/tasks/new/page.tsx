@@ -89,9 +89,7 @@ export default function NewTaskPage() {
         dueDate: data.dueDate ? new Date(data.dueDate) : undefined
       };
 
-  // taskData is validated by Zod; cast to TaskData to satisfy the
-  // service signature and keep runtime validation via the schema.
-  const response = await createTask(taskData as unknown as import('@/services/tasks').TaskData);
+      const response = await createTask(taskData);
       
       if (response.success) {
         toast.success('Tarefa criada com sucesso!');

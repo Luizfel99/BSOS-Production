@@ -1,40 +1,30 @@
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+// prisma/seed.js
+const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcryptjs');
+
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting database seed...');
-  const roles = ['admin', 'owner', 'manager', 'supervisor', 'cleaner'];
-  const users = [];
-
-  for (const role of roles) {
     const passwordHash = await bcrypt.hash('admin123', 10);
-    users.push({
-      name: `${role.charAt(0).toUpperCase() + role.slice(1)} Demo`,
-      email: `${role}@bsos.com`,
-      passwordHash,
-      role,
-      createdAt: new Date(),
-    });
-  }
 
-  for (const u of users) {
-    await prisma.user.upsert({
-      where: { email: u.email },
-      update: u,
-      create: u,
+    const admin = await prisma.user.upsert({
+        where: { email: 'admin@bsos.com' },
+        update: {},
+        create: {
+            name: 'Admin Demo',
+            email: 'admin@bsos.com',
+            passwordHash,
+            role: 'ADMIN',
+        },
     });
-  }
 
-  console.log('✅ Demo users seeded successfully!');
+    console.log('✅ Admin user created:', admin.email);
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error('❌ Error seeding database:', e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+    .then(() => prisma.$disconnect())
+    .catch((e) => {
+        console.error('❌ Error seeding database:', e);
+        prisma.$disconnect();
+        process.exit(1);
+    });

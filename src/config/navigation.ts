@@ -31,7 +31,7 @@ export const navigationItems: NavigationItem[] = [
     label: 'Dashboard',
     icon: Home,
     href: '/dashboard',
-    roles: ['OWNER', 'MANAGER', 'SUPERVISOR', 'CLEANER', 'CLIENT', 'ADMIN'],
+    roles: ['OWNER', 'MANAGER', 'SUPERVISOR', 'CLEANER', 'CLIENT'],
     priority: 1,
   },
   {
@@ -39,7 +39,7 @@ export const navigationItems: NavigationItem[] = [
     label: 'Tarefas',
     icon: Calendar,
     href: '/tasks',
-    roles: ['OWNER', 'MANAGER', 'SUPERVISOR', 'CLEANER', 'ADMIN'],
+    roles: ['OWNER', 'MANAGER', 'SUPERVISOR', 'CLEANER'],
     priority: 2,
   },
   {
@@ -47,7 +47,7 @@ export const navigationItems: NavigationItem[] = [
     label: 'Propriedades',
     icon: Home,
     href: '/properties',
-    roles: ['OWNER', 'MANAGER', 'SUPERVISOR', 'ADMIN'],
+    roles: ['OWNER', 'MANAGER', 'SUPERVISOR'],
     priority: 3,
   },
   {
@@ -55,7 +55,7 @@ export const navigationItems: NavigationItem[] = [
     label: 'Equipe',
     icon: Users,
     href: '/team/manage',
-    roles: ['OWNER', 'MANAGER', 'ADMIN'],
+    roles: ['OWNER', 'MANAGER'],
     priority: 4,
   },
   {
@@ -63,7 +63,7 @@ export const navigationItems: NavigationItem[] = [
     label: 'Financeiro',
     icon: DollarSign,
     href: '/finance',
-    roles: ['OWNER', 'MANAGER', 'ADMIN'],
+    roles: ['OWNER', 'MANAGER'],
     priority: 5,
   },
   {
@@ -71,7 +71,7 @@ export const navigationItems: NavigationItem[] = [
     label: 'Analytics',
     icon: BarChart3,
     href: '/analytics',
-    roles: ['OWNER', 'MANAGER', 'SUPERVISOR', 'ADMIN'],
+    roles: ['OWNER', 'MANAGER', 'SUPERVISOR'],
     priority: 6,
   },
   {
@@ -79,7 +79,7 @@ export const navigationItems: NavigationItem[] = [
     label: 'Notificações',
     icon: Bell,
     href: '/notifications',
-    roles: ['OWNER', 'MANAGER', 'SUPERVISOR', 'CLEANER', 'CLIENT', 'ADMIN'],
+    roles: ['OWNER', 'MANAGER', 'SUPERVISOR', 'CLEANER', 'CLIENT'],
     priority: 7,
   },
   {
@@ -87,7 +87,7 @@ export const navigationItems: NavigationItem[] = [
     label: 'Configurações',
     icon: Settings,
     href: '/settings',
-    roles: ['OWNER', 'MANAGER', 'ADMIN'],
+    roles: ['OWNER', 'MANAGER'],
     priority: 8,
   },
 ];
@@ -96,10 +96,8 @@ export const navigationItems: NavigationItem[] = [
  * Get navigation items filtered by user role
  */
 export function getNavigationForRole(userRole: string): NavigationItem[] {
-  if (!userRole) return [];
-  const roleUpper = userRole.toUpperCase();
   return navigationItems
-    .filter(item => item.roles.map(r => r.toUpperCase()).includes(roleUpper))
+    .filter(item => item.roles.includes(userRole.toUpperCase()))
     .sort((a, b) => a.priority - b.priority);
 }
 
@@ -107,11 +105,9 @@ export function getNavigationForRole(userRole: string): NavigationItem[] {
  * Check if user has access to a specific route
  */
 export function hasRouteAccess(route: string, userRole: string): boolean {
-  if (!userRole) return false;
-  const roleUpper = userRole.toUpperCase();
   const item = navigationItems.find(item => item.href === route);
-  if (!item) return true; // Allow access to routes not explicitly listed
-  return item.roles.map(r => r.toUpperCase()).includes(roleUpper);
+  if (!item) return true; // Allow access to routes not in navigation
+  return item.roles.includes(userRole.toUpperCase());
 }
 
 export default navigationItems;

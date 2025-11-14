@@ -41,16 +41,13 @@ export default function NewPropertyPage() {
 
   const onSubmit = async (data: PropertyFormData) => {
     setIsSubmitting(true);
-
+    
     try {
-      // The Zod schema validates the fields at runtime, but react-hook-form's
-      // inferred types can be broader. Cast to CreatePropertyData to satisfy
-      // the service signature while keeping runtime validation in place.
       await createProperty({
-        ...(data as CreatePropertyData),
+        ...data,
         contactEmail: data.contactEmail || undefined
       });
-
+      
       toast.success('Propriedade criada com sucesso!');
       router.push('/properties');
     } catch (error) {
@@ -66,7 +63,7 @@ export default function NewPropertyPage() {
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <motion.div
+          <motion.div 
             className="mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
