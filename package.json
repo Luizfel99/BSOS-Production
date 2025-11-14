@@ -3,6 +3,9 @@
   "version": "2.0.0",
   "description": "BSOS - Where Cleaning Meets Intelligence. Sistema Operacional Inteligente para Gestão de Limpeza",
   "private": true,
+  "prisma": {
+    "seed": "node ./prisma/seed.js"
+  },
   "scripts": {
     "dev": "next dev -p 3020",
     "build": "prisma generate && next build",
@@ -28,6 +31,7 @@
     "@types/pg": "^8.15.5",
     "@vercel/analytics": "^1.5.0",
     "autoprefixer": "^10.4.21",
+    "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
@@ -45,6 +49,7 @@
     "react-hook-form": "^7.47.0",
     "react-hot-toast": "^2.6.0",
     "react-i18next": "^16.0.0",
+    "react-icons": "^5.5.0",
     "recharts": "^3.2.1",
     "stripe": "^19.1.0",
     "tailwind-merge": "^1.14.0",
