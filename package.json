@@ -18,6 +18,7 @@
     "setup-production": "node scripts/setup-production.js",
     "db:migrate": "node scripts/migrate.js",
     "db:schema": "psql $DATABASE_URL -f scripts/database-schema.sql",
+    "db:seed": "npx prisma db seed",
     "deploy:vercel": "vercel --prod",
     "deploy:production": "node scripts/deploy-production.js",
     "test": "echo \"No tests specified\" && exit 0",

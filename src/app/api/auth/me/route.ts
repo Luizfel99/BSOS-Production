@@ -10,7 +10,7 @@ export async function GET(req: Request) {
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json(
         { error: "Token não fornecido" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -39,14 +39,14 @@ export async function GET(req: Request) {
     if (!user) {
       return NextResponse.json(
         { error: "Usuário não encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
     if (!user.active) {
       return NextResponse.json(
         { error: "Usuário desativado" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -74,7 +74,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(
       { error: "Erro ao buscar usuário" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

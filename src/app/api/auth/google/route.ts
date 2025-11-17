@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
 export async function HEAD() {
-  const ok = !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET;
+  const ok =
+    !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET;
   return new NextResponse(null, { status: ok ? 200 : 501 });
 }
 
@@ -13,5 +14,10 @@ export async function GET() {
     );
   }
   // why: placeholder – aqui entraria sua integração real (NextAuth/Passport/OAuth).
-  return NextResponse.redirect(new URL("/login?oauth=google-ready", process.env.APP_URL ?? "http://localhost:3020"));
+  return NextResponse.redirect(
+    new URL(
+      "/login?oauth=google-ready",
+      process.env.APP_URL ?? "http://localhost:3020"
+    )
+  );
 }

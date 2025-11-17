@@ -8,7 +8,7 @@ declare global {
 
 function makePrisma(): PrismaClient {
   const useNeon =
-    (process.env.NEON_HTTP?.toLowerCase() === "true") ||
+    process.env.NEON_HTTP?.toLowerCase() === "true" ||
     process.env.VERCEL === "1";
 
   // Simple DSN usage (Neon requires sslmode=require no DATABASE_URL)
