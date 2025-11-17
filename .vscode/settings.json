@@ -24,5 +24,6 @@
     "*": true,
     "typescript": false,
     "typescriptreact": false
-  }
+  },
+  "prisma.pinToPrisma6": true
 }

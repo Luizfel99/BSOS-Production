@@ -7,7 +7,7 @@
     "seed": "node ./prisma/seed.js"
   },
   "scripts": {
-    "predev": "node scripts/kill-port.mjs",
+    "predev": "bash scripts/kill-ports.sh",
     "dev": "node scripts/dev-with-fallback.mjs",
     "who-owns-port": "node scripts/who-owns-port.mjs",
     "prestart": "sh -c 'rm -rf .next || true'",

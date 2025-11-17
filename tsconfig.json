@@ -34,11 +34,12 @@
     ]
   },
   "include": [
-    "src/app/**/*.{ts,tsx}",
-    "src/components/**/*.{ts,tsx}",
-    "src/contexts/**/*.{ts,tsx}",
-    "src/hooks/**/*.{ts,tsx}",
-    "src/services/**/*.{ts,tsx}"
+    "src/app/**/*",
+    "src/components/**/*",
+    "src/contexts/**/*",
+    "src/hooks/**/*",
+    "src/services/**/*",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
@@ -47,8 +48,6 @@
     "**/backup*/**",
     "**/.history/**",
     "**/*.backup.*",
-    "**/*.backup2.*",
-    "**/*.bak*",
-    "backups_before_login_update/**"
+    "**/*.bak*"
   ]
 }
