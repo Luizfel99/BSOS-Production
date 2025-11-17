@@ -4,7 +4,7 @@
   "description": "BSOS - Where Cleaning Meets Intelligence. Sistema Operacional Inteligente para Gestão de Limpeza",
   "private": true,
   "prisma": {
-    "seed": "node ./prisma/seed.js"
+    "seed": "node --import=dotenv/config ./prisma/seed.mjs"
   },
   "scripts": {
     "predev": "bash scripts/kill-ports.sh",
