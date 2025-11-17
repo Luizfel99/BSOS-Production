@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     if (!token || !password) {
       return NextResponse.json(
         { error: "Token e senha são obrigatórios" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     if (password.length < 6) {
       return NextResponse.json(
         { error: "Senha deve ter no mínimo 6 caracteres" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -45,15 +45,15 @@ export async function POST(req: Request) {
     // Deletar token usado
     // await prisma.resetToken.delete({ where: { token } });
 
-    return NextResponse.json({ 
-      success: true, 
-      message: "Senha alterada com sucesso" 
+    return NextResponse.json({
+      success: true,
+      message: "Senha alterada com sucesso",
     });
   } catch (error) {
     console.error("Error in reset-password:", error);
     return NextResponse.json(
       { error: "Erro ao resetar senha" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

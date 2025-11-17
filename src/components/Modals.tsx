@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 interface ModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ interface ModalProps {
 
 interface InputFieldProps {
   label: string;
-  type?: 'text' | 'number' | 'date' | 'time' | 'textarea' | 'select';
+  type?: "text" | "number" | "date" | "time" | "textarea" | "select";
   value: string | number;
   onChange: (value: string | number) => void;
   options?: { value: string; label: string }[];
@@ -21,7 +21,12 @@ interface InputFieldProps {
 }
 
 // Modal Base Component
-export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+export const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -47,27 +52,33 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
 // Input Field Component
 export const InputField: React.FC<InputFieldProps> = ({
   label,
-  type = 'text',
+  type = "text",
   value,
   onChange,
   options,
   placeholder,
   required = false,
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const newValue = type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value;
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const newValue =
+      type === "number" ? parseFloat(e.target.value) || 0 : e.target.value;
     onChange(newValue);
   };
 
-  const baseClasses = "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent";
+  const baseClasses =
+    "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent";
 
   return (
     <div className="mb-4">
       <label className="block text-sm font-medium text-gray-700 mb-1">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
-      
-      {type === 'textarea' ? (
+
+      {type === "textarea" ? (
         <textarea
           value={value as string}
           onChange={handleChange}
@@ -75,14 +86,14 @@ export const InputField: React.FC<InputFieldProps> = ({
           className={`${baseClasses} resize-none h-20`}
           required={required}
         />
-      ) : type === 'select' && options ? (
+      ) : type === "select" && options ? (
         <select
           value={value as string}
           onChange={handleChange}
           className={baseClasses}
           required={required}
         >
-          <option value="">{placeholder || 'Selecione...'}</option>
+          <option value="">{placeholder || "Selecione..."}</option>
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -120,16 +131,16 @@ export const EditValuesModal: React.FC<EditValuesModalProps> = ({
   onSave,
 }) => {
   const [newValue, setNewValue] = useState(currentValue);
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState("");
 
   const handleSave = () => {
     if (!reason.trim()) {
-      toast.error('Motivo da alteração é obrigatório');
+      toast.error("Motivo da alteração é obrigatório");
       return;
     }
     onSave(newValue, reason);
     onClose();
-    setReason('');
+    setReason("");
   };
 
   return (
@@ -142,7 +153,7 @@ export const EditValuesModal: React.FC<EditValuesModalProps> = ({
         placeholder="0.00"
         required
       />
-      
+
       <InputField
         label="Motivo da Alteração"
         type="textarea"
@@ -185,42 +196,46 @@ export const BonusModal: React.FC<BonusModalProps> = ({
   onSave,
 }) => {
   const [bonus, setBonus] = useState(0);
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState("");
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
 
   const handleSave = () => {
     if (!reason.trim()) {
-      toast.error('Motivo do bônus é obrigatório');
+      toast.error("Motivo do bônus é obrigatório");
       return;
     }
     if (bonus <= 0) {
-      toast.error('Valor do bônus deve ser positivo');
+      toast.error("Valor do bônus deve ser positivo");
       return;
     }
     onSave(bonus, reason, month, year);
     onClose();
     setBonus(0);
-    setReason('');
+    setReason("");
   };
 
   const monthOptions = [
-    { value: '1', label: 'Janeiro' },
-    { value: '2', label: 'Fevereiro' },
-    { value: '3', label: 'Março' },
-    { value: '4', label: 'Abril' },
-    { value: '5', label: 'Maio' },
-    { value: '6', label: 'Junho' },
-    { value: '7', label: 'Julho' },
-    { value: '8', label: 'Agosto' },
-    { value: '9', label: 'Setembro' },
-    { value: '10', label: 'Outubro' },
-    { value: '11', label: 'Novembro' },
-    { value: '12', label: 'Dezembro' },
+    { value: "1", label: "Janeiro" },
+    { value: "2", label: "Fevereiro" },
+    { value: "3", label: "Março" },
+    { value: "4", label: "Abril" },
+    { value: "5", label: "Maio" },
+    { value: "6", label: "Junho" },
+    { value: "7", label: "Julho" },
+    { value: "8", label: "Agosto" },
+    { value: "9", label: "Setembro" },
+    { value: "10", label: "Outubro" },
+    { value: "11", label: "Novembro" },
+    { value: "12", label: "Dezembro" },
   ];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`Configurar Bônus - ${employeeName}`}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={`Configurar Bônus - ${employeeName}`}
+    >
       <InputField
         label="Valor do Bônus (R$)"
         type="number"
@@ -229,7 +244,7 @@ export const BonusModal: React.FC<BonusModalProps> = ({
         placeholder="0.00"
         required
       />
-      
+
       <InputField
         label="Motivo do Bônus"
         type="textarea"
@@ -248,7 +263,7 @@ export const BonusModal: React.FC<BonusModalProps> = ({
           options={monthOptions}
           required
         />
-        
+
         <InputField
           label="Ano"
           type="number"
@@ -290,15 +305,15 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
   propertyName,
   onSave,
 }) => {
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [type, setType] = useState('');
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [type, setType] = useState("");
   const [duration, setDuration] = useState(120);
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState("");
 
   const handleSave = () => {
     if (!date || !time || !type) {
-      toast.error('Data, horário e tipo de limpeza são obrigatórios');
+      toast.error("Data, horário e tipo de limpeza são obrigatórios");
       return;
     }
 
@@ -313,22 +328,26 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
     onSave(scheduleData);
     onClose();
     // Reset form
-    setDate('');
-    setTime('');
-    setType('');
+    setDate("");
+    setTime("");
+    setType("");
     setDuration(120);
-    setNotes('');
+    setNotes("");
   };
 
   const serviceTypes = [
-    { value: 'basic', label: 'Limpeza Básica (R$ 80)' },
-    { value: 'standard', label: 'Limpeza Padrão (R$ 100)' },
-    { value: 'premium', label: 'Limpeza Premium (R$ 150)' },
-    { value: 'deep', label: 'Limpeza Pesada (R$ 200)' },
+    { value: "basic", label: "Limpeza Básica (R$ 80)" },
+    { value: "standard", label: "Limpeza Padrão (R$ 100)" },
+    { value: "premium", label: "Limpeza Premium (R$ 150)" },
+    { value: "deep", label: "Limpeza Pesada (R$ 200)" },
   ];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={`Agendar Limpeza - ${propertyName}`}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={`Agendar Limpeza - ${propertyName}`}
+    >
       <div className="grid grid-cols-2 gap-3">
         <InputField
           label="Data"
@@ -337,7 +356,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
           onChange={(value) => setDate(value as string)}
           required
         />
-        
+
         <InputField
           label="Horário"
           type="time"
@@ -364,7 +383,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
         onChange={(value) => setDuration(value as number)}
         placeholder="120"
       />
-      
+
       <InputField
         label="Observações Especiais"
         type="textarea"

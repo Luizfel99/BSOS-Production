@@ -1,51 +1,60 @@
 /**
  * Protected Component - RBAC wrapper for conditional rendering
  * Only renders children if user has required permissions
+ *
+ * Uses User type from AuthContext (simplified model without passwordHash, active, createdAt)
  */
 
-'use client';
+"use client";
 
-import React from 'react';
-import { useAuthAdapter } from '@/contexts/AuthAdapter';
-import { hasPermission, canAccessFeature, canAccessRoute, Module, Action } from '@/utils/rbac';
-import { AlertTriangle, Lock, ShieldX } from 'lucide-react';
+import React from "react";
+import { useAuthAdapter } from "@/contexts/AuthAdapter";
+import { User } from "@/contexts/AuthContext";
+import {
+  hasPermission,
+  canAccessFeature,
+  canAccessRoute,
+  Module,
+  Action,
+} from "@/utils/rbac";
+import { AlertTriangle, Lock, ShieldX } from "lucide-react";
 
 interface ProtectedComponentProps {
   children: React.ReactNode;
-  
+
   // Permission-based access
   module?: Module;
   action?: Action;
-  
+
   // Feature-based access
   feature?: string;
-  
+
   // Route-based access
   route?: string;
-  
+
   // Role-based access
   allowedRoles?: string[];
-  
+
   // Fallback content
   fallback?: React.ReactNode;
   showNoAccess?: boolean;
   noAccessMessage?: string;
-  
+
   // Alternative: redirect instead of showing fallback
   redirectTo?: string;
-  
+
   // Loading state
   loading?: boolean;
 }
 
 const NoAccessMessage: React.FC<{
   message?: string;
-  variant?: 'default' | 'minimal' | 'detailed';
-}> = ({ 
-  message = 'Você não tem permissão para acessar este recurso',
-  variant = 'default'
+  variant?: "default" | "minimal" | "detailed";
+}> = ({
+  message = "Você não tem permissão para acessar este recurso",
+  variant = "default",
 }) => {
-  if (variant === 'minimal') {
+  if (variant === "minimal") {
     return (
       <div className="flex items-center justify-center text-gray-500 text-sm py-2">
         <Lock className="h-4 w-4 mr-2" />
@@ -54,7 +63,7 @@ const NoAccessMessage: React.FC<{
     );
   }
 
-  if (variant === 'detailed') {
+  if (variant === "detailed") {
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
         <div className="flex justify-center mb-4">
@@ -62,10 +71,15 @@ const NoAccessMessage: React.FC<{
             <ShieldX className="h-6 w-6 text-gray-400" />
           </div>
         </div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Acesso Negado</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">
+          Acesso Negado
+        </h3>
         <p className="text-gray-600 mb-4">{message}</p>
         <div className="text-sm text-gray-500">
-          <p>Entre em contato com seu supervisor se você acredita que deveria ter acesso a este recurso.</p>
+          <p>
+            Entre em contato com seu supervisor se você acredita que deveria ter
+            acesso a este recurso.
+          </p>
         </div>
       </div>
     );
@@ -102,7 +116,7 @@ export const ProtectedComponent: React.FC<ProtectedComponentProps> = ({
   showNoAccess = true,
   noAccessMessage,
   redirectTo,
-  loading: propLoading = false
+  loading: propLoading = false,
 }) => {
   const { user, isLoading: authLoading } = useAuthAdapter();
   const isAuthenticated = !!user;
@@ -120,7 +134,9 @@ export const ProtectedComponent: React.FC<ProtectedComponentProps> = ({
   // If user is not authenticated or session is invalid
   if (!user || !isAuthenticated) {
     if (showNoAccess) {
-      return <NoAccessMessage message="É necessário estar logado para acessar este recurso" />;
+      return (
+        <NoAccessMessage message="É necessário estar logado para acessar este recurso" />
+      );
     }
     return fallback || null;
   }
@@ -132,22 +148,24 @@ export const ProtectedComponent: React.FC<ProtectedComponentProps> = ({
   if (module && action) {
     hasAccess = hasPermission(user, module, action);
   }
-  
+
   // Feature-based access check
   else if (feature) {
     hasAccess = canAccessFeature(user, feature);
   }
-  
+
   // Route-based access check
   else if (route) {
     hasAccess = canAccessRoute(user, route);
   }
-  
+
   // Role-based access check (case-insensitive)
   else if (allowedRoles) {
     const userRoleLower = user?.role?.toLowerCase();
-    const allowedRolesLower = allowedRoles.map(r => r.toLowerCase());
-    hasAccess = userRoleLower ? allowedRolesLower.includes(userRoleLower) : false;
+    const allowedRolesLower = allowedRoles.map((r) => r.toLowerCase());
+    hasAccess = userRoleLower
+      ? allowedRolesLower.includes(userRoleLower)
+      : false;
   }
 
   // If user has access, render children
@@ -156,7 +174,7 @@ export const ProtectedComponent: React.FC<ProtectedComponentProps> = ({
   }
 
   // If no access and redirect is specified
-  if (redirectTo && typeof window !== 'undefined') {
+  if (redirectTo && typeof window !== "undefined") {
     window.location.href = redirectTo;
     return null;
   }
@@ -206,7 +224,7 @@ export const usePermissions = () => {
   const checkRole = (allowedRoles: string[]): boolean => {
     if (loading || !user) return false;
     const userRoleLower = user.role.toLowerCase();
-    const allowedRolesLower = allowedRoles.map(r => r.toLowerCase());
+    const allowedRolesLower = allowedRoles.map((r) => r.toLowerCase());
     return allowedRolesLower.includes(userRoleLower);
   };
 
@@ -218,7 +236,7 @@ export const usePermissions = () => {
     canAccessFeature: checkFeature,
     canAccessRoute: checkRoute,
     hasRole: checkRole,
-    userRole: user?.role || null
+    userRole: user?.role || null,
   };
 };
 
@@ -232,7 +250,7 @@ export const withRoleProtection = <P extends object>(
     action?: Action;
     fallback?: React.ReactNode;
     redirectTo?: string;
-  }
+  },
 ) => {
   return function ProtectedPage(props: P) {
     return (

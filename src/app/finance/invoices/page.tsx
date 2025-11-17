@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
-import { FileText, Plus, Eye, Download, AlertCircle } from 'lucide-react';
-import { ProtectedComponent } from '@/components/ProtectedComponent';
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
+import { FileText, Plus, Eye, Download, AlertCircle } from "lucide-react";
+import { ProtectedComponent } from "@/components/ProtectedComponent";
 
 interface Invoice {
   id: string;
   amount: number;
-  status: 'draft' | 'sent' | 'paid' | 'overdue';
+  status: "draft" | "sent" | "paid" | "overdue";
   clientName: string;
   clientEmail: string;
   description: string;
@@ -28,17 +28,17 @@ export default function InvoicesPage() {
   const loadInvoices = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/finance/invoices');
-      
+      const response = await fetch("/api/finance/invoices");
+
       if (response.ok) {
         const data = await response.json();
         setInvoices(data.data || []);
       } else {
-        toast.error('Erro ao carregar faturas');
+        toast.error("Erro ao carregar faturas");
       }
     } catch (error) {
-      console.error('Error loading invoices:', error);
-      toast.error('Erro ao carregar faturas');
+      console.error("Error loading invoices:", error);
+      toast.error("Erro ao carregar faturas");
     } finally {
       setLoading(false);
     }
@@ -46,19 +46,23 @@ export default function InvoicesPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'paid': return 'bg-green-100 text-green-800';
-      case 'sent': return 'bg-blue-100 text-blue-800';
-      case 'overdue': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "paid":
+        return "bg-green-100 text-green-800";
+      case "sent":
+        return "bg-blue-100 text-blue-800";
+      case "overdue":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      'draft': 'Rascunho',
-      'sent': 'Enviada',
-      'paid': 'Paga',
-      'overdue': 'Vencida'
+      draft: "Rascunho",
+      sent: "Enviada",
+      paid: "Paga",
+      overdue: "Vencida",
     };
     return labels[status as keyof typeof labels] || status;
   };
@@ -67,7 +71,6 @@ export default function InvoicesPage() {
     <ProtectedComponent>
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -79,11 +82,15 @@ export default function InvoicesPage() {
                 <div className="flex items-center">
                   <FileText className="h-8 w-8 mr-3 text-blue-600" />
                   <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Faturas</h1>
-                    <p className="text-gray-600">Gerencie todas as faturas e pagamentos</p>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Faturas
+                    </h1>
+                    <p className="text-gray-600">
+                      Gerencie todas as faturas e pagamentos
+                    </p>
                   </div>
                 </div>
-                
+
                 <button className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 flex items-center gap-2 transition-colors">
                   <Plus className="h-4 w-4" />
                   Nova Fatura
@@ -178,15 +185,22 @@ export default function InvoicesPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          R$ {invoice.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          R${" "}
+                          {invoice.amount.toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2,
+                          })}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(invoice.status)}`}>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(invoice.status)}`}
+                          >
                             {getStatusLabel(invoice.status)}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(invoice.dueDate).toLocaleDateString('pt-BR')}
+                          {new Date(invoice.dueDate).toLocaleDateString(
+                            "pt-BR",
+                          )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end gap-2">
@@ -220,8 +234,9 @@ export default function InvoicesPage() {
                   Integração Stripe
                 </h3>
                 <p className="text-sm text-blue-700 mt-1">
-                  Esta página está conectada com a API Stripe para gerenciamento de faturas.
-                  Dados em tempo real serão exibidos quando a integração estiver ativa.
+                  Esta página está conectada com a API Stripe para gerenciamento
+                  de faturas. Dados em tempo real serão exibidos quando a
+                  integração estiver ativa.
                 </p>
               </div>
             </div>

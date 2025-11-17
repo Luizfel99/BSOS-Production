@@ -1,6 +1,13 @@
 // Client-side notification services
 
-export type NotificationType = 'info' | 'success' | 'warning' | 'error' | 'task' | 'message' | 'system';
+export type NotificationType =
+  | "info"
+  | "success"
+  | "warning"
+  | "error"
+  | "task"
+  | "message"
+  | "system";
 
 export interface Notification {
   id: string;
@@ -31,9 +38,9 @@ export interface NotificationResponse {
  */
 export async function getNotifications(): Promise<NotificationResponse> {
   try {
-    const response = await fetch('/api/notifications', {
-      method: 'GET',
-      credentials: 'include',
+    const response = await fetch("/api/notifications", {
+      method: "GET",
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -42,10 +49,10 @@ export async function getNotifications(): Promise<NotificationResponse> {
 
     return await response.json();
   } catch (error) {
-    console.error('Error fetching notifications:', error);
+    console.error("Error fetching notifications:", error);
     return {
       success: false,
-      message: 'Failed to fetch notifications'
+      message: "Failed to fetch notifications",
     };
   }
 }
@@ -54,15 +61,15 @@ export async function getNotifications(): Promise<NotificationResponse> {
  * Create a new notification
  */
 export async function createNotification(
-  notificationData: CreateNotificationRequest
+  notificationData: CreateNotificationRequest,
 ): Promise<NotificationResponse> {
   try {
-    const response = await fetch('/api/notifications', {
-      method: 'POST',
+    const response = await fetch("/api/notifications", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(notificationData),
     });
 
@@ -72,10 +79,10 @@ export async function createNotification(
 
     return await response.json();
   } catch (error) {
-    console.error('Error creating notification:', error);
+    console.error("Error creating notification:", error);
     return {
       success: false,
-      message: 'Failed to create notification'
+      message: "Failed to create notification",
     };
   }
 }
@@ -83,11 +90,13 @@ export async function createNotification(
 /**
  * Mark a notification as read
  */
-export async function markAsRead(notificationId: string): Promise<NotificationResponse> {
+export async function markAsRead(
+  notificationId: string,
+): Promise<NotificationResponse> {
   try {
     const response = await fetch(`/api/notifications/${notificationId}`, {
-      method: 'PUT',
-      credentials: 'include',
+      method: "PUT",
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -96,10 +105,10 @@ export async function markAsRead(notificationId: string): Promise<NotificationRe
 
     return await response.json();
   } catch (error) {
-    console.error('Error marking notification as read:', error);
+    console.error("Error marking notification as read:", error);
     return {
       success: false,
-      message: 'Failed to mark notification as read'
+      message: "Failed to mark notification as read",
     };
   }
 }
@@ -107,11 +116,13 @@ export async function markAsRead(notificationId: string): Promise<NotificationRe
 /**
  * Delete a notification
  */
-export async function deleteNotification(notificationId: string): Promise<NotificationResponse> {
+export async function deleteNotification(
+  notificationId: string,
+): Promise<NotificationResponse> {
   try {
     const response = await fetch(`/api/notifications/${notificationId}`, {
-      method: 'DELETE',
-      credentials: 'include',
+      method: "DELETE",
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -120,10 +131,10 @@ export async function deleteNotification(notificationId: string): Promise<Notifi
 
     return await response.json();
   } catch (error) {
-    console.error('Error deleting notification:', error);
+    console.error("Error deleting notification:", error);
     return {
       success: false,
-      message: 'Failed to delete notification'
+      message: "Failed to delete notification",
     };
   }
 }
@@ -133,22 +144,22 @@ export async function deleteNotification(notificationId: string): Promise<Notifi
  */
 export function getNotificationColor(type: NotificationType): string {
   switch (type) {
-    case 'success':
-      return 'text-green-600 bg-green-50 border-green-200';
-    case 'error':
-      return 'text-red-600 bg-red-50 border-red-200';
-    case 'warning':
-      return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-    case 'info':
-      return 'text-blue-600 bg-blue-50 border-blue-200';
-    case 'system':
-      return 'text-purple-600 bg-purple-50 border-purple-200';
-    case 'task':
-      return 'text-orange-600 bg-orange-50 border-orange-200';
-    case 'message':
-      return 'text-blue-600 bg-blue-50 border-blue-200';
+    case "success":
+      return "text-green-600 bg-green-50 border-green-200";
+    case "error":
+      return "text-red-600 bg-red-50 border-red-200";
+    case "warning":
+      return "text-yellow-600 bg-yellow-50 border-yellow-200";
+    case "info":
+      return "text-blue-600 bg-blue-50 border-blue-200";
+    case "system":
+      return "text-purple-600 bg-purple-50 border-purple-200";
+    case "task":
+      return "text-orange-600 bg-orange-50 border-orange-200";
+    case "message":
+      return "text-blue-600 bg-blue-50 border-blue-200";
     default:
-      return 'text-gray-600 bg-gray-50 border-gray-200';
+      return "text-gray-600 bg-gray-50 border-gray-200";
   }
 }
 
@@ -157,22 +168,22 @@ export function getNotificationColor(type: NotificationType): string {
  */
 export function getNotificationIcon(type: NotificationType): string {
   switch (type) {
-    case 'success':
-      return '✅';
-    case 'error':
-      return '❌';
-    case 'warning':
-      return '⚠️';
-    case 'info':
-      return 'ℹ️';
-    case 'system':
-      return '⚙️';
-    case 'task':
-      return '📋';
-    case 'message':
-      return '💬';
+    case "success":
+      return "✅";
+    case "error":
+      return "❌";
+    case "warning":
+      return "⚠️";
+    case "info":
+      return "ℹ️";
+    case "system":
+      return "⚙️";
+    case "task":
+      return "📋";
+    case "message":
+      return "💬";
     default:
-      return '📧';
+      return "📧";
   }
 }
 
@@ -188,7 +199,7 @@ export function formatNotificationTime(date: Date | string): string {
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
   if (diffMins < 1) {
-    return 'Agora mesmo';
+    return "Agora mesmo";
   } else if (diffMins < 60) {
     return `${diffMins} min atrás`;
   } else if (diffHours < 24) {
@@ -196,6 +207,6 @@ export function formatNotificationTime(date: Date | string): string {
   } else if (diffDays < 7) {
     return `${diffDays} dias atrás`;
   } else {
-    return notificationDate.toLocaleDateString('pt-BR');
+    return notificationDate.toLocaleDateString("pt-BR");
   }
 }

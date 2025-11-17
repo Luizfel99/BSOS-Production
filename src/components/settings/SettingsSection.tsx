@@ -1,8 +1,15 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Save, RefreshCw, Download, Upload, AlertCircle, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  Save,
+  RefreshCw,
+  Download,
+  Upload,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
 
 // Settings Categories Components
 interface SettingItem {
@@ -10,7 +17,7 @@ interface SettingItem {
   category: string;
   key: string;
   value: string;
-  type: 'STRING' | 'BOOLEAN' | 'NUMBER' | 'JSON' | 'ENCRYPTED';
+  type: "STRING" | "BOOLEAN" | "NUMBER" | "JSON" | "ENCRYPTED";
   encrypted: boolean;
 }
 
@@ -27,27 +34,30 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
   description,
   settings,
   onUpdate,
-  loading = false
+  loading = false,
 }) => {
   const [localValues, setLocalValues] = useState<Record<string, string>>({});
   const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
-    const initial = settings.reduce((acc, setting) => {
-      acc[setting.key] = setting.value;
-      return acc;
-    }, {} as Record<string, string>);
+    const initial = settings.reduce(
+      (acc, setting) => {
+        acc[setting.key] = setting.value;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
     setLocalValues(initial);
   }, [settings]);
 
   const handleChange = (key: string, value: string) => {
-    setLocalValues(prev => ({ ...prev, [key]: value }));
+    setLocalValues((prev) => ({ ...prev, [key]: value }));
     setHasChanges(true);
   };
 
   const handleSave = () => {
     Object.entries(localValues).forEach(([key, value]) => {
-      const original = settings.find(s => s.key === key)?.value;
+      const original = settings.find((s) => s.key === key)?.value;
       if (value !== original) {
         onUpdate(key, value);
       }
@@ -56,23 +66,25 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
   };
 
   const renderSettingInput = (setting: SettingItem) => {
-    const value = localValues[setting.key] || '';
+    const value = localValues[setting.key] || "";
 
     switch (setting.type) {
-      case 'BOOLEAN':
+      case "BOOLEAN":
         return (
           <label className="flex items-center space-x-2">
             <input
               type="checkbox"
-              checked={value.toLowerCase() === 'true'}
-              onChange={(e) => handleChange(setting.key, e.target.checked.toString())}
+              checked={value.toLowerCase() === "true"}
+              onChange={(e) =>
+                handleChange(setting.key, e.target.checked.toString())
+              }
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <span className="text-sm text-gray-600">Ativado</span>
           </label>
         );
 
-      case 'NUMBER':
+      case "NUMBER":
         return (
           <input
             type="number"
@@ -82,7 +94,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
           />
         );
 
-      case 'JSON':
+      case "JSON":
         return (
           <textarea
             value={value}
@@ -93,7 +105,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
           />
         );
 
-      case 'ENCRYPTED':
+      case "ENCRYPTED":
         return (
           <div className="relative">
             <input
@@ -104,7 +116,10 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
               placeholder="••••••••"
             />
             <div className="absolute right-3 top-2.5">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full" title="Encrypted field"></div>
+              <div
+                className="w-2 h-2 bg-yellow-500 rounded-full"
+                title="Encrypted field"
+              ></div>
             </div>
           </div>
         );
@@ -136,7 +151,9 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
         {settings.map((setting) => (
           <div key={setting.key} className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              {setting.key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              {setting.key
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase())}
               {setting.encrypted && (
                 <span className="ml-2 text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded">
                   Encrypted
@@ -156,7 +173,9 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
         >
           <div className="flex items-center space-x-2">
             <AlertCircle className="w-4 h-4 text-yellow-600" />
-            <span className="text-sm text-yellow-800">Você tem alterações não salvas</span>
+            <span className="text-sm text-yellow-800">
+              Você tem alterações não salvas
+            </span>
           </div>
           <button
             onClick={handleSave}

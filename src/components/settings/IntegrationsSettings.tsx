@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  Settings, 
-  ExternalLink, 
-  CheckCircle, 
-  XCircle, 
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Settings,
+  ExternalLink,
+  CheckCircle,
+  XCircle,
   AlertTriangle,
   Key,
-  Shield
-} from 'lucide-react';
+  Shield,
+} from "lucide-react";
 
 interface Integration {
   id: string;
@@ -19,12 +19,12 @@ interface Integration {
   enabled: boolean;
   configured: boolean;
   icon: string;
-  status: 'connected' | 'disconnected' | 'error' | 'pending';
+  status: "connected" | "disconnected" | "error" | "pending";
   settings: {
     key: string;
     label: string;
     value: string;
-    type: 'text' | 'password' | 'url';
+    type: "text" | "password" | "url";
     required: boolean;
   }[];
 }
@@ -40,45 +40,55 @@ const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({
   integrations,
   onToggle,
   onUpdateSettings,
-  onTestConnection
+  onTestConnection,
 }) => {
-  const [expandedIntegration, setExpandedIntegration] = useState<string | null>(null);
-  const [testingConnection, setTestingConnection] = useState<string | null>(null);
-  const [settingsValues, setSettingsValues] = useState<Record<string, Record<string, string>>>({});
+  const [expandedIntegration, setExpandedIntegration] = useState<string | null>(
+    null,
+  );
+  const [testingConnection, setTestingConnection] = useState<string | null>(
+    null,
+  );
+  const [settingsValues, setSettingsValues] = useState<
+    Record<string, Record<string, string>>
+  >({});
 
-  const getStatusIcon = (status: Integration['status']) => {
+  const getStatusIcon = (status: Integration["status"]) => {
     switch (status) {
-      case 'connected':
+      case "connected":
         return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'error':
+      case "error":
         return <XCircle className="w-5 h-5 text-red-500" />;
-      case 'pending':
+      case "pending":
         return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
       default:
         return <XCircle className="w-5 h-5 text-gray-400" />;
     }
   };
 
-  const getStatusText = (status: Integration['status']) => {
+  const getStatusText = (status: Integration["status"]) => {
     switch (status) {
-      case 'connected':
-        return 'Conectado';
-      case 'error':
-        return 'Erro';
-      case 'pending':
-        return 'Pendente';
+      case "connected":
+        return "Conectado";
+      case "error":
+        return "Erro";
+      case "pending":
+        return "Pendente";
       default:
-        return 'Desconectado';
+        return "Desconectado";
     }
   };
 
-  const handleSettingChange = (integrationId: string, key: string, value: string) => {
-    setSettingsValues(prev => ({
+  const handleSettingChange = (
+    integrationId: string,
+    key: string,
+    value: string,
+  ) => {
+    setSettingsValues((prev) => ({
       ...prev,
       [integrationId]: {
         ...prev[integrationId],
-        [key]: value
-      }
+        [key]: value,
+      },
     }));
   };
 
@@ -99,9 +109,12 @@ const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({
   return (
     <div className="space-y-4">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Integrações Externas</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          Integrações Externas
+        </h3>
         <p className="text-gray-600 text-sm">
-          Configure conexões com plataformas externas como Airbnb, Hostaway, Stripe e Google.
+          Configure conexões com plataformas externas como Airbnb, Hostaway,
+          Stripe e Google.
         </p>
       </div>
 
@@ -117,8 +130,12 @@ const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({
               <div className="flex items-center space-x-3">
                 <div className="text-2xl">{integration.icon}</div>
                 <div>
-                  <h4 className="font-medium text-gray-900">{integration.name}</h4>
-                  <p className="text-sm text-gray-600">{integration.description}</p>
+                  <h4 className="font-medium text-gray-900">
+                    {integration.name}
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    {integration.description}
+                  </p>
                 </div>
               </div>
 
@@ -141,9 +158,13 @@ const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({
                 </label>
 
                 <button
-                  onClick={() => setExpandedIntegration(
-                    expandedIntegration === integration.id ? null : integration.id
-                  )}
+                  onClick={() =>
+                    setExpandedIntegration(
+                      expandedIntegration === integration.id
+                        ? null
+                        : integration.id,
+                    )
+                  }
                   className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
                 >
                   <Settings className="w-4 h-4" />
@@ -155,7 +176,7 @@ const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({
           {expandedIntegration === integration.id && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               className="border-t bg-gray-50 p-4"
             >
@@ -169,17 +190,32 @@ const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({
                   <div key={setting.key} className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">
                       {setting.label}
-                      {setting.required && <span className="text-red-500 ml-1">*</span>}
+                      {setting.required && (
+                        <span className="text-red-500 ml-1">*</span>
+                      )}
                     </label>
                     <div className="relative">
                       <input
                         type={setting.type}
-                        value={settingsValues[integration.id]?.[setting.key] || setting.value}
-                        onChange={(e) => handleSettingChange(integration.id, setting.key, e.target.value)}
+                        value={
+                          settingsValues[integration.id]?.[setting.key] ||
+                          setting.value
+                        }
+                        onChange={(e) =>
+                          handleSettingChange(
+                            integration.id,
+                            setting.key,
+                            e.target.value,
+                          )
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={setting.type === 'password' ? '••••••••' : `Digite ${setting.label.toLowerCase()}`}
+                        placeholder={
+                          setting.type === "password"
+                            ? "••••••••"
+                            : `Digite ${setting.label.toLowerCase()}`
+                        }
                       />
-                      {setting.type === 'password' && (
+                      {setting.type === "password" && (
                         <Shield className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
                       )}
                     </div>
@@ -194,7 +230,9 @@ const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({
                   >
                     <ExternalLink className="w-4 h-4" />
                     <span>
-                      {testingConnection === integration.id ? 'Testando...' : 'Testar Conexão'}
+                      {testingConnection === integration.id
+                        ? "Testando..."
+                        : "Testar Conexão"}
                     </span>
                   </button>
 
@@ -223,10 +261,13 @@ const IntegrationsSettings: React.FC<IntegrationsSettingsProps> = ({
         <div className="flex items-start space-x-3">
           <Shield className="w-5 h-5 text-blue-600 mt-0.5" />
           <div>
-            <h4 className="font-medium text-blue-900">Segurança das Integrações</h4>
+            <h4 className="font-medium text-blue-900">
+              Segurança das Integrações
+            </h4>
             <p className="text-sm text-blue-700 mt-1">
-              Todas as chaves de API e dados sensíveis são criptografados antes de serem armazenados. 
-              Mantenha suas credenciais seguras e atualize-as regularmente.
+              Todas as chaves de API e dados sensíveis são criptografados antes
+              de serem armazenados. Mantenha suas credenciais seguras e
+              atualize-as regularmente.
             </p>
           </div>
         </div>

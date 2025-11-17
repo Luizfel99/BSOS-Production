@@ -1,66 +1,76 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Save } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { toast } from 'react-hot-toast';
-import RouteGuard from '@/components/RouteGuard';
-import MobileNavigation from '@/components/MobileNavigation';
-import ProtectedComponent from '@/components/ProtectedComponent';
-import { createTask } from '@/services/tasks';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Save } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "react-hot-toast";
+import RouteGuard from "@/components/RouteGuard";
+import MobileNavigation from "@/components/MobileNavigation";
+import ProtectedComponent from "@/components/ProtectedComponent";
+import { createTask } from "@/services/tasks";
 
 const taskSchema = z.object({
-  title: z.string().min(1, 'Título é obrigatório'),
+  title: z.string().min(1, "Título é obrigatório"),
   description: z.string().optional(),
-  type: z.enum(['cleaning', 'maintenance', 'inspection', 'other']),
-  priority: z.enum(['low', 'medium', 'high', 'urgent']),
-  status: z.enum(['pending', 'in_progress', 'completed', 'cancelled']).default('pending'),
+  type: z.enum(["cleaning", "maintenance", "inspection", "other"]),
+  priority: z.enum(["low", "medium", "high", "urgent"]),
+  status: z
+    .enum(["pending", "in_progress", "completed", "cancelled"])
+    .default("pending"),
   assignedTo: z.string().optional(),
   propertyId: z.string().optional(),
   dueDate: z.string().optional(),
   estimatedDuration: z.number().optional(),
   materials: z.string().optional(),
-  instructions: z.string().optional()
+  instructions: z.string().optional(),
 });
 
 type TaskFormData = z.infer<typeof taskSchema>;
 
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.6 }
-  }
+    transition: { duration: 0.6 },
+  },
 };
 
 export default function NewTaskPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState<Array<{id: string, name: string}>>([]);
-  const [properties, setProperties] = useState<Array<{id: string, name: string, address: string}>>([]);
+  const [users, setUsers] = useState<Array<{ id: string; name: string }>>([]);
+  const [properties, setProperties] = useState<
+    Array<{ id: string; name: string; address: string }>
+  >([]);
 
-  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<TaskFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm<TaskFormData>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
-      status: 'pending',
-      priority: 'medium',
-      type: 'cleaning'
-    }
+      status: "pending",
+      priority: "medium",
+      type: "cleaning",
+    },
   });
 
   useEffect(() => {
     loadFormData();
-    
+
     // Check for propertyId in URL params
-    const propertyId = searchParams.get('propertyId');
+    const propertyId = searchParams.get("propertyId");
     if (propertyId) {
-      setValue('propertyId', propertyId);
+      setValue("propertyId", propertyId);
     }
   }, [searchParams, setValue]);
 
@@ -68,37 +78,39 @@ export default function NewTaskPage() {
     try {
       // Load users and properties for dropdowns
       const [usersResponse, propertiesResponse] = await Promise.all([
-        fetch('/api/users').then(res => res.json()),
-        fetch('/api/properties').then(res => res.json())
+        fetch("/api/users").then((res) => res.json()),
+        fetch("/api/properties").then((res) => res.json()),
       ]);
 
       if (usersResponse.success) setUsers(usersResponse.data);
       if (propertiesResponse.success) setProperties(propertiesResponse.data);
     } catch (error) {
-      console.error('Erro ao carregar dados do formulário:', error);
+      console.error("Erro ao carregar dados do formulário:", error);
     }
   };
 
   const onSubmit = async (data: TaskFormData) => {
     try {
       setLoading(true);
-      
+
       const taskData = {
         ...data,
-        estimatedDuration: data.estimatedDuration ? Number(data.estimatedDuration) : undefined,
-        dueDate: data.dueDate ? new Date(data.dueDate) : undefined
+        estimatedDuration: data.estimatedDuration
+          ? Number(data.estimatedDuration)
+          : undefined,
+        dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
       };
 
       const response = await createTask(taskData);
-      
+
       if (response.success) {
-        toast.success('Tarefa criada com sucesso!');
-        router.push('/tasks');
+        toast.success("Tarefa criada com sucesso!");
+        router.push("/tasks");
       } else {
-        toast.error(response.message || 'Erro ao criar tarefa');
+        toast.error(response.message || "Erro ao criar tarefa");
       }
     } catch (error) {
-      toast.error('Erro ao criar tarefa');
+      toast.error("Erro ao criar tarefa");
     } finally {
       setLoading(false);
     }
@@ -107,7 +119,7 @@ export default function NewTaskPage() {
   return (
     <RouteGuard>
       <MobileNavigation activeItem="tasks">
-        <motion.div 
+        <motion.div
           className="p-6"
           variants={pageVariants}
           initial="hidden"
@@ -122,16 +134,23 @@ export default function NewTaskPage() {
                 <ArrowLeft className="h-5 w-5" />
               </button>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Nova Tarefa</h1>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Nova Tarefa
+                </h1>
                 <p className="text-gray-600 mt-2">
                   Crie uma nova tarefa de limpeza ou manutenção
                 </p>
               </div>
             </div>
 
-            <ProtectedComponent allowedRoles={['owner', 'manager', 'supervisor']}>
+            <ProtectedComponent
+              allowedRoles={["owner", "manager", "supervisor"]}
+            >
               <div className="bg-white rounded-lg shadow">
-                <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="p-6 space-y-6"
+                >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -139,12 +158,14 @@ export default function NewTaskPage() {
                       </label>
                       <input
                         type="text"
-                        {...register('title')}
+                        {...register("title")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Digite o título da tarefa"
                       />
                       {errors.title && (
-                        <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.title.message}
+                        </p>
                       )}
                     </div>
 
@@ -153,7 +174,7 @@ export default function NewTaskPage() {
                         Tipo
                       </label>
                       <select
-                        {...register('type')}
+                        {...register("type")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="cleaning">Limpeza</option>
@@ -168,7 +189,7 @@ export default function NewTaskPage() {
                         Prioridade
                       </label>
                       <select
-                        {...register('priority')}
+                        {...register("priority")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="low">Baixa</option>
@@ -183,7 +204,7 @@ export default function NewTaskPage() {
                         Status
                       </label>
                       <select
-                        {...register('status')}
+                        {...register("status")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="pending">Pendente</option>
@@ -198,7 +219,7 @@ export default function NewTaskPage() {
                         Responsável
                       </label>
                       <select
-                        {...register('assignedTo')}
+                        {...register("assignedTo")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="">Selecione um responsável</option>
@@ -215,7 +236,7 @@ export default function NewTaskPage() {
                         Propriedade
                       </label>
                       <select
-                        {...register('propertyId')}
+                        {...register("propertyId")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="">Selecione uma propriedade</option>
@@ -233,7 +254,7 @@ export default function NewTaskPage() {
                       </label>
                       <input
                         type="datetime-local"
-                        {...register('dueDate')}
+                        {...register("dueDate")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -244,7 +265,9 @@ export default function NewTaskPage() {
                       </label>
                       <input
                         type="number"
-                        {...register('estimatedDuration', { valueAsNumber: true })}
+                        {...register("estimatedDuration", {
+                          valueAsNumber: true,
+                        })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Ex: 120"
                       />
@@ -256,7 +279,7 @@ export default function NewTaskPage() {
                       Descrição
                     </label>
                     <textarea
-                      {...register('description')}
+                      {...register("description")}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Descreva os detalhes da tarefa"
@@ -268,7 +291,7 @@ export default function NewTaskPage() {
                       Materiais Necessários
                     </label>
                     <textarea
-                      {...register('materials')}
+                      {...register("materials")}
                       rows={2}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Liste os materiais necessários"
@@ -280,7 +303,7 @@ export default function NewTaskPage() {
                       Instruções Especiais
                     </label>
                     <textarea
-                      {...register('instructions')}
+                      {...register("instructions")}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Instruções especiais para a execução da tarefa"
@@ -301,7 +324,7 @@ export default function NewTaskPage() {
                       className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center gap-2 disabled:opacity-50"
                     >
                       <Save className="h-4 w-4" />
-                      {loading ? 'Salvando...' : 'Criar Tarefa'}
+                      {loading ? "Salvando..." : "Criar Tarefa"}
                     </button>
                   </div>
                 </form>

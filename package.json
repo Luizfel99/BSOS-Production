@@ -7,9 +7,12 @@
     "seed": "node ./prisma/seed.js"
   },
   "scripts": {
-    "dev": "next dev -p 3020",
+    "predev": "node scripts/kill-port.mjs",
+    "dev": "node scripts/dev-with-fallback.mjs",
+    "who-owns-port": "node scripts/who-owns-port.mjs",
+    "prestart": "sh -c 'rm -rf .next || true'",
+    "start": "next start -p ${PORT:-3020}",
     "build": "prisma generate && next build",
-    "start": "next start -p 3020",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "setup-production": "node scripts/setup-production.js",
@@ -19,11 +22,14 @@
     "deploy:production": "node scripts/deploy-production.js",
     "test": "echo \"No tests specified\" && exit 0",
     "test:api": "node scripts/test-api-routes.js",
-    "predeployment:test": "npm run type-check && npm run test:api"
+    "predeployment:test": "npm run type-check && npm run test:api",
+    "repair": "node scripts/repair.mjs",
+    "repair:build": "node scripts/repair.mjs && npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
     "@prisma/client": "^5.20.0",
+    "@sendgrid/mail": "^8.1.6",
     "@sentry/nextjs": "^10.21.0",
     "@stripe/stripe-js": "^8.0.0",
     "@types/bcryptjs": "^2.4.6",
@@ -60,6 +66,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "detect-port": "^1.6.1",
     "eslint": "^8",
     "eslint-config-next": "15.5.4",
     "prisma": "^5.20.0",

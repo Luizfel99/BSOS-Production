@@ -1,10 +1,26 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+// VS AI: DO NOT MODIFY CASE OF ROLE STRINGS.
+// All user roles MUST remain lowercase exactly as written.
+// Valid roles: "cleaner", "supervisor", "manager", "owner", "client", "admin".
+
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import axios from "axios";
 import { useRouter, usePathname } from "next/navigation";
 
-export type UserRole = 'admin' | 'cleaner' | 'supervisor' | 'manager' | 'owner' | 'client';
+export type UserRole =
+  | "cleaner"
+  | "supervisor"
+  | "manager"
+  | "owner"
+  | "client"
+  | "admin"; // keep lowercase
 
 export interface User {
   id: string;
@@ -34,24 +50,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Carrega token do localStorage ao montar
-  useEffect(() => {
-    const stored = localStorage.getItem("auth_token");
-    if (stored) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${stored}`;
-      fetchProfile();
-    } else {
-      setLoading(false);
-    }
-  }, []);
-
   async function fetchProfile() {
+    setLoading(true);
     try {
       const res = await axios.get("/api/auth/me");
-      setUser(res.data.user);
+      setUser(res.data.user ?? null);
     } catch (error) {
       console.error("Erro ao buscar perfil:", error);
-      logout();
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -62,14 +68,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await axios.post("/api/auth/login", { email, password });
       const token = res.data.token;
 
-      // Salvar token
       localStorage.setItem("auth_token", token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      // Buscar dados do usuário
       await fetchProfile();
 
-      // Redirecionar para dashboard
       router.push("/dashboard");
     } catch (error) {
       console.error("Erro no login:", error);
@@ -81,9 +84,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("auth_token");
     delete axios.defaults.headers.common["Authorization"];
     setUser(null);
-    
-    // Só redireciona se não estiver em rota pública
-    const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password', '/verify-code'];
+
+    const publicRoutes = [
+      "/login",
+      "/register",
+      "/forgot-password",
+      "/reset-password",
+      "/verify-code",
+    ];
     if (!publicRoutes.includes(pathname)) {
       router.push("/login");
     }
@@ -92,6 +100,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function refreshUser() {
     await fetchProfile();
   }
+
+  useEffect(() => {
+    const stored =
+      typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+
+    if (!stored) {
+      setLoading(false);
+      return;
+    }
+
+    axios.defaults.headers.common["Authorization"] = `Bearer ${stored}`;
+
+    const watchdog = setTimeout(() => {
+      setLoading(false);
+    }, 8000);
+
+    fetchProfile().finally(() => {
+      clearTimeout(watchdog);
+    });
+  }, []);
 
   const value: AuthContextType = {
     user,
@@ -102,11 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refreshUser,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

@@ -1,23 +1,31 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { ArrowLeft, Save, Building2, MapPin, User, Mail, Clock } from 'lucide-react';
-import { ProtectedComponent } from '@/components/ProtectedComponent';
-import { createProperty, type CreatePropertyData } from '@/services/properties';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  ArrowLeft,
+  Save,
+  Building2,
+  MapPin,
+  User,
+  Mail,
+  Clock,
+} from "lucide-react";
+import { ProtectedComponent } from "@/components/ProtectedComponent";
+import { createProperty, type CreatePropertyData } from "@/services/properties";
 
 const propertySchema = z.object({
-  name: z.string().min(1, 'Nome da propriedade é obrigatório'),
-  address: z.string().min(1, 'Endereço é obrigatório'),
-  type: z.enum(['APARTMENT', 'HOUSE', 'STUDIO', 'COMMERCIAL']),
+  name: z.string().min(1, "Nome da propriedade é obrigatório"),
+  address: z.string().min(1, "Endereço é obrigatório"),
+  type: z.enum(["APARTMENT", "HOUSE", "STUDIO", "COMMERCIAL"]),
   size: z.string().optional(),
   clientName: z.string().optional(),
-  contactEmail: z.string().email('Email inválido').optional().or(z.literal('')),
+  contactEmail: z.string().email("Email inválido").optional().or(z.literal("")),
   cleaningFrequency: z.string().optional(),
 });
 
@@ -31,39 +39,39 @@ export default function NewPropertyPage() {
     register,
     handleSubmit,
     formState: { errors },
-    watch
+    watch,
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
     defaultValues: {
-      type: 'APARTMENT'
-    }
+      type: "APARTMENT",
+    },
   });
 
   const onSubmit = async (data: PropertyFormData) => {
     setIsSubmitting(true);
-    
+
     try {
       await createProperty({
         ...data,
-        contactEmail: data.contactEmail || undefined
+        contactEmail: data.contactEmail || undefined,
       });
-      
-      toast.success('Propriedade criada com sucesso!');
-      router.push('/properties');
+
+      toast.success("Propriedade criada com sucesso!");
+      router.push("/properties");
     } catch (error) {
-      console.error('Error creating property:', error);
-      toast.error('Erro ao criar propriedade');
+      console.error("Error creating property:", error);
+      toast.error("Erro ao criar propriedade");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <ProtectedComponent allowedRoles={['OWNER', 'MANAGER']}>
+    <ProtectedComponent allowedRoles={["OWNER", "MANAGER"]}>
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <motion.div 
+          <motion.div
             className="mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -77,8 +85,12 @@ export default function NewPropertyPage() {
                   <ArrowLeft className="h-5 w-5" />
                 </button>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Nova Propriedade</h1>
-                  <p className="text-gray-600">Cadastre uma nova propriedade no sistema</p>
+                  <h1 className="text-3xl font-bold text-gray-900">
+                    Nova Propriedade
+                  </h1>
+                  <p className="text-gray-600">
+                    Cadastre uma nova propriedade no sistema
+                  </p>
                 </div>
               </div>
             </div>
@@ -104,13 +116,15 @@ export default function NewPropertyPage() {
                       Nome da Propriedade *
                     </label>
                     <input
-                      {...register('name')}
+                      {...register("name")}
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Ex: Apartamento Centro - 301"
                     />
                     {errors.name && (
-                      <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.name.message}
+                      </p>
                     )}
                   </div>
 
@@ -119,7 +133,7 @@ export default function NewPropertyPage() {
                       Tipo de Propriedade
                     </label>
                     <select
-                      {...register('type')}
+                      {...register("type")}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="APARTMENT">Apartamento</option>
@@ -128,7 +142,9 @@ export default function NewPropertyPage() {
                       <option value="COMMERCIAL">Comercial</option>
                     </select>
                     {errors.type && (
-                      <p className="text-red-500 text-sm mt-1">{errors.type.message}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.type.message}
+                      </p>
                     )}
                   </div>
 
@@ -138,13 +154,15 @@ export default function NewPropertyPage() {
                       Endereço Completo *
                     </label>
                     <textarea
-                      {...register('address')}
+                      {...register("address")}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Rua, número, bairro, cidade, CEP"
                     />
                     {errors.address && (
-                      <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.address.message}
+                      </p>
                     )}
                   </div>
 
@@ -153,7 +171,7 @@ export default function NewPropertyPage() {
                       Tamanho
                     </label>
                     <input
-                      {...register('size')}
+                      {...register("size")}
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Ex: 80m², 3 quartos"
@@ -166,7 +184,7 @@ export default function NewPropertyPage() {
                       Frequência de Limpeza
                     </label>
                     <select
-                      {...register('cleaningFrequency')}
+                      {...register("cleaningFrequency")}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">Selecionar frequência</option>
@@ -192,7 +210,7 @@ export default function NewPropertyPage() {
                       Nome do Cliente
                     </label>
                     <input
-                      {...register('clientName')}
+                      {...register("clientName")}
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Nome completo do cliente"
@@ -205,13 +223,15 @@ export default function NewPropertyPage() {
                       Email de Contato
                     </label>
                     <input
-                      {...register('contactEmail')}
+                      {...register("contactEmail")}
                       type="email"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="email@exemplo.com"
                     />
                     {errors.contactEmail && (
-                      <p className="text-red-500 text-sm mt-1">{errors.contactEmail.message}</p>
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.contactEmail.message}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -232,7 +252,7 @@ export default function NewPropertyPage() {
                   className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors flex items-center disabled:opacity-50"
                 >
                   <Save className="h-4 w-4 mr-2" />
-                  {isSubmitting ? 'Salvando...' : 'Criar Propriedade'}
+                  {isSubmitting ? "Salvando..." : "Criar Propriedade"}
                 </button>
               </div>
             </form>

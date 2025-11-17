@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     if (!name || !email || !password || !role) {
       return NextResponse.json(
         { error: "Todos os campos são obrigatórios" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     if (exists) {
       return NextResponse.json(
         { error: "E-mail já cadastrado" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     console.error("Error registering user:", error);
     return NextResponse.json(
       { error: "Erro ao criar usuário" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

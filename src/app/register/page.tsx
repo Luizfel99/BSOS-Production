@@ -23,7 +23,7 @@ export default function RegisterPage() {
     try {
       await axios.post("/api/auth/register", form);
       setMsg("✅ Usuário criado com sucesso!");
-      
+
       // Limpar formulário
       setForm({
         name: "",

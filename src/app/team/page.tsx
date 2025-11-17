@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
 import {
   Users,
   Plus,
@@ -16,9 +16,9 @@ import {
   UserCheck,
   UserX,
   Building,
-  ClipboardList
-} from 'lucide-react';
-import { ProtectedComponent } from '@/components/ProtectedComponent';
+  ClipboardList,
+} from "lucide-react";
+import { ProtectedComponent } from "@/components/ProtectedComponent";
 import {
   TeamMember,
   getTeamMembers,
@@ -28,30 +28,30 @@ import {
   getRoleDisplayName,
   getRoleColor,
   getStatusColor,
-  getStatusDisplayName
-} from '@/services/team';
+  getStatusDisplayName,
+} from "@/services/team";
 
 // Modal Components
 function CreateTeamMemberModal({
   isOpen,
   onClose,
-  onSubmit
+  onSubmit,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
 }) {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    role: 'Cleaner' as 'Cleaner' | 'Supervisor' | 'Manager'
+    name: "",
+    email: "",
+    phone: "",
+    role: "Cleaner" as "Cleaner" | "Supervisor" | "Manager",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-    setFormData({ name: '', email: '', phone: '', role: 'Cleaner' });
+    setFormData({ name: "", email: "", phone: "", role: "Cleaner" });
     onClose();
   };
 
@@ -71,7 +71,9 @@ function CreateTeamMemberModal({
             <Input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               required
             />
           </div>
@@ -80,7 +82,9 @@ function CreateTeamMemberModal({
             <Input
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
             />
           </div>
           <div>
@@ -88,14 +92,18 @@ function CreateTeamMemberModal({
             <Input
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
             />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Função</label>
             <select
               value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
+              onChange={(e) =>
+                setFormData({ ...formData, role: e.target.value as any })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="Cleaner">Faxineiro(a)</option>
@@ -104,7 +112,12 @@ function CreateTeamMemberModal({
             </select>
           </div>
           <div className="flex gap-2 pt-4">
-            <Button type="button" variant="secondary" onClick={onClose} className="flex-1">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={onClose}
+              className="flex-1"
+            >
               Cancelar
             </Button>
             <Button type="submit" className="flex-1">
@@ -121,7 +134,7 @@ function EditTeamMemberModal({
   isOpen,
   onClose,
   member,
-  onSubmit
+  onSubmit,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -129,21 +142,21 @@ function EditTeamMemberModal({
   onSubmit: (id: string, data: any) => void;
 }) {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    role: 'Cleaner' as 'Cleaner' | 'Supervisor' | 'Manager',
-    status: 'Active' as 'Active' | 'Inactive'
+    name: "",
+    email: "",
+    phone: "",
+    role: "Cleaner" as "Cleaner" | "Supervisor" | "Manager",
+    status: "Active" as "Active" | "Inactive",
   });
 
   useEffect(() => {
     if (member) {
       setFormData({
         name: member.name,
-        email: member.email || '',
-        phone: member.phone || '',
+        email: member.email || "",
+        phone: member.phone || "",
         role: member.role,
-        status: member.status
+        status: member.status,
       });
     }
   }, [member]);
@@ -172,7 +185,9 @@ function EditTeamMemberModal({
             <Input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               required
             />
           </div>
@@ -181,7 +196,9 @@ function EditTeamMemberModal({
             <Input
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
             />
           </div>
           <div>
@@ -189,14 +206,18 @@ function EditTeamMemberModal({
             <Input
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
             />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Função</label>
             <select
               value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
+              onChange={(e) =>
+                setFormData({ ...formData, role: e.target.value as any })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="Cleaner">Faxineiro(a)</option>
@@ -208,7 +229,9 @@ function EditTeamMemberModal({
             <label className="block text-sm font-medium mb-1">Status</label>
             <select
               value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+              onChange={(e) =>
+                setFormData({ ...formData, status: e.target.value as any })
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="Active">Ativo</option>
@@ -216,7 +239,12 @@ function EditTeamMemberModal({
             </select>
           </div>
           <div className="flex gap-2 pt-4">
-            <Button type="button" variant="secondary" onClick={onClose} className="flex-1">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={onClose}
+              className="flex-1"
+            >
               Cancelar
             </Button>
             <Button type="submit" className="flex-1">
@@ -232,9 +260,9 @@ function EditTeamMemberModal({
 export default function TeamPage() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
@@ -249,7 +277,7 @@ export default function TeamPage() {
       const members = await getTeamMembers();
       setTeamMembers(members);
     } catch (error) {
-      console.error('Error loading team members:', error);
+      console.error("Error loading team members:", error);
     } finally {
       setLoading(false);
     }
@@ -260,7 +288,7 @@ export default function TeamPage() {
       await createTeamMember(data);
       await loadTeamMembers();
     } catch (error) {
-      console.error('Error creating team member:', error);
+      console.error("Error creating team member:", error);
     }
   };
 
@@ -269,44 +297,48 @@ export default function TeamPage() {
       await updateTeamMember(id, data);
       await loadTeamMembers();
     } catch (error) {
-      console.error('Error updating team member:', error);
+      console.error("Error updating team member:", error);
     }
   };
 
   const handleDeleteMember = async (id: string) => {
-    if (confirm('Tem certeza que deseja remover este funcionário?')) {
+    if (confirm("Tem certeza que deseja remover este funcionário?")) {
       try {
         await deleteTeamMember(id);
         await loadTeamMembers();
       } catch (error) {
-        console.error('Error deleting team member:', error);
+        console.error("Error deleting team member:", error);
       }
     }
   };
 
   const handleToggleStatus = async (member: TeamMember) => {
     try {
-      const newStatus = member.status === 'Active' ? 'Inactive' : 'Active';
+      const newStatus = member.status === "Active" ? "Inactive" : "Active";
       await updateTeamMember(member.id, { status: newStatus });
       await loadTeamMembers();
     } catch (error) {
-      console.error('Error toggling status:', error);
+      console.error("Error toggling status:", error);
     }
   };
 
-  const filteredMembers = teamMembers.filter(member => {
-    const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (member.email && member.email.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesRole = roleFilter === 'all' || member.role === roleFilter;
-    const matchesStatus = statusFilter === 'all' || member.status === statusFilter;
+  const filteredMembers = teamMembers.filter((member) => {
+    const matchesSearch =
+      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (member.email &&
+        member.email.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesRole = roleFilter === "all" || member.role === roleFilter;
+    const matchesStatus =
+      statusFilter === "all" || member.status === statusFilter;
     return matchesSearch && matchesRole && matchesStatus;
   });
 
   return (
-    <ProtectedComponent allowedRoles={['ADMIN', 'MANAGER', 'SUPERVISOR', 'CLEANER']}>
+    <ProtectedComponent
+      allowedRoles={["ADMIN", "MANAGER", "SUPERVISOR", "CLEANER"]}
+    >
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -319,7 +351,9 @@ export default function TeamPage() {
                   <Users className="h-8 w-8 mr-3 text-blue-600" />
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900">Equipe</h1>
-                    <p className="text-gray-600">Gerencie todos os membros da equipe</p>
+                    <p className="text-gray-600">
+                      Gerencie todos os membros da equipe
+                    </p>
                   </div>
                 </div>
 
@@ -448,14 +482,18 @@ export default function TeamPage() {
                         </div>
                       </div>
 
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(member.status)}`}>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(member.status)}`}
+                      >
                         {getStatusDisplayName(member.status)}
                       </span>
                     </div>
 
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center text-sm text-gray-600">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getRoleColor(member.role)}`}>
+                        <span
+                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getRoleColor(member.role)}`}
+                        >
                           {getRoleDisplayName(member.role)}
                         </span>
                       </div>
@@ -466,19 +504,21 @@ export default function TeamPage() {
                         </div>
                       )}
 
-                      {member.assignedTasks && member.assignedTasks.length > 0 && (
-                        <div className="text-sm text-gray-600">
-                          <ClipboardList className="h-4 w-4 inline mr-1" />
-                          {member.assignedTasks.length} tarefa(s)
-                        </div>
-                      )}
+                      {member.assignedTasks &&
+                        member.assignedTasks.length > 0 && (
+                          <div className="text-sm text-gray-600">
+                            <ClipboardList className="h-4 w-4 inline mr-1" />
+                            {member.assignedTasks.length} tarefa(s)
+                          </div>
+                        )}
 
-                      {member.assignedProperties && member.assignedProperties.length > 0 && (
-                        <div className="text-sm text-gray-600">
-                          <Building className="h-4 w-4 inline mr-1" />
-                          {member.assignedProperties.length} propriedade(s)
-                        </div>
-                      )}
+                      {member.assignedProperties &&
+                        member.assignedProperties.length > 0 && (
+                          <div className="text-sm text-gray-600">
+                            <Building className="h-4 w-4 inline mr-1" />
+                            {member.assignedProperties.length} propriedade(s)
+                          </div>
+                        )}
                     </div>
 
                     <div className="flex items-center justify-between pt-4 border-t">
@@ -496,12 +536,22 @@ export default function TeamPage() {
                         </Button>
 
                         <Button
-                          variant={member.status === 'Active' ? 'destructive' : 'primary'}
+                          variant={
+                            member.status === "Active"
+                              ? "destructive"
+                              : "primary"
+                          }
                           size="sm"
-                          leftIcon={member.status === 'Active' ? <UserX className="h-3 w-3" /> : <UserCheck className="h-3 w-3" />}
+                          leftIcon={
+                            member.status === "Active" ? (
+                              <UserX className="h-3 w-3" />
+                            ) : (
+                              <UserCheck className="h-3 w-3" />
+                            )
+                          }
                           onClick={() => handleToggleStatus(member)}
                         >
-                          {member.status === 'Active' ? 'Desativar' : 'Ativar'}
+                          {member.status === "Active" ? "Desativar" : "Ativar"}
                         </Button>
                       </div>
 
@@ -521,21 +571,23 @@ export default function TeamPage() {
           )}
 
           {/* No Search Results */}
-          {!loading && teamMembers.length > 0 && filteredMembers.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="bg-white rounded-lg shadow-sm border p-8 text-center"
-            >
-              <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Nenhum funcionário encontrado
-              </h3>
-              <p className="text-gray-600">
-                Tente ajustar os filtros de busca.
-              </p>
-            </motion.div>
-          )}
+          {!loading &&
+            teamMembers.length > 0 &&
+            filteredMembers.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="bg-white rounded-lg shadow-sm border p-8 text-center"
+              >
+                <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Nenhum funcionário encontrado
+                </h3>
+                <p className="text-gray-600">
+                  Tente ajustar os filtros de busca.
+                </p>
+              </motion.div>
+            )}
         </div>
 
         {/* Modals */}

@@ -19,7 +19,7 @@ export default function DashboardPage() {
         }
 
         const res = await axios.get("/api/dashboard", {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         setStats(res.data.stats);

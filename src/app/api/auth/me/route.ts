@@ -6,11 +6,11 @@ export async function GET(req: Request) {
   try {
     // Extrair token do header Authorization
     const authHeader = req.headers.get("authorization");
-    
+
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return NextResponse.json(
         { error: "Token não fornecido" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -39,18 +39,18 @@ export async function GET(req: Request) {
     if (!user) {
       return NextResponse.json(
         { error: "Usuário não encontrado" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     if (!user.active) {
       return NextResponse.json(
         { error: "Usuário desativado" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
       user: {
         id: String(user.id),
@@ -59,28 +59,22 @@ export async function GET(req: Request) {
         role: user.role,
         active: user.active,
         createdAt: user.createdAt,
-      }
+      },
     });
   } catch (error: any) {
     console.error("Error in /api/auth/me:", error);
 
     if (error.name === "JsonWebTokenError") {
-      return NextResponse.json(
-        { error: "Token inválido" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Token inválido" }, { status: 401 });
     }
 
     if (error.name === "TokenExpiredError") {
-      return NextResponse.json(
-        { error: "Token expirado" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Token expirado" }, { status: 401 });
     }
 
     return NextResponse.json(
       { error: "Erro ao buscar usuário" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { ArrowLeft, Save, X } from 'lucide-react';
-import { RouteGuard } from '@/components/RouteGuard';
-import { MobileNavigation } from '@/components/MobileNavigation';
-import { ProtectedComponent } from '@/components/ProtectedComponent';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Alert } from '@/components/ui/Alert';
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { ArrowLeft, Save, X } from "lucide-react";
+import { RouteGuard } from "@/components/RouteGuard";
+import { MobileNavigation } from "@/components/MobileNavigation";
+import { ProtectedComponent } from "@/components/ProtectedComponent";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { Alert } from "@/components/ui/Alert";
 
 const teamMemberSchema = z.object({
-  name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
-  email: z.string().email('Email inválido'),
+  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  email: z.string().email("Email inválido"),
   phone: z.string().optional(),
-  role: z.enum(['ADMIN', 'MANAGER', 'CLEANER', 'CLIENT'], {
-    required_error: 'Selecione uma função'
+  role: z.enum(["ADMIN", "MANAGER", "CLEANER", "CLIENT"], {
+    required_error: "Selecione uma função",
   }),
-  active: z.boolean().default(true)
+  active: z.boolean().default(true),
 });
 
 type TeamMemberFormData = z.infer<typeof teamMemberSchema>;
@@ -30,7 +30,7 @@ type TeamMemberFormData = z.infer<typeof teamMemberSchema>;
 export default function TeamManagePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const memberId = searchParams.get('id');
+  const memberId = searchParams.get("id");
   const isEditing = !!memberId;
 
   const [loading, setLoading] = useState(false);
@@ -41,16 +41,16 @@ export default function TeamManagePage() {
     handleSubmit,
     formState: { errors },
     setValue,
-    watch
+    watch,
   } = useForm<TeamMemberFormData>({
     resolver: zodResolver(teamMemberSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      role: 'CLEANER',
-      active: true
-    }
+      name: "",
+      email: "",
+      phone: "",
+      role: "CLEANER",
+      active: true,
+    },
   });
 
   // Load member data if editing
@@ -63,27 +63,27 @@ export default function TeamManagePage() {
   const loadMemberData = async (id: string) => {
     try {
       setLoading(true);
-      
+
       // Mock data for demo
       const mockMember = {
-        id: '1',
-        name: 'Ana Silva',
-        email: 'ana@empresa.com',
-        phone: '(11) 99999-9999',
-        role: 'MANAGER' as const,
-        active: true
+        id: "1",
+        name: "Ana Silva",
+        email: "ana@empresa.com",
+        phone: "(11) 99999-9999",
+        role: "MANAGER" as const,
+        active: true,
       };
 
-      if (id === '1') {
-        setValue('name', mockMember.name);
-        setValue('email', mockMember.email);
-        setValue('phone', mockMember.phone);
-        setValue('role', mockMember.role);
-        setValue('active', mockMember.active);
+      if (id === "1") {
+        setValue("name", mockMember.name);
+        setValue("email", mockMember.email);
+        setValue("phone", mockMember.phone);
+        setValue("role", mockMember.role);
+        setValue("active", mockMember.active);
       }
     } catch (error) {
-      console.error('Error loading member:', error);
-      alert('Erro ao carregar dados do membro');
+      console.error("Error loading member:", error);
+      alert("Erro ao carregar dados do membro");
     } finally {
       setLoading(false);
     }
@@ -92,25 +92,28 @@ export default function TeamManagePage() {
   const onSubmit = async (data: TeamMemberFormData) => {
     try {
       setSubmitLoading(true);
-      
-      console.log('Form data:', data);
-      
+
+      console.log("Form data:", data);
+
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      alert(isEditing ? 'Membro atualizado com sucesso!' : 'Membro criado com sucesso!');
-      router.push('/team');
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      alert(
+        isEditing
+          ? "Membro atualizado com sucesso!"
+          : "Membro criado com sucesso!",
+      );
+      router.push("/team");
     } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('Erro ao salvar dados');
+      console.error("Error submitting form:", error);
+      alert("Erro ao salvar dados");
     } finally {
       setSubmitLoading(false);
     }
   };
 
   const handleCancel = () => {
-    router.push('/team');
+    router.push("/team");
   };
 
   return (
@@ -135,10 +138,12 @@ export default function TeamManagePage() {
                 </Button>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {isEditing ? 'Editar Membro' : 'Adicionar Membro'}
+                    {isEditing ? "Editar Membro" : "Adicionar Membro"}
                   </h1>
                   <p className="text-gray-600">
-                    {isEditing ? 'Atualize as informações do membro' : 'Adicione um novo membro à equipe'}
+                    {isEditing
+                      ? "Atualize as informações do membro"
+                      : "Adicione um novo membro à equipe"}
                   </p>
                 </div>
               </div>
@@ -154,63 +159,81 @@ export default function TeamManagePage() {
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     {/* Name */}
                     <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        htmlFor="name"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Nome Completo *
                       </label>
                       <input
                         type="text"
                         id="name"
-                        {...register('name')}
+                        {...register("name")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Digite o nome completo"
                       />
                       {errors.name && (
-                        <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.name.message}
+                        </p>
                       )}
                     </div>
 
                     {/* Email */}
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Email *
                       </label>
                       <input
                         type="email"
                         id="email"
-                        {...register('email')}
+                        {...register("email")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Digite o email"
                       />
                       {errors.email && (
-                        <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.email.message}
+                        </p>
                       )}
                     </div>
 
                     {/* Phone */}
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        htmlFor="phone"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Telefone
                       </label>
                       <input
                         type="tel"
                         id="phone"
-                        {...register('phone')}
+                        {...register("phone")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="(11) 99999-9999"
                       />
                       {errors.phone && (
-                        <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.phone.message}
+                        </p>
                       )}
                     </div>
 
                     {/* Role */}
                     <div>
-                      <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label
+                        htmlFor="role"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
                         Função *
                       </label>
                       <select
                         id="role"
-                        {...register('role')}
+                        {...register("role")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       >
                         <option value="CLEANER">Faxineiro(a)</option>
@@ -219,7 +242,9 @@ export default function TeamManagePage() {
                         <option value="CLIENT">Cliente</option>
                       </select>
                       {errors.role && (
-                        <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.role.message}
+                        </p>
                       )}
                     </div>
 
@@ -228,10 +253,12 @@ export default function TeamManagePage() {
                       <label className="flex items-center">
                         <input
                           type="checkbox"
-                          {...register('active')}
+                          {...register("active")}
                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
-                        <span className="ml-2 text-sm text-gray-700">Membro ativo</span>
+                        <span className="ml-2 text-sm text-gray-700">
+                          Membro ativo
+                        </span>
                       </label>
                     </div>
 
@@ -249,12 +276,13 @@ export default function TeamManagePage() {
                         ) : (
                           <Save className="h-4 w-4" />
                         )}
-                        {submitLoading 
-                          ? 'Salvando...' 
-                          : isEditing ? 'Atualizar' : 'Salvar'
-                        }
+                        {submitLoading
+                          ? "Salvando..."
+                          : isEditing
+                            ? "Atualizar"
+                            : "Salvar"}
                       </Button>
-                      
+
                       <Button
                         type="button"
                         onClick={handleCancel}
@@ -272,10 +300,14 @@ export default function TeamManagePage() {
 
               {/* Additional Info */}
               <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-blue-900 mb-2">Informações importantes:</h3>
+                <h3 className="text-sm font-medium text-blue-900 mb-2">
+                  Informações importantes:
+                </h3>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>• O email deve ser único para cada membro</li>
-                  <li>• Membros inativos não aparecerão nas atribuições de tarefas</li>
+                  <li>
+                    • Membros inativos não aparecerão nas atribuições de tarefas
+                  </li>
                   <li>• A função determina as permissões no sistema</li>
                 </ul>
               </div>

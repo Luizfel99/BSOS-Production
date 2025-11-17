@@ -1,13 +1,26 @@
+// VS AI: DO NOT MODIFY ROLE STRINGS (cleaner, supervisor, manager, owner, client, admin).
+// IF YOU CHANGE TO PascalCase, the entire RBAC system breaks.
+
 /**
  * Role-Based Access Control (RBAC) Utilities
  * Provides comprehensive permission management for the BSOS platform
+ *
+ * Uses simplified User type from AuthContext (without passwordHash, active, createdAt)
  */
 
-import React from 'react';
-import { Shield, Users, Building, FileText, Settings, DollarSign, Clock, BarChart } from 'lucide-react';
-
-// Import types from AuthContext instead of UserContext
-import { UserRole, User } from '@/contexts/AuthContext';
+import React from "react";
+import {
+  Shield,
+  Users,
+  Building,
+  FileText,
+  Settings,
+  DollarSign,
+  Clock,
+  BarChart,
+} from "lucide-react";
+import { UserRole, User } from "@/contexts/AuthContext";
+// Usando User do AuthContext (modelo simplificado sem passwordHash, active, createdAt)
 
 // Define Permission type locally
 export interface Permission {
@@ -16,304 +29,490 @@ export interface Permission {
 }
 
 // Define all possible actions in the system
-export type Action = 
-  | 'view' | 'create' | 'update' | 'delete' | 'approve' | 'reject'
-  | 'upload_photo' | 'checklist' | 'feedback' | 'audit' | 'message'
-  | 'evaluate' | 'export' | 'configure' | 'approve_payment'
-  | 'manage_users' | 'view_reports' | 'access_analytics'
-  | 'manage_integrations' | 'view_finance' | 'edit_templates'
-  | 'access'; // General access permission
+export type Action =
+  | "view"
+  | "create"
+  | "update"
+  | "delete"
+  | "approve"
+  | "reject"
+  | "upload_photo"
+  | "checklist"
+  | "feedback"
+  | "audit"
+  | "message"
+  | "evaluate"
+  | "export"
+  | "configure"
+  | "approve_payment"
+  | "manage_users"
+  | "view_reports"
+  | "access_analytics"
+  | "manage_integrations"
+  | "view_finance"
+  | "edit_templates"
+  | "access";
 
-// Define all modules in the system
-export type Module = 
-  | 'core' | 'manager' | 'client' | 'finance' | 'analytics' 
-  | 'integrations' | 'reports' | 'users' | 'settings' | 'templates'
-  | 'dashboard' | 'tasks' | 'properties' | 'employees' | 'payments';
+// Define system modules
+export type Module =
+  | "core"
+  | "manager"
+  | "client"
+  | "finance"
+  | "analytics"
+  | "integrations"
+  | "reports"
+  | "users"
+  | "settings"
+  | "templates"
+  | "dashboard"
+  | "tasks"
+  | "properties"
+  | "employees"
+  | "payments";
 
-// Role-based feature access matrix
+/* -----------------------------------------------
+   ROLE PERMISSIONS (usando lowercase conforme AuthContext)
+------------------------------------------------*/
 export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   admin: [
-    { module: 'core', actions: ['view', 'create', 'update', 'delete'] },
-    { module: 'manager', actions: ['view', 'create', 'update', 'delete'] },
-    { module: 'client', actions: ['view'] },
-    { module: 'finance', actions: ['view', 'create', 'update', 'delete', 'view_finance'] },
-    { module: 'analytics', actions: ['view', 'export', 'configure', 'access_analytics'] },
-    { module: 'tasks', actions: ['view', 'create', 'update', 'delete', 'approve'] },
-    { module: 'employees', actions: ['view', 'create', 'update', 'delete', 'manage_users'] },
-    { module: 'properties', actions: ['view', 'create', 'update', 'delete'] },
-    { module: 'reports', actions: ['view', 'export', 'view_reports'] },
-    { module: 'integrations', actions: ['view', 'create', 'update', 'delete', 'manage_integrations'] },
-    { module: 'templates', actions: ['view', 'create', 'update', 'delete', 'edit_templates'] },
-    { module: 'settings', actions: ['view', 'create', 'update', 'delete', 'configure'] },
-    { module: 'users', actions: ['view', 'create', 'update', 'delete', 'manage_users'] },
-    { module: 'payments', actions: ['view', 'create', 'update', 'delete', 'approve_payment'] },
-    { module: 'dashboard', actions: ['view', 'access'] }
+    { module: "core", actions: ["view", "create", "update", "delete"] },
+    { module: "manager", actions: ["view", "create", "update", "delete"] },
+    { module: "client", actions: ["view"] },
+    {
+      module: "finance",
+      actions: ["view", "create", "update", "delete", "view_finance"],
+    },
+    {
+      module: "analytics",
+      actions: ["view", "export", "configure", "access_analytics"],
+    },
+    {
+      module: "tasks",
+      actions: ["view", "create", "update", "delete", "approve"],
+    },
+    {
+      module: "employees",
+      actions: ["view", "create", "update", "delete", "manage_users"],
+    },
+    { module: "properties", actions: ["view", "create", "update", "delete"] },
+    { module: "reports", actions: ["view", "export", "view_reports"] },
+    {
+      module: "integrations",
+      actions: ["view", "create", "update", "delete", "manage_integrations"],
+    },
+    {
+      module: "templates",
+      actions: ["view", "create", "update", "delete", "edit_templates"],
+    },
+    {
+      module: "settings",
+      actions: ["view", "create", "update", "delete", "configure"],
+    },
+    {
+      module: "users",
+      actions: ["view", "create", "update", "delete", "manage_users"],
+    },
+    {
+      module: "payments",
+      actions: ["view", "create", "update", "delete", "approve_payment"],
+    },
+    { module: "dashboard", actions: ["view", "access"] },
   ],
+
   cleaner: [
-    { module: 'core', actions: ['view', 'update', 'upload_photo', 'checklist'] },
-    { module: 'tasks', actions: ['view', 'update'] },
-    { module: 'dashboard', actions: ['view', 'access'] }
+    {
+      module: "core",
+      actions: ["view", "update", "upload_photo", "checklist"],
+    },
+    { module: "tasks", actions: ["view", "update"] },
+    { module: "dashboard", actions: ["view", "access"] },
   ],
+
   supervisor: [
-    { module: 'core', actions: ['view', 'create', 'update', 'approve', 'feedback', 'audit'] },
-    { module: 'tasks', actions: ['view', 'create', 'update', 'approve'] },
-    { module: 'employees', actions: ['view', 'feedback'] },
-    { module: 'reports', actions: ['view'] },
-    { module: 'analytics', actions: ['view', 'access_analytics'] },
-    { module: 'dashboard', actions: ['view', 'access'] },
-    { module: 'manager', actions: ['view'] }
+    {
+      module: "core",
+      actions: ["view", "create", "update", "approve", "feedback", "audit"],
+    },
+    { module: "tasks", actions: ["view", "create", "update", "approve"] },
+    { module: "employees", actions: ["view", "feedback"] },
+    { module: "reports", actions: ["view"] },
+    { module: "analytics", actions: ["view", "access_analytics"] },
+    { module: "dashboard", actions: ["view", "access"] },
+    { module: "manager", actions: ["view"] },
   ],
+
   manager: [
-    { module: 'core', actions: ['view', 'create', 'update', 'delete'] },
-    { module: 'manager', actions: ['view', 'create', 'update', 'approve_payment'] },
-    { module: 'tasks', actions: ['view', 'create', 'update', 'delete', 'approve'] },
-    { module: 'employees', actions: ['view', 'create', 'update', 'manage_users'] },
-    { module: 'properties', actions: ['view', 'create', 'update', 'delete'] },
-    { module: 'reports', actions: ['view', 'export'] },
-    { module: 'analytics', actions: ['view', 'export', 'access_analytics'] },
-    { module: 'integrations', actions: ['view', 'configure'] },
-    { module: 'templates', actions: ['view', 'edit_templates'] },
-    { module: 'dashboard', actions: ['view', 'access'] },
-    { module: 'finance', actions: ['view'] }
+    { module: "core", actions: ["view", "create", "update", "delete"] },
+    {
+      module: "manager",
+      actions: ["view", "create", "update", "approve_payment"],
+    },
+    {
+      module: "tasks",
+      actions: ["view", "create", "update", "delete", "approve"],
+    },
+    {
+      module: "employees",
+      actions: ["view", "create", "update", "manage_users"],
+    },
+    { module: "properties", actions: ["view", "create", "update", "delete"] },
+    { module: "reports", actions: ["view", "export"] },
+    { module: "analytics", actions: ["view", "export", "access_analytics"] },
+    { module: "integrations", actions: ["view", "configure"] },
+    { module: "templates", actions: ["view", "edit_templates"] },
+    { module: "dashboard", actions: ["view", "access"] },
+    { module: "finance", actions: ["view"] },
+  ],
+
+  owner: [
+    { module: "core", actions: ["view", "create", "update", "delete"] },
+    { module: "manager", actions: ["view", "create", "update", "delete"] },
+    { module: "client", actions: ["view"] },
+    {
+      module: "finance",
+      actions: ["view", "create", "update", "delete", "view_finance"],
+    },
+    {
+      module: "analytics",
+      actions: ["view", "export", "configure", "access_analytics"],
+    },
+    {
+      module: "tasks",
+      actions: ["view", "create", "update", "delete", "approve"],
+    },
+    {
+      module: "employees",
+      actions: ["view", "create", "update", "delete", "manage_users"],
+    },
+    { module: "properties", actions: ["view", "create", "update", "delete"] },
+    { module: "reports", actions: ["view", "export", "view_reports"] },
+    {
+      module: "integrations",
+      actions: ["view", "create", "update", "delete", "manage_integrations"],
+    },
+    {
+      module: "templates",
+      actions: ["view", "create", "update", "delete", "edit_templates"],
+    },
+    {
+      module: "settings",
+      actions: ["view", "create", "update", "delete", "configure"],
+    },
+    {
+      module: "users",
+      actions: ["view", "create", "update", "delete", "manage_users"],
+    },
+    {
+      module: "payments",
+      actions: ["view", "create", "update", "delete", "approve_payment"],
+    },
+    { module: "dashboard", actions: ["view", "access"] },
+  ],
+
+  client: [
+    { module: "client", actions: ["view", "evaluate", "message"] },
+    { module: "properties", actions: ["view"] },
+    { module: "tasks", actions: ["view"] },
+    { module: "reports", actions: ["view"] },
+    { module: "dashboard", actions: ["view", "access"] },
+  ],
+};
+
+/* -----------------------------------------------
+   FEATURE ACCESS (CORRIGIDO)
+------------------------------------------------*/
+export const FEATURE_ACCESS: Record<string, UserRole[]> = {
+  "task-management": ["cleaner", "supervisor", "manager", "owner"],
+  "photo-upload": ["cleaner", "supervisor", "manager", "owner"],
+  checklist: ["cleaner", "supervisor", "manager", "owner"],
+  "employee-management": ["supervisor", "manager", "owner"],
+  "property-management": ["manager", "owner", "client"],
+  "payment-approval": ["manager", "owner"],
+  "template-editing": ["manager", "owner"],
+  "analytics-dashboard": ["supervisor", "manager", "owner"],
+  "financial-reports": ["manager", "owner"],
+  "performance-reports": ["supervisor", "manager", "owner"],
+  "export-data": ["manager", "owner"],
+  "client-portal": ["client", "owner"],
+  "service-evaluation": ["client"],
+  "property-communication": ["client", "manager", "owner"],
+  "user-management": ["owner"],
+  "system-settings": ["owner"],
+  "integration-management": ["manager", "owner"],
+  "audit-logs": ["supervisor", "manager", "owner"],
+};
+
+/* -----------------------------------------------
+   NAVIGATION ACCESS (CORRIGIDO)
+------------------------------------------------*/
+export const NAVIGATION_ACCESS: Record<UserRole, string[]> = {
+  cleaner: ["dashboard", "tasks", "checklist", "profile"],
+  supervisor: ["dashboard", "tasks", "team", "reports", "analytics", "profile"],
+  manager: [
+    "dashboard",
+    "tasks",
+    "team",
+    "properties",
+    "reports",
+    "analytics",
+    "integrations",
+    "profile",
   ],
   owner: [
-    { module: 'core', actions: ['view', 'create', 'update', 'delete'] },
-    { module: 'manager', actions: ['view', 'create', 'update', 'delete'] },
-    { module: 'client', actions: ['view'] },
-    { module: 'finance', actions: ['view', 'create', 'update', 'delete', 'view_finance'] },
-    { module: 'analytics', actions: ['view', 'export', 'configure', 'access_analytics'] },
-    { module: 'tasks', actions: ['view', 'create', 'update', 'delete', 'approve'] },
-    { module: 'employees', actions: ['view', 'create', 'update', 'delete', 'manage_users'] },
-    { module: 'properties', actions: ['view', 'create', 'update', 'delete'] },
-    { module: 'reports', actions: ['view', 'export', 'view_reports'] },
-    { module: 'integrations', actions: ['view', 'create', 'update', 'delete', 'manage_integrations'] },
-    { module: 'templates', actions: ['view', 'create', 'update', 'delete', 'edit_templates'] },
-    { module: 'settings', actions: ['view', 'create', 'update', 'delete', 'configure'] },
-    { module: 'users', actions: ['view', 'create', 'update', 'delete', 'manage_users'] },
-    { module: 'payments', actions: ['view', 'create', 'update', 'delete', 'approve_payment'] },
-    { module: 'dashboard', actions: ['view', 'access'] }
+    "dashboard",
+    "tasks",
+    "team",
+    "properties",
+    "reports",
+    "analytics",
+    "finance",
+    "settings",
+    "integrations",
+    "profile",
   ],
-  client: [
-    { module: 'client', actions: ['view', 'evaluate', 'message'] },
-    { module: 'properties', actions: ['view'] },
-    { module: 'tasks', actions: ['view'] },
-    { module: 'reports', actions: ['view'] },
-    { module: 'dashboard', actions: ['view', 'access'] }
-  ]
+  client: ["dashboard", "properties", "services", "messages", "profile"],
+  admin: [
+    "dashboard",
+    "tasks",
+    "team",
+    "properties",
+    "finance",
+    "reports",
+    "analytics",
+    "integrations",
+    "settings",
+    "profile",
+  ],
 };
 
-// Feature visibility matrix based on roles
-export const FEATURE_ACCESS: Record<string, UserRole[]> = {
-  // Core features
-  'task-management': ['cleaner', 'supervisor', 'manager', 'owner'],
-  'photo-upload': ['cleaner', 'supervisor', 'manager', 'owner'],
-  'checklist': ['cleaner', 'supervisor', 'manager', 'owner'],
-  
-  // Management features
-  'employee-management': ['supervisor', 'manager', 'owner'],
-  'property-management': ['manager', 'owner', 'client'],
-  'payment-approval': ['manager', 'owner'],
-  'template-editing': ['manager', 'owner'],
-  
-  // Analytics and reporting
-  'analytics-dashboard': ['supervisor', 'manager', 'owner'],
-  'financial-reports': ['manager', 'owner'],
-  'performance-reports': ['supervisor', 'manager', 'owner'],
-  'export-data': ['manager', 'owner'],
-  
-  // Client features
-  'client-portal': ['client', 'owner'],
-  'service-evaluation': ['client'],
-  'property-communication': ['client', 'manager', 'owner'],
-  
-  // System administration
-  'user-management': ['owner'],
-  'system-settings': ['owner'],
-  'integration-management': ['manager', 'owner'],
-  'audit-logs': ['supervisor', 'manager', 'owner']
-};
-
-// Navigation items based on roles
-export const NAVIGATION_ACCESS: Record<UserRole, string[]> = {
-  cleaner: ['dashboard', 'tasks', 'checklist', 'profile'],
-  supervisor: ['dashboard', 'tasks', 'team', 'reports', 'analytics', 'profile'],
-  manager: ['dashboard', 'tasks', 'team', 'properties', 'reports', 'analytics', 'integrations', 'profile'],
-  owner: ['dashboard', 'tasks', 'team', 'properties', 'reports', 'analytics', 'finance', 'settings', 'integrations', 'profile'],
-  client: ['dashboard', 'properties', 'services', 'messages', 'profile']
-};
-
-/**
- * Check if a user has permission for a specific action on a module
- */
-export function hasPermission(user: User | null, module: Module, action: Action): boolean {
+/* -----------------------------------------------
+   FUNCTIONS (NÃO PRECISAM DE AJUSTE)
+------------------------------------------------*/
+export function hasPermission(
+  user: User | null,
+  module: Module,
+  action: Action,
+): boolean {
   if (!user) return false;
-  
-  const userPermissions = user.permissions || ROLE_PERMISSIONS[user.role] || [];
-  const modulePermission = userPermissions.find(p => p.module === module);
-  
-  return modulePermission?.actions.includes(action) || false;
+  const perms = ROLE_PERMISSIONS[user.role] || [];
+  const modulePerm = perms.find((p) => p.module === module);
+  return modulePerm?.actions.includes(action) || false;
 }
 
-/**
- * Check if a user can access a specific feature
- */
 export function canAccessFeature(user: User | null, feature: string): boolean {
   if (!user) return false;
-  
-  const allowedRoles = FEATURE_ACCESS[feature];
-  return allowedRoles ? allowedRoles.includes(user.role) : false;
+  const roles = FEATURE_ACCESS[feature];
+  return roles ? roles.includes(user.role) : false;
 }
 
-/**
- * Get navigation items accessible to a user
- */
 export function getAccessibleNavigation(user: User | null): string[] {
   if (!user) return [];
-  
   return NAVIGATION_ACCESS[user.role] || [];
 }
 
-/**
- * Check if user can access a route/page
- */
 export function canAccessRoute(user: User | null, route: string): boolean {
   if (!user) return false;
-  
-  const routePermissions: Record<string, UserRole[]> = {
-    '/dashboard': ['cleaner', 'supervisor', 'manager', 'owner', 'client'],
-    '/tasks': ['cleaner', 'supervisor', 'manager', 'owner'],
-    '/team': ['supervisor', 'manager', 'owner'],
-    '/properties': ['manager', 'owner', 'client'],
-    '/reports': ['supervisor', 'manager', 'owner', 'client'],
-    '/analytics': ['owner'],
-    '/finance': ['manager', 'owner'],
-    '/settings': ['owner'],
-    '/integrations': ['manager', 'owner'],
-    '/client': ['client', 'owner'],
-    '/admin': ['owner']
+  const ROUTES: Record<string, UserRole[]> = {
+    "/dashboard": [
+      "cleaner",
+      "supervisor",
+      "manager",
+      "owner",
+      "client",
+      "admin",
+    ],
+    "/tasks": ["cleaner", "supervisor", "manager", "owner", "admin"],
+    "/team": ["supervisor", "manager", "owner", "admin"],
+    "/properties": ["manager", "owner", "client", "admin"],
+    "/reports": ["supervisor", "manager", "owner", "client", "admin"],
+    "/analytics": ["owner", "admin"],
+    "/finance": ["manager", "owner", "admin"],
+    "/settings": ["owner", "admin"],
+    "/integrations": ["manager", "owner", "admin"],
+    "/client": ["client", "owner", "admin"],
+    "/admin": ["owner", "admin"],
   };
-  
-  const allowedRoles = routePermissions[route];
-  return allowedRoles ? allowedRoles.includes(user.role) : true;
+
+  const roles = ROUTES[route];
+  return roles ? roles.includes(user.role) : true;
 }
 
-/**
- * Get role-specific dashboard configuration
- */
 export function getRoleDashboardConfig(role: UserRole) {
-  const dashboardConfigs = {
+  const CFG = {
     cleaner: {
-      defaultView: 'tasks',
-      widgets: ['my-tasks', 'recent-activity', 'notifications'],
-      actions: ['view-tasks', 'upload-photos', 'complete-checklist']
+      defaultView: "tasks",
+      widgets: ["my-tasks", "recent-activity", "notifications"],
+      actions: ["view-tasks", "upload-photos", "complete-checklist"],
     },
     supervisor: {
-      defaultView: 'overview',
-      widgets: ['team-performance', 'pending-approvals', 'quality-metrics', 'notifications'],
-      actions: ['review-tasks', 'approve-work', 'manage-team', 'view-reports']
+      defaultView: "overview",
+      widgets: [
+        "team-performance",
+        "pending-approvals",
+        "quality-metrics",
+        "notifications",
+      ],
+      actions: ["review-tasks", "approve-work", "manage-team", "view-reports"],
     },
     manager: {
-      defaultView: 'management',
-      widgets: ['property-overview', 'team-stats', 'financial-summary', 'performance-metrics'],
-      actions: ['manage-properties', 'approve-payments', 'view-analytics', 'manage-team']
+      defaultView: "management",
+      widgets: [
+        "property-overview",
+        "team-stats",
+        "financial-summary",
+        "performance-metrics",
+      ],
+      actions: [
+        "manage-properties",
+        "approve-payments",
+        "view-analytics",
+        "manage-team",
+      ],
     },
     owner: {
-      defaultView: 'analytics',
-      widgets: ['business-metrics', 'financial-overview', 'performance-dashboard', 'system-health'],
-      actions: ['full-analytics', 'financial-management', 'system-admin', 'strategic-planning']
+      defaultView: "analytics",
+      widgets: [
+        "business-metrics",
+        "financial-overview",
+        "performance-dashboard",
+        "system-health",
+      ],
+      actions: [
+        "full-analytics",
+        "financial-management",
+        "system-admin",
+        "strategic-planning",
+      ],
     },
     client: {
-      defaultView: 'services',
-      widgets: ['my-properties', 'service-history', 'upcoming-cleanings', 'messages'],
-      actions: ['view-properties', 'schedule-services', 'rate-services', 'contact-support']
-    }
+      defaultView: "services",
+      widgets: [
+        "my-properties",
+        "service-history",
+        "upcoming-cleanings",
+        "messages",
+      ],
+      actions: [
+        "view-properties",
+        "schedule-services",
+        "rate-services",
+        "contact-support",
+      ],
+    },
+    admin: {
+      defaultView: "analytics",
+      widgets: [
+        "business-metrics",
+        "financial-overview",
+        "performance-dashboard",
+        "system-health",
+      ],
+      actions: ["full-analytics", "system-admin", "manage-users"],
+    },
   };
-  
-  return dashboardConfigs[role];
+
+  return CFG[role];
 }
 
-/**
- * Filter menu items based on user permissions
- */
-export function filterMenuByPermissions(user: User | null, menuItems: any[]): any[] {
+export function filterMenuByPermissions(
+  user: User | null,
+  items: any[],
+): any[] {
   if (!user) return [];
-  
-  return menuItems.filter(item => {
+  return items.filter((item) => {
     if (item.requiredPermission) {
-      const [module, action] = item.requiredPermission.split(':');
+      const [module, action] = item.requiredPermission.split(":");
       return hasPermission(user, module as Module, action as Action);
     }
-    
-    if (item.requiredFeature) {
+    if (item.requiredFeature)
       return canAccessFeature(user, item.requiredFeature);
-    }
-    
-    if (item.allowedRoles) {
-      return item.allowedRoles.includes(user.role);
-    }
-    
-    return true; // Default allow if no restrictions specified
+    if (item.allowedRoles) return item.allowedRoles.includes(user.role);
+    return true;
   });
 }
 
-/**
- * Get user's capability level for progressive UI
- */
-export function getUserCapabilityLevel(user: User | null): 'basic' | 'intermediate' | 'advanced' | 'admin' {
-  if (!user) return 'basic';
-  
-  const capabilityMap = {
-    cleaner: 'basic',
-    client: 'basic',
-    supervisor: 'intermediate',
-    manager: 'advanced',
-    owner: 'admin'
+export function getUserCapabilityLevel(
+  user: User | null,
+): "basic" | "intermediate" | "advanced" | "admin" {
+  if (!user) return "basic";
+
+  const CAP = {
+    cleaner: "basic",
+    client: "basic",
+    supervisor: "intermediate",
+    manager: "advanced",
+    owner: "admin",
+    admin: "admin",
   } as const;
-  
-  return capabilityMap[user.role];
+
+  return CAP[user.role];
 }
 
-/**
- * Check if user should see advanced features
- */
 export function shouldShowAdvancedFeatures(user: User | null): boolean {
-  const capability = getUserCapabilityLevel(user);
-  return ['advanced', 'admin'].includes(capability);
+  const cap = getUserCapabilityLevel(user);
+  return ["advanced", "admin"].includes(cap);
 }
 
-/**
- * Get contextual help based on user role
- */
 export function getRoleBasedHelp(user: User | null) {
   if (!user) return null;
-  
-  const helpContent = {
+
+  const HELP = {
     cleaner: {
-      quickActions: ['Upload photos', 'Complete checklist', 'Update task status'],
-      helpTopics: ['How to use the mobile app', 'Photo upload guidelines', 'Checklist best practices'],
-      supportContact: 'supervisor'
+      quickActions: [
+        "Upload photos",
+        "Complete checklist",
+        "Update task status",
+      ],
+      helpTopics: [
+        "How to use the mobile app",
+        "Photo upload guidelines",
+        "Checklist best practices",
+      ],
+      supportContact: "supervisor",
     },
     supervisor: {
-      quickActions: ['Review completed work', 'Approve tasks', 'Give feedback'],
-      helpTopics: ['Team management', 'Quality control', 'Performance tracking'],
-      supportContact: 'manager'
+      quickActions: ["Review completed work", "Approve tasks", "Give feedback"],
+      helpTopics: [
+        "Team management",
+        "Quality control",
+        "Performance tracking",
+      ],
+      supportContact: "manager",
     },
     manager: {
-      quickActions: ['Manage properties', 'Approve payments', 'View reports'],
-      helpTopics: ['Property management', 'Team performance', 'Financial overview'],
-      supportContact: 'admin'
+      quickActions: ["Manage properties", "Approve payments", "View reports"],
+      helpTopics: [
+        "Property management",
+        "Team performance",
+        "Financial overview",
+      ],
+      supportContact: "admin",
     },
     owner: {
-      quickActions: ['View analytics', 'System settings', 'Strategic planning'],
-      helpTopics: ['Business analytics', 'System administration', 'Growth strategies'],
-      supportContact: 'technical_support'
+      quickActions: ["View analytics", "System settings", "Strategic planning"],
+      helpTopics: [
+        "Business analytics",
+        "System administration",
+        "Growth strategies",
+      ],
+      supportContact: "technical_support",
     },
     client: {
-      quickActions: ['Schedule cleaning', 'Rate service', 'Contact support'],
-      helpTopics: ['Service booking', 'Property management', 'Billing questions'],
-      supportContact: 'customer_service'
-    }
+      quickActions: ["Schedule cleaning", "Rate service", "Contact support"],
+      helpTopics: [
+        "Service booking",
+        "Property management",
+        "Billing questions",
+      ],
+      supportContact: "customer_service",
+    },
+    admin: {
+      quickActions: ["System auditing", "User oversight", "Platform settings"],
+      helpTopics: ["System architecture", "Security best practices"],
+      supportContact: "technical_support",
+    },
   };
-  
-  return helpContent[user.role];
+
+  return HELP[user.role];
 }

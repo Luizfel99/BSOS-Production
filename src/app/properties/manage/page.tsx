@@ -1,38 +1,38 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { toast } from 'react-hot-toast';
-import { motion } from 'framer-motion';
-import { 
-  ArrowLeft, 
-  Save, 
-  Building, 
-  MapPin, 
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "react-hot-toast";
+import { motion } from "framer-motion";
+import {
+  ArrowLeft,
+  Save,
+  Building,
+  MapPin,
   Home,
   User,
   Tag,
-  AlertCircle 
-} from 'lucide-react';
-import { ProtectedComponent } from '@/components/ProtectedComponent';
-import { 
-  createProperty, 
-  updateProperty, 
+  AlertCircle,
+} from "lucide-react";
+import { ProtectedComponent } from "@/components/ProtectedComponent";
+import {
+  createProperty,
+  updateProperty,
   getProperty,
   type CreatePropertyData,
   type UpdatePropertyData,
-  type Property 
-} from '@/services/properties';
+  type Property,
+} from "@/services/properties";
 
 // Form validation schema
 const propertySchema = z.object({
-  name: z.string().min(1, 'Property name is required'),
-  address: z.string().min(1, 'Address is required'),
-  type: z.enum(['APARTMENT', 'HOUSE', 'STUDIO', 'COMMERCIAL'], {
-    required_error: 'Property type is required',
+  name: z.string().min(1, "Property name is required"),
+  address: z.string().min(1, "Address is required"),
+  type: z.enum(["APARTMENT", "HOUSE", "STUDIO", "COMMERCIAL"], {
+    required_error: "Property type is required",
   }),
   platform: z.string().optional(),
   platformId: z.string().optional(),
@@ -45,7 +45,7 @@ type PropertyFormData = z.infer<typeof propertySchema>;
 export default function PropertyManagePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const propertyId = searchParams.get('id');
+  const propertyId = searchParams.get("id");
   const isEditing = Boolean(propertyId);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -57,16 +57,16 @@ export default function PropertyManagePage() {
     formState: { errors, isSubmitting },
     reset,
     setValue,
-    watch
+    watch,
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
     defaultValues: {
-      name: '',
-      address: '',
-      type: 'APARTMENT',
-      platform: '',
-      platformId: '',
-      ownerId: '',
+      name: "",
+      address: "",
+      type: "APARTMENT",
+      platform: "",
+      platformId: "",
+      ownerId: "",
       active: true,
     },
   });
@@ -83,20 +83,20 @@ export default function PropertyManagePage() {
       setIsLoadingProperty(true);
       const response = await getProperty(id);
       const property = response.data;
-      
+
       // Reset form with property data
       reset({
         name: property.name,
         address: property.address,
         type: property.type,
-        platform: property.platform || '',
-        platformId: property.platformId || '',
-        ownerId: property.ownerId || '',
+        platform: property.platform || "",
+        platformId: property.platformId || "",
+        ownerId: property.ownerId || "",
         active: property.active,
       });
     } catch (error: any) {
-      toast.error(error.message || 'Failed to load property');
-      router.push('/properties');
+      toast.error(error.message || "Failed to load property");
+      router.push("/properties");
     } finally {
       setIsLoadingProperty(false);
     }
@@ -132,9 +132,12 @@ export default function PropertyManagePage() {
         await createProperty(createData);
       }
 
-      router.push('/properties');
+      router.push("/properties");
     } catch (error: any) {
-      toast.error(error.message || `Failed to ${isEditing ? 'update' : 'create'} property`);
+      toast.error(
+        error.message ||
+          `Failed to ${isEditing ? "update" : "create"} property`,
+      );
     } finally {
       setIsLoading(false);
     }
@@ -152,7 +155,7 @@ export default function PropertyManagePage() {
   }
 
   return (
-    <ProtectedComponent allowedRoles={['OWNER', 'MANAGER']}>
+    <ProtectedComponent allowedRoles={["OWNER", "MANAGER"]}>
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-2xl mx-auto px-4 py-8">
           {/* Header */}
@@ -169,13 +172,12 @@ export default function PropertyManagePage() {
               Back to Properties
             </button>
             <h1 className="text-3xl font-bold text-gray-900">
-              {isEditing ? 'Edit Property' : 'Add New Property'}
+              {isEditing ? "Edit Property" : "Add New Property"}
             </h1>
             <p className="text-gray-600 mt-2">
-              {isEditing 
-                ? 'Update property information and settings'
-                : 'Create a new property for cleaning management'
-              }
+              {isEditing
+                ? "Update property information and settings"
+                : "Create a new property for cleaning management"}
             </p>
           </motion.div>
 
@@ -195,7 +197,7 @@ export default function PropertyManagePage() {
                 </label>
                 <input
                   type="text"
-                  {...register('name')}
+                  {...register("name")}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   placeholder="Enter property name"
                 />
@@ -214,7 +216,7 @@ export default function PropertyManagePage() {
                   Address
                 </label>
                 <textarea
-                  {...register('address')}
+                  {...register("address")}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   placeholder="Enter full address"
@@ -234,7 +236,7 @@ export default function PropertyManagePage() {
                   Property Type
                 </label>
                 <select
-                  {...register('type')}
+                  {...register("type")}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 >
                   <option value="APARTMENT">Apartment</option>
@@ -258,7 +260,7 @@ export default function PropertyManagePage() {
                   </label>
                   <input
                     type="text"
-                    {...register('platform')}
+                    {...register("platform")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="e.g., Airbnb, Booking.com"
                   />
@@ -271,7 +273,7 @@ export default function PropertyManagePage() {
                   </label>
                   <input
                     type="text"
-                    {...register('platformId')}
+                    {...register("platformId")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="Platform listing ID"
                   />
@@ -286,7 +288,7 @@ export default function PropertyManagePage() {
                 </label>
                 <input
                   type="text"
-                  {...register('ownerId')}
+                  {...register("ownerId")}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   placeholder="Leave empty to assign to current user"
                 />
@@ -296,7 +298,7 @@ export default function PropertyManagePage() {
               <div className="flex items-center">
                 <input
                   type="checkbox"
-                  {...register('active')}
+                  {...register("active")}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <label className="ml-2 text-sm font-medium text-gray-700">
@@ -323,7 +325,7 @@ export default function PropertyManagePage() {
                   ) : (
                     <Save className="h-4 w-4 mr-2" />
                   )}
-                  {isEditing ? 'Update Property' : 'Create Property'}
+                  {isEditing ? "Update Property" : "Create Property"}
                 </button>
               </div>
             </form>

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 /**
  * Hook para evitar erros de hidratação SSR/Client
@@ -22,10 +22,10 @@ export function useIsClient() {
  */
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, (value: T | ((val: T) => T)) => void] {
   const isClient = useIsClient();
-  
+
   const [storedValue, setStoredValue] = useState<T>(initialValue);
 
   useEffect(() => {
@@ -43,9 +43,10 @@ export function useLocalStorage<T>(
 
   const setValue = (value: T | ((val: T) => T)) => {
     try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
-      
+
       if (isClient) {
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       }
@@ -63,7 +64,9 @@ export function useLocalStorage<T>(
  */
 export function useCurrentDate() {
   const isClient = useIsClient();
-  const [currentDate, setCurrentDate] = useState(() => new Date('2024-10-08T12:00:00'));
+  const [currentDate, setCurrentDate] = useState(
+    () => new Date("2024-10-08T12:00:00"),
+  );
 
   useEffect(() => {
     if (!isClient) return;
@@ -82,11 +85,11 @@ export function useCurrentDate() {
 /**
  * Hook para IDs únicos que evitam conflitos SSR/Client
  */
-export function useUniqueId(prefix: string = 'id'): string {
+export function useUniqueId(prefix: string = "id"): string {
   const isClient = useIsClient();
   const [id] = useState(() => {
     // Usa um contador simples no servidor, timestamp no cliente
-    return isClient 
+    return isClient
       ? `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
       : `${prefix}-server-${Math.random().toString(36).substr(2, 9)}`;
   });

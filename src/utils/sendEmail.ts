@@ -1,7 +1,7 @@
 /**
  * Email Utility
  * Função para envio de emails
- * 
+ *
  * Para produção, instale: npm install @sendgrid/mail
  * Configure as variáveis de ambiente:
  * - SENDGRID_API_KEY
@@ -17,27 +17,28 @@ interface EmailOptions {
 export async function sendEmail(
   to: string,
   subject: string,
-  html: string
+  html: string,
 ): Promise<void> {
   // Verificar se está em produção e SendGrid está configurado
-  const useSendGrid = process.env.SENDGRID_API_KEY && process.env.NODE_ENV === 'production';
+  const useSendGrid =
+    process.env.SENDGRID_API_KEY && process.env.NODE_ENV === "production";
 
   if (useSendGrid) {
     try {
       // Importar SendGrid dinamicamente
-      const sgMail = require('@sendgrid/mail');
+      const sgMail = require("@sendgrid/mail");
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
       await sgMail.send({
         to,
-        from: process.env.EMAIL_FROM || 'noreply@bsos.com',
+        from: process.env.EMAIL_FROM || "noreply@bsos.com",
         subject,
         html,
       });
 
       console.log(`✅ Email enviado para ${to}`);
     } catch (error) {
-      console.error('❌ Erro ao enviar email via SendGrid:', error);
+      console.error("❌ Erro ao enviar email via SendGrid:", error);
       throw error;
     }
   } else {

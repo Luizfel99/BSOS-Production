@@ -16,7 +16,7 @@ export async function GET() {
         status: "⚠️ API running, but DB error",
         message: err.message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

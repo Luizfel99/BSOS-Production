@@ -55,7 +55,7 @@ export default function VerifyCodePage() {
 
   async function handleVerify() {
     const fullCode = code.join("");
-    
+
     if (fullCode.length !== 6) {
       setMsg("❌ Por favor, digite os 6 dígitos");
       return;
@@ -66,7 +66,7 @@ export default function VerifyCodePage() {
 
     try {
       const email = localStorage.getItem("verify_email");
-      
+
       if (!email) {
         setMsg("❌ E-mail não encontrado. Por favor, solicite um novo código.");
         setLoading(false);
@@ -81,16 +81,17 @@ export default function VerifyCodePage() {
       if (res.data.success) {
         setMsg("✅ Código verificado com sucesso!");
         localStorage.removeItem("verify_email");
-        
+
         // Redirecionar após 1.5 segundos
         setTimeout(() => {
           router.push("/login");
         }, 1500);
       }
     } catch (error: any) {
-      const errorMsg = error.response?.data?.error || "Código inválido ou expirado.";
+      const errorMsg =
+        error.response?.data?.error || "Código inválido ou expirado.";
       setMsg(`❌ ${errorMsg}`);
-      
+
       // Limpar código em caso de erro
       setCode(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
@@ -102,7 +103,6 @@ export default function VerifyCodePage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-8 bg-gradient-to-br from-blue-600 to-blue-900">
       <div className="bg-white p-8 rounded-2xl shadow-2xl text-center space-y-6 max-w-md w-full animate-fadeIn">
-        
         {/* Logo ou ícone */}
         <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
           <span className="text-3xl">🔐</span>
@@ -120,7 +120,9 @@ export default function VerifyCodePage() {
           {code.map((digit, index) => (
             <input
               key={index}
-              ref={(el) => { if (el) inputRefs.current[index] = el; }}
+              ref={(el) => {
+                if (el) inputRefs.current[index] = el;
+              }}
               type="text"
               inputMode="numeric"
               maxLength={1}

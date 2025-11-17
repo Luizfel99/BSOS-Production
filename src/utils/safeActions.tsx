@@ -3,9 +3,9 @@
  * Provides safe action button utilities with proper user state checks
  */
 
-import { useAuth } from '@/contexts/AuthContext';
-import { usePermissions } from '@/components/ProtectedComponent';
-import { Module, Action } from '@/utils/rbac';
+import { useAuth } from "@/contexts/AuthContext";
+import { usePermissions } from "@/components/ProtectedComponent";
+import { Module, Action } from "@/utils/rbac";
 
 export interface ActionButtonProps {
   children: React.ReactNode;
@@ -26,13 +26,17 @@ export const SafeActionButton: React.FC<ActionButtonProps> = ({
   children,
   onClick,
   disabled = false,
-  className = '',
+  className = "",
   requiredPermission,
   allowedRoles,
   fallbackDisabled = false,
   title,
 }) => {
-  const { user, isAuthenticated, hasPermission: checkPermission } = usePermissions();
+  const {
+    user,
+    isAuthenticated,
+    hasPermission: checkPermission,
+  } = usePermissions();
 
   // If no user is authenticated, hide or disable button
   if (!user || !isAuthenticated) {
@@ -54,9 +58,9 @@ export const SafeActionButton: React.FC<ActionButtonProps> = ({
   if (requiredPermission) {
     const hasRequiredPermission = checkPermission(
       requiredPermission.module,
-      requiredPermission.action
+      requiredPermission.action,
     );
-    
+
     if (!hasRequiredPermission) {
       if (fallbackDisabled) {
         return (
@@ -76,7 +80,7 @@ export const SafeActionButton: React.FC<ActionButtonProps> = ({
   // Check role requirements
   if (allowedRoles && user.role) {
     const hasAllowedRole = allowedRoles.includes(user.role);
-    
+
     if (!hasAllowedRole) {
       if (fallbackDisabled) {
         return (
@@ -97,10 +101,10 @@ export const SafeActionButton: React.FC<ActionButtonProps> = ({
   const handleClick = () => {
     // Additional safety check before executing action
     if (!user || !isAuthenticated) {
-      console.warn('Action blocked: User not authenticated');
+      console.warn("Action blocked: User not authenticated");
       return;
     }
-    
+
     // Execute the action
     onClick();
   };
@@ -129,12 +133,12 @@ export const useSafeActions = () => {
     requirements?: {
       requiredPermission?: { module: Module; action: Action };
       allowedRoles?: string[];
-    }
+    },
   ) => {
     return () => {
       // Check authentication
       if (!user || !isAuthenticated) {
-        console.warn('Action blocked: User not authenticated');
+        console.warn("Action blocked: User not authenticated");
         return;
       }
 
@@ -142,11 +146,11 @@ export const useSafeActions = () => {
       if (requirements?.requiredPermission) {
         const hasRequiredPermission = hasPermission(
           requirements.requiredPermission.module,
-          requirements.requiredPermission.action
+          requirements.requiredPermission.action,
         );
-        
+
         if (!hasRequiredPermission) {
-          console.warn('Action blocked: Insufficient permissions');
+          console.warn("Action blocked: Insufficient permissions");
           return;
         }
       }
@@ -154,9 +158,9 @@ export const useSafeActions = () => {
       // Check role requirements
       if (requirements?.allowedRoles && user.role) {
         const hasAllowedRole = requirements.allowedRoles.includes(user.role);
-        
+
         if (!hasAllowedRole) {
-          console.warn('Action blocked: Role not authorized');
+          console.warn("Action blocked: Role not authorized");
           return;
         }
       }
@@ -165,7 +169,7 @@ export const useSafeActions = () => {
       try {
         action();
       } catch (error) {
-        console.error('Action execution error:', error);
+        console.error("Action execution error:", error);
       }
     };
   };
@@ -183,9 +187,9 @@ export const useSafeActions = () => {
     if (requirements?.requiredPermission) {
       const hasRequiredPermission = hasPermission(
         requirements.requiredPermission.module,
-        requirements.requiredPermission.action
+        requirements.requiredPermission.action,
       );
-      
+
       if (!hasRequiredPermission) {
         return false;
       }
@@ -194,7 +198,7 @@ export const useSafeActions = () => {
     // Check role requirements
     if (requirements?.allowedRoles && user.role) {
       const hasAllowedRole = requirements.allowedRoles.includes(user.role);
-      
+
       if (!hasAllowedRole) {
         return false;
       }
@@ -216,16 +220,16 @@ export const useSafeActions = () => {
  * Safe wrapper for any action that requires user authentication
  */
 export const withUserCheck = <T extends any[]>(
-  action: (...args: T) => void
+  action: (...args: T) => void,
 ) => {
   return (...args: T) => {
     const { user, isAuthenticated } = useAuth();
-    
+
     if (!user || !isAuthenticated) {
-      console.warn('Action blocked: User not authenticated');
+      console.warn("Action blocked: User not authenticated");
       return;
     }
-    
+
     action(...args);
   };
 };

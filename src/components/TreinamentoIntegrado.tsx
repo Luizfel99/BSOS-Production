@@ -3,18 +3,48 @@
  * Sistema completo de treinamento com vídeos, manuais e testes
  */
 
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { BookOpen, Video, FileText, Award, Clock, Users, Play, Download, Upload, CheckCircle2, AlertTriangle, Star, BarChart3, Target, Calendar, Search, Filter, Plus, Edit3, Trash2, Eye, Lock, Unlock } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  BookOpen,
+  Video,
+  FileText,
+  Award,
+  Clock,
+  Users,
+  Play,
+  Download,
+  Upload,
+  CheckCircle2,
+  AlertTriangle,
+  Star,
+  BarChart3,
+  Target,
+  Calendar,
+  Search,
+  Filter,
+  Plus,
+  Edit3,
+  Trash2,
+  Eye,
+  Lock,
+  Unlock,
+} from "lucide-react";
 
 interface TrainingModule {
   id: string;
   title: string;
   description: string;
-  category: 'fundamentals' | 'techniques' | 'safety' | 'products' | 'customer_service' | 'equipment';
-  
+  category:
+    | "fundamentals"
+    | "techniques"
+    | "safety"
+    | "products"
+    | "customer_service"
+    | "equipment";
+
   // Conteúdo
   content: {
     videos: Array<{
@@ -25,16 +55,16 @@ interface TrainingModule {
       thumbnail: string;
       description: string;
     }>;
-    
+
     documents: Array<{
       id: string;
       title: string;
-      type: 'pdf' | 'doc' | 'image';
+      type: "pdf" | "doc" | "image";
       url: string;
       size: number;
       description: string;
     }>;
-    
+
     quizzes: Array<{
       id: string;
       title: string;
@@ -43,24 +73,24 @@ interface TrainingModule {
       passingScore: number; // percentual
     }>;
   };
-  
+
   // Configurações
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   estimatedDuration: number; // em minutos
   prerequisites: string[];
   isRequired: boolean;
   isActive: boolean;
-  
+
   // Estatísticas
   enrolledCount: number;
   completedCount: number;
   averageScore: number;
   averageRating: number;
-  
+
   // Datas
   createdAt: string;
   updatedAt: string;
-  
+
   // Certificação
   certificationRequired: boolean;
   certificationValidDays: number;
@@ -71,13 +101,13 @@ interface UserProgress {
   userName: string;
   userPhoto: string;
   userRole: string;
-  
+
   moduleId: string;
-  
+
   // Progresso
-  status: 'not_started' | 'in_progress' | 'completed' | 'expired';
+  status: "not_started" | "in_progress" | "completed" | "expired";
   progressPercentage: number;
-  
+
   // Videos assistidos
   videosWatched: Array<{
     videoId: string;
@@ -85,14 +115,14 @@ interface UserProgress {
     completed: boolean;
     lastWatched: string;
   }>;
-  
+
   // Documentos visualizados
   documentsViewed: Array<{
     documentId: string;
     viewedAt: string;
     timeSpent: number;
   }>;
-  
+
   // Testes realizados
   quizResults: Array<{
     quizId: string;
@@ -110,17 +140,17 @@ interface UserProgress {
     bestScore: number;
     lastAttempt: string;
   }>;
-  
+
   // Datas importantes
   startedAt?: string;
   completedAt?: string;
   lastActivity: string;
-  
+
   // Certificação
   certificationEarned: boolean;
   certificationDate?: string;
   certificationExpiryDate?: string;
-  
+
   // Feedback
   rating?: number;
   feedback?: string;
@@ -131,10 +161,10 @@ interface Quiz {
   moduleId: string;
   title: string;
   description: string;
-  
+
   questions: Array<{
     id: string;
-    type: 'multiple_choice' | 'true_false' | 'text' | 'image_selection';
+    type: "multiple_choice" | "true_false" | "text" | "image_selection";
     question: string;
     options?: string[];
     correctAnswer: string | string[];
@@ -142,7 +172,7 @@ interface Quiz {
     points: number;
     image?: string;
   }>;
-  
+
   settings: {
     timeLimit: number;
     passingScore: number;
@@ -150,7 +180,7 @@ interface Quiz {
     randomizeQuestions: boolean;
     showResultsImmediately: boolean;
   };
-  
+
   isActive: boolean;
 }
 
@@ -159,23 +189,27 @@ export default function TreinamentoIntegrado() {
   const [trainingModules, setTrainingModules] = useState<TrainingModule[]>([]);
   const [userProgresses, setUserProgresses] = useState<UserProgress[]>([]);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-  
-  const [activeTab, setActiveTab] = useState<'modules' | 'progress' | 'quizzes' | 'analytics' | 'library'>('modules');
-  const [selectedModule, setSelectedModule] = useState<TrainingModule | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  
+
+  const [activeTab, setActiveTab] = useState<
+    "modules" | "progress" | "quizzes" | "analytics" | "library"
+  >("modules");
+  const [selectedModule, setSelectedModule] = useState<TrainingModule | null>(
+    null,
+  );
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showQuizModal, setShowQuizModal] = useState(false);
   const [showVideoPlayer, setShowVideoPlayer] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
-  
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchTrainingData();
   }, []);
-  
+
   // Early return if no user is authenticated
   if (!user) {
     return null;
@@ -185,22 +219,22 @@ export default function TreinamentoIntegrado() {
     try {
       setLoading(true);
       const [modulesRes, progressRes, quizzesRes] = await Promise.all([
-        fetch('/api/training/modules'),
-        fetch('/api/training/progress'),
-        fetch('/api/training/quizzes')
+        fetch("/api/training/modules"),
+        fetch("/api/training/progress"),
+        fetch("/api/training/quizzes"),
       ]);
-      
+
       const [modulesData, progressData, quizzesData] = await Promise.all([
         modulesRes.json(),
         progressRes.json(),
-        quizzesRes.json()
+        quizzesRes.json(),
       ]);
-      
+
       setTrainingModules(modulesData.modules);
       setUserProgresses(progressData.progresses);
       setQuizzes(quizzesData.quizzes);
     } catch (error) {
-      console.error('Erro ao buscar dados de treinamento:', error);
+      console.error("Erro ao buscar dados de treinamento:", error);
     } finally {
       setLoading(false);
     }
@@ -209,50 +243,50 @@ export default function TreinamentoIntegrado() {
   const enrollInModule = async (moduleId: string) => {
     try {
       await fetch(`/api/training/modules/${moduleId}/enroll`, {
-        method: 'POST'
+        method: "POST",
       });
       fetchTrainingData();
     } catch (error) {
-      console.error('Erro ao se inscrever no módulo:', error);
+      console.error("Erro ao se inscrever no módulo:", error);
     }
   };
 
   const markVideoAsWatched = async (moduleId: string, videoId: string) => {
     try {
       await fetch(`/api/training/progress/video`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ moduleId, videoId })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ moduleId, videoId }),
       });
       fetchTrainingData();
     } catch (error) {
-      console.error('Erro ao marcar vídeo como assistido:', error);
+      console.error("Erro ao marcar vídeo como assistido:", error);
     }
   };
 
   const submitQuiz = async (quizId: string, answers: any[]) => {
     try {
       await fetch(`/api/training/quizzes/${quizId}/submit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers }),
       });
       fetchTrainingData();
     } catch (error) {
-      console.error('Erro ao enviar teste:', error);
+      console.error("Erro ao enviar teste:", error);
     }
   };
 
   const handleDownloadCertificate = async (moduleId: string) => {
     try {
       const response = await fetch(`/api/training/certificates/${moduleId}`, {
-        method: 'GET'
+        method: "GET",
       });
-      
+
       if (response.ok) {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
         a.download = `certificado-${moduleId}.pdf`;
         document.body.appendChild(a);
@@ -260,16 +294,16 @@ export default function TreinamentoIntegrado() {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
       } else {
-        throw new Error('Erro ao baixar certificado');
+        throw new Error("Erro ao baixar certificado");
       }
     } catch (error) {
-      console.error('Erro:', error);
-      alert('Erro ao baixar certificado. Tente novamente.');
+      console.error("Erro:", error);
+      alert("Erro ao baixar certificado. Tente novamente.");
     }
   };
 
   const handleViewDocument = (url: string) => {
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
   const handleDownloadDocument = async (url: string, filename: string) => {
@@ -277,7 +311,7 @@ export default function TreinamentoIntegrado() {
       const response = await fetch(url);
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = downloadUrl;
       a.download = filename;
       document.body.appendChild(a);
@@ -285,63 +319,72 @@ export default function TreinamentoIntegrado() {
       window.URL.revokeObjectURL(downloadUrl);
       document.body.removeChild(a);
     } catch (error) {
-      console.error('Erro:', error);
-      alert('Erro ao baixar documento. Tente novamente.');
+      console.error("Erro:", error);
+      alert("Erro ao baixar documento. Tente novamente.");
     }
   };
 
   const handleStartQuiz = (quizId: string) => {
-    console.log('🎯 Iniciando quiz ID:', quizId);
+    console.log("🎯 Iniciando quiz ID:", quizId);
     setShowQuizModal(true);
     // Additional quiz initialization logic here
   };
 
   const getCategoryIcon = (category: string) => {
     const icons = {
-      fundamentals: 'F',
-      techniques: 'T',
-      safety: 'S',
-      products: 'P',
-      customer_service: 'CS',
-      equipment: 'E'
+      fundamentals: "F",
+      techniques: "T",
+      safety: "S",
+      products: "P",
+      customer_service: "CS",
+      equipment: "E",
     };
-    return icons[category as keyof typeof icons] || 'G';
+    return icons[category as keyof typeof icons] || "G";
   };
 
   const getDifficultyColor = (difficulty: string) => {
     const colors = {
-      beginner: 'bg-green-100 text-green-800',
-      intermediate: 'bg-yellow-100 text-yellow-800',
-      advanced: 'bg-red-100 text-red-800'
+      beginner: "bg-green-100 text-green-800",
+      intermediate: "bg-yellow-100 text-yellow-800",
+      advanced: "bg-red-100 text-red-800",
     };
-    return colors[difficulty as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return (
+      colors[difficulty as keyof typeof colors] || "bg-gray-100 text-gray-800"
+    );
   };
 
   const getStatusColor = (status: string) => {
     const colors = {
-      not_started: 'bg-gray-100 text-gray-800',
-      in_progress: 'bg-blue-100 text-blue-800',
-      completed: 'bg-green-100 text-green-800',
-      expired: 'bg-red-100 text-red-800'
+      not_started: "bg-gray-100 text-gray-800",
+      in_progress: "bg-blue-100 text-blue-800",
+      completed: "bg-green-100 text-green-800",
+      expired: "bg-red-100 text-red-800",
     };
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
   };
 
   const formatDuration = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const filteredModules = trainingModules.filter(module => {
-    if (selectedCategory !== 'all' && module.category !== selectedCategory) return false;
-    if (searchQuery && !module.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !module.description.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+  const filteredModules = trainingModules.filter((module) => {
+    if (selectedCategory !== "all" && module.category !== selectedCategory)
+      return false;
+    if (
+      searchQuery &&
+      !module.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !module.description.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+      return false;
     return true;
   });
 
   const getUserProgress = (moduleId: string) => {
-    return userProgresses.find(p => p.moduleId === moduleId && p.userId === user?.id);
+    return userProgresses.find(
+      (p) => p.moduleId === moduleId && p.userId === user?.id,
+    );
   };
 
   if (loading) {
@@ -357,12 +400,14 @@ export default function TreinamentoIntegrado() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">📚 Treinamento Integrado</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            📚 Treinamento Integrado
+          </h1>
           <p className="text-gray-600">Centro de treinamento Bright & Shine</p>
         </div>
-        
+
         <div className="flex gap-3">
-          {(user?.role === 'owner' || user?.role === 'supervisor') && (
+          {(user?.role === "owner" || user?.role === "supervisor") && (
             <>
               <button
                 onClick={() => setShowCreateModal(true)}
@@ -386,19 +431,19 @@ export default function TreinamentoIntegrado() {
       {/* Tabs */}
       <div className="flex border-b mb-6">
         {[
-          { id: 'modules', label: 'Módulos', icon: BookOpen },
-          { id: 'progress', label: 'Meu Progresso', icon: BarChart3 },
-          { id: 'quizzes', label: 'Testes', icon: Target },
-          { id: 'analytics', label: 'Analytics', icon: Award },
-          { id: 'library', label: 'Biblioteca', icon: FileText }
-        ].map(tab => (
+          { id: "modules", label: "Módulos", icon: BookOpen },
+          { id: "progress", label: "Meu Progresso", icon: BarChart3 },
+          { id: "quizzes", label: "Testes", icon: Target },
+          { id: "analytics", label: "Analytics", icon: Award },
+          { id: "library", label: "Biblioteca", icon: FileText },
+        ].map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
             className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
-              activeTab === tab.id 
-                ? 'border-b-2 border-blue-600 text-blue-600' 
-                : 'text-gray-600 hover:text-gray-900'
+              activeTab === tab.id
+                ? "border-b-2 border-blue-600 text-blue-600"
+                : "text-gray-600 hover:text-gray-900"
             }`}
           >
             <tab.icon className="h-4 w-4" />
@@ -413,24 +458,24 @@ export default function TreinamentoIntegrado() {
           <div className="text-2xl font-bold">{trainingModules.length}</div>
           <div className="text-blue-100">Módulos Disponíveis</div>
         </div>
-        
+
         <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 rounded-lg text-white">
           <div className="text-2xl font-bold">
-            {userProgresses.filter(p => p.status === 'completed').length}
+            {userProgresses.filter((p) => p.status === "completed").length}
           </div>
           <div className="text-green-100">Módulos Concluídos</div>
         </div>
-        
+
         <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-4 rounded-lg text-white">
           <div className="text-2xl font-bold">
-            {userProgresses.filter(p => p.certificationEarned).length}
+            {userProgresses.filter((p) => p.certificationEarned).length}
           </div>
           <div className="text-purple-100">Certificações</div>
         </div>
-        
+
         <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-4 rounded-lg text-white">
           <div className="text-2xl font-bold">
-            {userProgresses.filter(p => p.status === 'in_progress').length}
+            {userProgresses.filter((p) => p.status === "in_progress").length}
           </div>
           <div className="text-orange-100">Em Progresso</div>
         </div>
@@ -468,20 +513,30 @@ export default function TreinamentoIntegrado() {
       </div>
 
       {/* Content based on active tab */}
-      {activeTab === 'modules' && (
+      {activeTab === "modules" && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredModules.map(module => {
+          {filteredModules.map((module) => {
             const userProgress = getUserProgress(module.id);
-            const totalContent = module.content.videos.length + module.content.documents.length + module.content.quizzes.length;
-            
+            const totalContent =
+              module.content.videos.length +
+              module.content.documents.length +
+              module.content.quizzes.length;
+
             return (
-              <div key={module.id} className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+              <div
+                key={module.id}
+                className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+              >
                 {/* Header do módulo */}
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl">{getCategoryIcon(module.category)}</span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(module.difficulty)}`}>
+                      <span className="text-2xl">
+                        {getCategoryIcon(module.category)}
+                      </span>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(module.difficulty)}`}
+                      >
                         {module.difficulty}
                       </span>
                     </div>
@@ -491,26 +546,34 @@ export default function TreinamentoIntegrado() {
                       </span>
                     )}
                   </div>
-                  
+
                   <h3 className="font-semibold text-lg mb-2">{module.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">{module.description}</p>
-                  
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {module.description}
+                  </p>
+
                   {/* Estatísticas do módulo */}
                   <div className="grid grid-cols-3 gap-3 mb-4 text-center">
                     <div>
-                      <div className="text-lg font-bold text-blue-600">{module.content.videos.length}</div>
+                      <div className="text-lg font-bold text-blue-600">
+                        {module.content.videos.length}
+                      </div>
                       <div className="text-xs text-gray-500">Vídeos</div>
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-green-600">{module.content.documents.length}</div>
+                      <div className="text-lg font-bold text-green-600">
+                        {module.content.documents.length}
+                      </div>
                       <div className="text-xs text-gray-500">Docs</div>
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-purple-600">{module.content.quizzes.length}</div>
+                      <div className="text-lg font-bold text-purple-600">
+                        {module.content.quizzes.length}
+                      </div>
                       <div className="text-xs text-gray-500">Testes</div>
                     </div>
                   </div>
-                  
+
                   {/* Progresso do usuário */}
                   {userProgress ? (
                     <div className="mb-4">
@@ -519,14 +582,20 @@ export default function TreinamentoIntegrado() {
                         <span>{userProgress.progressPercentage}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
+                        <div
                           className={`h-2 rounded-full ${
-                            userProgress.status === 'completed' ? 'bg-green-500' : 'bg-blue-500'
+                            userProgress.status === "completed"
+                              ? "bg-green-500"
+                              : "bg-blue-500"
                           }`}
-                          style={{ width: `${userProgress.progressPercentage}%` }}
+                          style={{
+                            width: `${userProgress.progressPercentage}%`,
+                          }}
                         ></div>
                       </div>
-                      <div className={`text-xs mt-1 ${getStatusColor(userProgress.status)} px-2 py-1 rounded-full inline-block`}>
+                      <div
+                        className={`text-xs mt-1 ${getStatusColor(userProgress.status)} px-2 py-1 rounded-full inline-block`}
+                      >
                         {userProgress.status}
                       </div>
                     </div>
@@ -537,7 +606,7 @@ export default function TreinamentoIntegrado() {
                       </span>
                     </div>
                   )}
-                  
+
                   {/* Informações adicionais */}
                   <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
                     <span className="flex items-center gap-1">
@@ -553,7 +622,7 @@ export default function TreinamentoIntegrado() {
                       {module.averageRating.toFixed(1)}
                     </span>
                   </div>
-                  
+
                   {/* Ações */}
                   <div className="flex gap-2">
                     {userProgress ? (
@@ -585,28 +654,33 @@ export default function TreinamentoIntegrado() {
         </div>
       )}
 
-      {activeTab === 'progress' && (
+      {activeTab === "progress" && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="bg-white p-6 rounded-lg border">
               <h3 className="font-semibold mb-2">Progresso Geral</h3>
               <div className="text-3xl font-bold text-blue-600 mb-2">
-                {userProgresses.length > 0 
-                  ? Math.round(userProgresses.reduce((acc, p) => acc + p.progressPercentage, 0) / userProgresses.length)
-                  : 0
-                }%
+                {userProgresses.length > 0
+                  ? Math.round(
+                      userProgresses.reduce(
+                        (acc, p) => acc + p.progressPercentage,
+                        0,
+                      ) / userProgresses.length,
+                    )
+                  : 0}
+                %
               </div>
               <p className="text-sm text-gray-600">Média de todos os módulos</p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg border">
               <h3 className="font-semibold mb-2">Certificações</h3>
               <div className="text-3xl font-bold text-green-600 mb-2">
-                {userProgresses.filter(p => p.certificationEarned).length}
+                {userProgresses.filter((p) => p.certificationEarned).length}
               </div>
               <p className="text-sm text-gray-600">Certificados obtidos</p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg border">
               <h3 className="font-semibold mb-2">Tempo de Estudo</h3>
               <div className="text-3xl font-bold text-purple-600 mb-2">24h</div>
@@ -616,26 +690,45 @@ export default function TreinamentoIntegrado() {
 
           {/* Lista de progresso */}
           <div className="space-y-4">
-            {userProgresses.map(progress => {
-              const trainingModule = trainingModules.find(m => m.id === progress.moduleId);
+            {userProgresses.map((progress) => {
+              const trainingModule = trainingModules.find(
+                (m) => m.id === progress.moduleId,
+              );
               if (!trainingModule) return null;
-              
+
               return (
-                <div key={progress.moduleId} className="bg-white border rounded-lg p-6">
+                <div
+                  key={progress.moduleId}
+                  className="bg-white border rounded-lg p-6"
+                >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-4">
-                      <span className="text-2xl">{getCategoryIcon(trainingModule.category)}</span>
+                      <span className="text-2xl">
+                        {getCategoryIcon(trainingModule.category)}
+                      </span>
                       <div>
-                        <h3 className="font-semibold text-lg">{trainingModule.title}</h3>
-                        <p className="text-gray-600">{trainingModule.category}</p>
+                        <h3 className="font-semibold text-lg">
+                          {trainingModule.title}
+                        </h3>
+                        <p className="text-gray-600">
+                          {trainingModule.category}
+                        </p>
                       </div>
                     </div>
-                    
+
                     <div className="text-right">
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full font-medium ${getStatusColor(progress.status)}`}>
-                        {progress.status === 'completed' && <CheckCircle2 className="h-4 w-4" />}
-                        {progress.status === 'in_progress' && <Clock className="h-4 w-4" />}
-                        {progress.status === 'expired' && <AlertTriangle className="h-4 w-4" />}
+                      <div
+                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full font-medium ${getStatusColor(progress.status)}`}
+                      >
+                        {progress.status === "completed" && (
+                          <CheckCircle2 className="h-4 w-4" />
+                        )}
+                        {progress.status === "in_progress" && (
+                          <Clock className="h-4 w-4" />
+                        )}
+                        {progress.status === "expired" && (
+                          <AlertTriangle className="h-4 w-4" />
+                        )}
                         {progress.status}
                       </div>
                       {progress.certificationEarned && (
@@ -650,21 +743,36 @@ export default function TreinamentoIntegrado() {
                   {/* Progresso detalhado */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div>
-                      <div className="text-sm text-gray-600 mb-1">Vídeos Assistidos</div>
+                      <div className="text-sm text-gray-600 mb-1">
+                        Vídeos Assistidos
+                      </div>
                       <div className="font-medium">
-                        {progress.videosWatched.filter(v => v.completed).length} / {trainingModule.content.videos.length}
+                        {
+                          progress.videosWatched.filter((v) => v.completed)
+                            .length
+                        }{" "}
+                        / {trainingModule.content.videos.length}
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-gray-600 mb-1">Documentos Lidos</div>
+                      <div className="text-sm text-gray-600 mb-1">
+                        Documentos Lidos
+                      </div>
                       <div className="font-medium">
-                        {progress.documentsViewed.length} / {trainingModule.content.documents.length}
+                        {progress.documentsViewed.length} /{" "}
+                        {trainingModule.content.documents.length}
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-gray-600 mb-1">Testes Aprovados</div>
+                      <div className="text-sm text-gray-600 mb-1">
+                        Testes Aprovados
+                      </div>
                       <div className="font-medium">
-                        {progress.quizResults.filter(q => q.bestScore >= 70).length} / {trainingModule.content.quizzes.length}
+                        {
+                          progress.quizResults.filter((q) => q.bestScore >= 70)
+                            .length
+                        }{" "}
+                        / {trainingModule.content.quizzes.length}
                       </div>
                     </div>
                   </div>
@@ -676,9 +784,11 @@ export default function TreinamentoIntegrado() {
                       <span>{progress.progressPercentage}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div 
+                      <div
                         className={`h-3 rounded-full ${
-                          progress.status === 'completed' ? 'bg-green-500' : 'bg-blue-500'
+                          progress.status === "completed"
+                            ? "bg-green-500"
+                            : "bg-blue-500"
                         }`}
                         style={{ width: `${progress.progressPercentage}%` }}
                       ></div>
@@ -694,8 +804,10 @@ export default function TreinamentoIntegrado() {
                       Continuar Estudos
                     </button>
                     {progress.certificationEarned && (
-                      <button 
-                        onClick={() => handleDownloadCertificate(progress.moduleId)}
+                      <button
+                        onClick={() =>
+                          handleDownloadCertificate(progress.moduleId)
+                        }
                         className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
                       >
                         <Download className="h-4 w-4 inline mr-2" />
@@ -718,7 +830,9 @@ export default function TreinamentoIntegrado() {
             <div className="p-6 border-b bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-lg">
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-2xl font-bold mb-2">{selectedModule.title}</h2>
+                  <h2 className="text-2xl font-bold mb-2">
+                    {selectedModule.title}
+                  </h2>
                   <p className="opacity-90">{selectedModule.description}</p>
                   <div className="flex items-center gap-4 mt-3">
                     <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
@@ -751,12 +865,15 @@ export default function TreinamentoIntegrado() {
                     Vídeos ({selectedModule.content.videos.length})
                   </h3>
                   <div className="grid gap-3">
-                    {selectedModule.content.videos.map(video => (
-                      <div key={video.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                    {selectedModule.content.videos.map((video) => (
+                      <div
+                        key={video.id}
+                        className="border rounded-lg p-4 hover:bg-gray-50"
+                      >
                         <div className="flex items-center gap-4">
                           <div className="relative">
                             <img
-                              src={video.thumbnail || '/placeholder-video.jpg'}
+                              src={video.thumbnail || "/placeholder-video.jpg"}
                               alt={video.title}
                               className="w-24 h-16 object-cover rounded"
                             />
@@ -766,7 +883,9 @@ export default function TreinamentoIntegrado() {
                           </div>
                           <div className="flex-1">
                             <h4 className="font-medium">{video.title}</h4>
-                            <p className="text-sm text-gray-600">{video.description}</p>
+                            <p className="text-sm text-gray-600">
+                              {video.description}
+                            </p>
                             <span className="text-xs text-gray-500">
                               Duração: {formatDuration(video.duration)}
                             </span>
@@ -795,26 +914,37 @@ export default function TreinamentoIntegrado() {
                     Documentos ({selectedModule.content.documents.length})
                   </h3>
                   <div className="grid gap-3">
-                    {selectedModule.content.documents.map(document => (
-                      <div key={document.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                    {selectedModule.content.documents.map((document) => (
+                      <div
+                        key={document.id}
+                        className="border rounded-lg p-4 hover:bg-gray-50"
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <h4 className="font-medium">{document.title}</h4>
-                            <p className="text-sm text-gray-600">{document.description}</p>
+                            <p className="text-sm text-gray-600">
+                              {document.description}
+                            </p>
                             <span className="text-xs text-gray-500">
-                              {document.type.toUpperCase()} • {(document.size / 1024).toFixed(1)} KB
+                              {document.type.toUpperCase()} •{" "}
+                              {(document.size / 1024).toFixed(1)} KB
                             </span>
                           </div>
                           <div className="flex gap-2">
-                            <button 
+                            <button
                               onClick={() => handleViewDocument(document.url)}
                               className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
                             >
                               <Eye className="h-4 w-4 inline mr-2" />
                               Visualizar
                             </button>
-                            <button 
-                              onClick={() => handleDownloadDocument(document.url, document.title)}
+                            <button
+                              onClick={() =>
+                                handleDownloadDocument(
+                                  document.url,
+                                  document.title,
+                                )
+                              }
                               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                             >
                               <Download className="h-4 w-4 inline mr-2" />
@@ -836,8 +966,11 @@ export default function TreinamentoIntegrado() {
                     Testes ({selectedModule.content.quizzes.length})
                   </h3>
                   <div className="grid gap-3">
-                    {selectedModule.content.quizzes.map(quiz => (
-                      <div key={quiz.id} className="border rounded-lg p-4 hover:bg-gray-50">
+                    {selectedModule.content.quizzes.map((quiz) => (
+                      <div
+                        key={quiz.id}
+                        className="border rounded-lg p-4 hover:bg-gray-50"
+                      >
                         <div className="flex items-center justify-between">
                           <div>
                             <h4 className="font-medium">{quiz.title}</h4>
@@ -847,7 +980,7 @@ export default function TreinamentoIntegrado() {
                               <span>Nota mínima: {quiz.passingScore}%</span>
                             </div>
                           </div>
-                          <button 
+                          <button
                             onClick={() => handleStartQuiz(quiz.id)}
                             className="bg-purple-600 text-white px-6 py-4 sm:px-4 sm:py-2 rounded hover:bg-purple-700 touch-target"
                           >
@@ -864,11 +997,15 @@ export default function TreinamentoIntegrado() {
         </div>
       )}
 
-      {filteredModules.length === 0 && activeTab === 'modules' && (
+      {filteredModules.length === 0 && activeTab === "modules" && (
         <div className="text-center py-12">
           <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum módulo encontrado</h3>
-          <p className="text-gray-600">Ajuste os filtros ou aguarde novos conteúdos</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            Nenhum módulo encontrado
+          </h3>
+          <p className="text-gray-600">
+            Ajuste os filtros ou aguarde novos conteúdos
+          </p>
         </div>
       )}
     </div>

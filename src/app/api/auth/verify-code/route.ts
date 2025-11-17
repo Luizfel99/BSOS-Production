@@ -8,14 +8,14 @@ export async function POST(req: Request) {
     if (!email || !code) {
       return NextResponse.json(
         { error: "E-mail e código são obrigatórios" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Buscar código de verificação (você precisará criar esta tabela)
     // const record = await prisma.verificationCode.findFirst({
-    //   where: { 
-    //     email, 
+    //   where: {
+    //     email,
     //     code,
     //     expiresAt: { gte: new Date() }
     //   }
@@ -29,19 +29,19 @@ export async function POST(req: Request) {
     // }
 
     // Deletar código usado
-    // await prisma.verificationCode.delete({ 
-    //   where: { id: record.id } 
+    // await prisma.verificationCode.delete({
+    //   where: { id: record.id }
     // });
 
-    return NextResponse.json({ 
-      success: true, 
-      message: "Código verificado com sucesso" 
+    return NextResponse.json({
+      success: true,
+      message: "Código verificado com sucesso",
     });
   } catch (error) {
     console.error("Error in verify-code:", error);
     return NextResponse.json(
       { error: "Erro ao verificar código" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

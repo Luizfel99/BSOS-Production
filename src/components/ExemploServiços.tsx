@@ -3,42 +3,33 @@
  * Demonstração de como usar os novos serviços nos componentes
  */
 
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useNotifications } from '@/hooks/useNotifications';
+import React, { useState, useEffect } from "react";
+import { useNotifications } from "@/hooks/useNotifications";
 
 // Importações dos serviços organizados
-import { 
-  createCleaning, 
-  getCleanings, 
-  startCleaning, 
-  completeCleaning 
-} from '@/services/cleanings';
+import {
+  createCleaning,
+  getCleanings,
+  startCleaning,
+  completeCleaning,
+} from "@/services/cleanings";
 
-import { 
-  getProperties
-} from '@/services/properties';
+import { getProperties } from "@/services/properties";
 
-import { 
-  getEmployees, 
-  employeeCheckin, 
-  employeeCheckout 
-} from '@/services/employees';
+import {
+  getEmployees,
+  employeeCheckin,
+  employeeCheckout,
+} from "@/services/employees";
 
-import { 
-  createTask, 
-  getTasks, 
-  completeTask 
-} from '@/services/tasks';
+import { createTask, getTasks, completeTask } from "@/services/tasks";
 
 // Importações dos utilitários
-import { 
-  formatCurrency, 
-  getStatusColor 
-} from '@/utils/format';
+import { formatCurrency, getStatusColor } from "@/utils/format";
 
-import { formatRelativeTime, formatDate, formatDuration } from '@/utils/date';
+import { formatRelativeTime, formatDate, formatDuration } from "@/utils/date";
 
 // Ou usando as versões organizadas:
 // import { CleaningService, PropertyService, EmployeeService } from '@/services';
@@ -49,7 +40,10 @@ interface CleaningExampleProps {
   employeeId: string;
 }
 
-export default function CleaningExample({ propertyId, employeeId }: CleaningExampleProps) {
+export default function CleaningExample({
+  propertyId,
+  employeeId,
+}: CleaningExampleProps) {
   const [cleanings, setCleanings] = useState([]);
   const [loading, setLoading] = useState(false);
   const { success, error } = useNotifications();
@@ -60,14 +54,14 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
       setLoading(true);
       const response = await getCleanings({
         propertyId,
-        status: 'scheduled'
+        status: "scheduled",
       });
-      
+
       if (response.success) {
         setCleanings(response.data || []);
       }
     } catch (err) {
-      error('Erro ao carregar limpezas');
+      error("Erro ao carregar limpezas");
     } finally {
       setLoading(false);
     }
@@ -79,18 +73,18 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
       const newCleaning = await createCleaning({
         propertyId,
         employeeId,
-        type: 'regular',
-        priority: 'medium',
+        type: "regular",
+        priority: "medium",
         scheduledDate: new Date().toISOString(),
         estimatedDuration: 120, // 2 horas
       });
 
       if (newCleaning.success) {
-        success('Limpeza agendada com sucesso!');
+        success("Limpeza agendada com sucesso!");
         loadCleanings(); // Recarregar lista
       }
     } catch (err) {
-      error('Erro ao agendar limpeza');
+      error("Erro ao agendar limpeza");
     }
   };
 
@@ -100,19 +94,19 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
       // Primeiro fazer check-in do funcionário
       await employeeCheckin(employeeId, {
         propertyId,
-        notes: 'Iniciando limpeza'
+        notes: "Iniciando limpeza",
       });
 
       // Depois iniciar a limpeza
       await startCleaning(cleaningId, employeeId);
-      
+
       // TODO: Implementar atualização de status da propriedade quando necessário
       // await updatePropertyStatus(propertyId, 'cleaning');
 
-      success('Limpeza iniciada!');
+      success("Limpeza iniciada!");
       loadCleanings();
     } catch (err) {
-      error('Erro ao iniciar limpeza');
+      error("Erro ao iniciar limpeza");
     }
   };
 
@@ -121,24 +115,24 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
     try {
       // Completar a limpeza
       await completeCleaning(cleaningId, {
-        notes: 'Limpeza concluída com sucesso',
-        rating: 5
+        notes: "Limpeza concluída com sucesso",
+        rating: 5,
       });
 
       // Fazer check-out do funcionário
       await employeeCheckout(employeeId, {
         completed_tasks: [cleaningId],
-        notes: 'Limpeza finalizada',
-        rating_request: true
+        notes: "Limpeza finalizada",
+        rating_request: true,
       });
 
       // TODO: Implementar atualização de status da propriedade quando necessário
       // await updatePropertyStatus(propertyId, 'available');
 
-      success('Limpeza finalizada!');
+      success("Limpeza finalizada!");
       loadCleanings();
     } catch (err) {
-      error('Erro ao finalizar limpeza');
+      error("Erro ao finalizar limpeza");
     }
   };
 
@@ -146,18 +140,19 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
   const handleCreateTask = async () => {
     try {
       await createTask({
-        title: 'Verificar produtos de limpeza',
-        description: 'Verificar se há produtos suficientes para próximas limpezas',
-        type: 'other',
-        priority: 'medium',
+        title: "Verificar produtos de limpeza",
+        description:
+          "Verificar se há produtos suficientes para próximas limpezas",
+        type: "other",
+        priority: "medium",
         assignedTo: employeeId,
         propertyId,
         dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Amanhã
       });
 
-      success('Tarefa criada!');
+      success("Tarefa criada!");
     } catch (err) {
-      error('Erro ao criar tarefa');
+      error("Erro ao criar tarefa");
     }
   };
 
@@ -201,15 +196,18 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
                     Limpeza {cleaning.type}
                   </h3>
                   <p className="text-gray-600">
-                    Agendada para: {formatDate(cleaning.scheduledDate, 'datetime')}
+                    Agendada para:{" "}
+                    {formatDate(cleaning.scheduledDate, "datetime")}
                   </p>
                   <p className="text-sm text-gray-500">
                     {formatRelativeTime(cleaning.scheduledDate)}
                   </p>
-                  
+
                   {cleaning.estimatedDuration && (
                     <p className="text-sm text-gray-500">
-                      Duração estimada: {Math.floor(cleaning.estimatedDuration / 60)}h {cleaning.estimatedDuration % 60}m
+                      Duração estimada:{" "}
+                      {Math.floor(cleaning.estimatedDuration / 60)}h{" "}
+                      {cleaning.estimatedDuration % 60}m
                     </p>
                   )}
 
@@ -228,7 +226,7 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
                     {cleaning.status}
                   </span>
 
-                  {cleaning.status === 'scheduled' && (
+                  {cleaning.status === "scheduled" && (
                     <button
                       onClick={() => handleStartCleaning(cleaning.id)}
                       className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -237,7 +235,7 @@ export default function CleaningExample({ propertyId, employeeId }: CleaningExam
                     </button>
                   )}
 
-                  {cleaning.status === 'in-progress' && (
+                  {cleaning.status === "in-progress" && (
                     <button
                       onClick={() => handleCompleteCleaning(cleaning.id)}
                       className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
@@ -277,18 +275,18 @@ export function useCleanings(propertyId?: string) {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await getCleanings(
-        propertyId ? { propertyId } : undefined
+        propertyId ? { propertyId } : undefined,
       );
-      
+
       if (response.success) {
         setCleanings(response.data || []);
       } else {
-        setError(response.error || 'Erro ao carregar limpezas');
+        setError(response.error || "Erro ao carregar limpezas");
       }
     } catch (err) {
-      setError('Erro ao carregar limpezas');
+      setError("Erro ao carregar limpezas");
     } finally {
       setLoading(false);
     }
@@ -319,7 +317,9 @@ export function CleaningList({ propertyId }: { propertyId: string }) {
         <div key={cleaning.id} className="p-4 border rounded">
           <h3>{cleaning.type}</h3>
           <p>{formatDate(cleaning.scheduledDate)}</p>
-          <span className={`px-2 py-1 rounded text-sm bg-${getStatusColor(cleaning.status)}-100`}>
+          <span
+            className={`px-2 py-1 rounded text-sm bg-${getStatusColor(cleaning.status)}-100`}
+          >
             {cleaning.status}
           </span>
         </div>

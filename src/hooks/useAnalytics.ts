@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export interface AnalyticsOverview {
   totalCleanings: number;
@@ -64,12 +64,14 @@ export interface UseAnalyticsReturn {
   lastUpdated: Date | null;
 }
 
-export function useAnalytics(options: UseAnalyticsOptions = {}): UseAnalyticsReturn {
+export function useAnalytics(
+  options: UseAnalyticsOptions = {},
+): UseAnalyticsReturn {
   const {
-    timeRange = '6months',
-    metric = 'all',
+    timeRange = "6months",
+    metric = "all",
     autoRefresh = false,
-    refreshInterval = 5 * 60 * 1000 // 5 minutes
+    refreshInterval = 5 * 60 * 1000, // 5 minutes
   } = options;
 
   const [data, setData] = useState<AnalyticsData | null>(null);
@@ -84,16 +86,16 @@ export function useAnalytics(options: UseAnalyticsOptions = {}): UseAnalyticsRet
 
       const params = new URLSearchParams({
         timeRange,
-        metric
+        metric,
       });
 
       const response = await fetch(`/api/analytics?${params}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         // Add cache control for better performance
-        cache: 'no-cache'
+        cache: "no-cache",
       });
 
       if (!response.ok) {
@@ -103,16 +105,15 @@ export function useAnalytics(options: UseAnalyticsOptions = {}): UseAnalyticsRet
       const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.message || 'Failed to fetch analytics data');
+        throw new Error(result.message || "Failed to fetch analytics data");
       }
 
       setData(result.data);
       setLastUpdated(new Date(result.lastUpdated));
-
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
       setError(errorMessage);
-      console.error('Analytics fetch error:', err);
+      console.error("Analytics fetch error:", err);
     } finally {
       setLoading(false);
     }
@@ -136,32 +137,32 @@ export function useAnalytics(options: UseAnalyticsOptions = {}): UseAnalyticsRet
     loading,
     error,
     refresh: fetchAnalytics,
-    lastUpdated
+    lastUpdated,
   };
 }
 
 // Specialized hooks for specific analytics data
 export function useAnalyticsOverview(timeRange?: string) {
-  return useAnalytics({ timeRange, metric: 'overview' });
+  return useAnalytics({ timeRange, metric: "overview" });
 }
 
 export function useTeamPerformance(timeRange?: string) {
-  return useAnalytics({ timeRange, metric: 'team' });
+  return useAnalytics({ timeRange, metric: "team" });
 }
 
 export function useClientSatisfaction(timeRange?: string) {
-  return useAnalytics({ timeRange, metric: 'satisfaction' });
+  return useAnalytics({ timeRange, metric: "satisfaction" });
 }
 
 export function useMonthlyTrends(timeRange?: string) {
-  return useAnalytics({ timeRange, metric: 'trends' });
+  return useAnalytics({ timeRange, metric: "trends" });
 }
 
 // Utility functions for data processing
 export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
   }).format(amount);
 };
 
@@ -173,28 +174,31 @@ export const formatRating = (rating: number): string => {
   return `${rating.toFixed(1)}⭐`;
 };
 
-export const calculateGrowth = (current: number, previous: number): {
+export const calculateGrowth = (
+  current: number,
+  previous: number,
+): {
   value: number;
   isPositive: boolean;
   percentage: number;
 } => {
   const difference = current - previous;
   const percentage = previous > 0 ? (difference / previous) * 100 : 0;
-  
+
   return {
     value: difference,
     isPositive: difference >= 0,
-    percentage: Math.abs(percentage)
+    percentage: Math.abs(percentage),
   };
 };
 
 // Color schemes for charts
 export const CHART_COLORS = {
-  primary: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
-  success: ['#10B981', '#34D399', '#6EE7B7'],
-  warning: ['#F59E0B', '#FBBF24', '#FCD34D'],
-  danger: ['#EF4444', '#F87171', '#FCA5A5'],
-  info: ['#3B82F6', '#60A5FA', '#93C5FD']
+  primary: ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"],
+  success: ["#10B981", "#34D399", "#6EE7B7"],
+  warning: ["#F59E0B", "#FBBF24", "#FCD34D"],
+  danger: ["#EF4444", "#F87171", "#FCA5A5"],
+  info: ["#3B82F6", "#60A5FA", "#93C5FD"],
 };
 
 export default useAnalytics;

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import RouteGuard from '@/components/RouteGuard';
-import MobileNavigation from '@/components/MobileNavigation';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import RouteGuard from "@/components/RouteGuard";
+import MobileNavigation from "@/components/MobileNavigation";
 import {
   BarChart,
   Bar,
@@ -19,8 +19,8 @@ import {
   Cell,
   AreaChart,
   Area,
-  ResponsiveContainer
-} from 'recharts';
+  ResponsiveContainer,
+} from "recharts";
 import {
   TrendingUp,
   Users,
@@ -31,57 +31,63 @@ import {
   Clock,
   Target,
   Award,
-  BarChart3
-} from 'lucide-react';
+  BarChart3,
+} from "lucide-react";
 
 // Sample data - will be replaced with Prisma data later
 const sampleData = {
   monthlyCleanings: [
-    { month: 'Jan', cleanings: 45, completed: 42, revenue: 4200 },
-    { month: 'Feb', cleanings: 52, completed: 50, revenue: 5000 },
-    { month: 'Mar', cleanings: 48, completed: 46, revenue: 4600 },
-    { month: 'Apr', cleanings: 61, completed: 59, revenue: 5900 },
-    { month: 'May', cleanings: 55, completed: 53, revenue: 5300 },
-    { month: 'Jun', cleanings: 67, completed: 65, revenue: 6500 },
+    { month: "Jan", cleanings: 45, completed: 42, revenue: 4200 },
+    { month: "Feb", cleanings: 52, completed: 50, revenue: 5000 },
+    { month: "Mar", cleanings: 48, completed: 46, revenue: 4600 },
+    { month: "Apr", cleanings: 61, completed: 59, revenue: 5900 },
+    { month: "May", cleanings: 55, completed: 53, revenue: 5300 },
+    { month: "Jun", cleanings: 67, completed: 65, revenue: 6500 },
   ],
-  
+
   teamPerformance: [
-    { name: 'Maria Silva', cleanings: 28, rating: 4.8, efficiency: 95 },
-    { name: 'João Santos', cleanings: 24, rating: 4.6, efficiency: 92 },
-    { name: 'Ana Costa', cleanings: 31, rating: 4.9, efficiency: 98 },
-    { name: 'Pedro Oliveira', cleanings: 22, rating: 4.5, efficiency: 88 },
+    { name: "Maria Silva", cleanings: 28, rating: 4.8, efficiency: 95 },
+    { name: "João Santos", cleanings: 24, rating: 4.6, efficiency: 92 },
+    { name: "Ana Costa", cleanings: 31, rating: 4.9, efficiency: 98 },
+    { name: "Pedro Oliveira", cleanings: 22, rating: 4.5, efficiency: 88 },
   ],
-  
+
   clientSatisfaction: [
-    { rating: '5 Stars', count: 85, percentage: 68 },
-    { rating: '4 Stars', count: 25, percentage: 20 },
-    { rating: '3 Stars', count: 10, percentage: 8 },
-    { rating: '2 Stars', count: 3, percentage: 2.4 },
-    { rating: '1 Star', count: 2, percentage: 1.6 },
+    { rating: "5 Stars", count: 85, percentage: 68 },
+    { rating: "4 Stars", count: 25, percentage: 20 },
+    { rating: "3 Stars", count: 10, percentage: 8 },
+    { rating: "2 Stars", count: 3, percentage: 2.4 },
+    { rating: "1 Star", count: 2, percentage: 1.6 },
   ],
-  
+
   weeklyTrends: [
-    { day: 'Mon', tasks: 12, completed: 11, satisfaction: 4.7 },
-    { day: 'Tue', tasks: 15, completed: 14, satisfaction: 4.8 },
-    { day: 'Wed', tasks: 18, completed: 17, satisfaction: 4.6 },
-    { day: 'Thu', tasks: 14, completed: 13, satisfaction: 4.9 },
-    { day: 'Fri', tasks: 16, completed: 16, satisfaction: 4.8 },
-    { day: 'Sat', tasks: 8, completed: 8, satisfaction: 4.9 },
-    { day: 'Sun', tasks: 5, completed: 5, satisfaction: 4.7 },
+    { day: "Mon", tasks: 12, completed: 11, satisfaction: 4.7 },
+    { day: "Tue", tasks: 15, completed: 14, satisfaction: 4.8 },
+    { day: "Wed", tasks: 18, completed: 17, satisfaction: 4.6 },
+    { day: "Thu", tasks: 14, completed: 13, satisfaction: 4.9 },
+    { day: "Fri", tasks: 16, completed: 16, satisfaction: 4.8 },
+    { day: "Sat", tasks: 8, completed: 8, satisfaction: 4.9 },
+    { day: "Sun", tasks: 5, completed: 5, satisfaction: 4.7 },
   ],
-  
+
   propertyTypes: [
-    { name: 'Apartamentos', value: 45, color: '#3B82F6' },
-    { name: 'Casas', value: 30, color: '#10B981' },
-    { name: 'Escritórios', value: 15, color: '#F59E0B' },
-    { name: 'Airbnb', value: 10, color: '#EF4444' },
-  ]
+    { name: "Apartamentos", value: 45, color: "#3B82F6" },
+    { name: "Casas", value: 30, color: "#10B981" },
+    { name: "Escritórios", value: 15, color: "#F59E0B" },
+    { name: "Airbnb", value: 10, color: "#EF4444" },
+  ],
 };
 
-const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6"];
 
 // Metric Card Component
-const MetricCard = ({ title, value, icon: Icon, trend, color = 'blue' }: {
+const MetricCard = ({
+  title,
+  value,
+  icon: Icon,
+  trend,
+  color = "blue",
+}: {
   title: string;
   value: string | number;
   icon: any;
@@ -89,11 +95,11 @@ const MetricCard = ({ title, value, icon: Icon, trend, color = 'blue' }: {
   color?: string;
 }) => {
   const colorClasses = {
-    blue: 'bg-blue-500',
-    green: 'bg-green-500',
-    yellow: 'bg-yellow-500',
-    red: 'bg-red-500',
-    purple: 'bg-purple-500'
+    blue: "bg-blue-500",
+    green: "bg-green-500",
+    yellow: "bg-yellow-500",
+    red: "bg-red-500",
+    purple: "bg-purple-500",
   };
 
   return (
@@ -103,17 +109,23 @@ const MetricCard = ({ title, value, icon: Icon, trend, color = 'blue' }: {
           <p className="text-sm font-medium text-gray-600">{title}</p>
           <p className="text-3xl font-bold text-gray-900">{value}</p>
           {trend && (
-            <div className={`flex items-center mt-2 text-sm ${
-              trend.isPositive ? 'text-green-600' : 'text-red-600'
-            }`}>
-              <TrendingUp className={`w-4 h-4 mr-1 ${
-                !trend.isPositive ? 'rotate-180' : ''
-              }`} />
+            <div
+              className={`flex items-center mt-2 text-sm ${
+                trend.isPositive ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              <TrendingUp
+                className={`w-4 h-4 mr-1 ${
+                  !trend.isPositive ? "rotate-180" : ""
+                }`}
+              />
               {trend.value}% vs mês anterior
             </div>
           )}
         </div>
-        <div className={`p-3 rounded-lg ${colorClasses[color as keyof typeof colorClasses]}`}>
+        <div
+          className={`p-3 rounded-lg ${colorClasses[color as keyof typeof colorClasses]}`}
+        >
           <Icon className="w-6 h-6 text-white" />
         </div>
       </div>
@@ -123,7 +135,7 @@ const MetricCard = ({ title, value, icon: Icon, trend, color = 'blue' }: {
 
 export default function AnalyticsPage() {
   const { user } = useAuth();
-  const [timeRange, setTimeRange] = useState('6months');
+  const [timeRange, setTimeRange] = useState("6months");
   const [isLoading, setIsLoading] = useState(true);
 
   // Simulate data loading
@@ -133,11 +145,22 @@ export default function AnalyticsPage() {
   }, []);
 
   // Calculate summary metrics
-  const totalCleanings = sampleData.monthlyCleanings.reduce((sum, month) => sum + month.cleanings, 0);
-  const totalCompleted = sampleData.monthlyCleanings.reduce((sum, month) => sum + month.completed, 0);
+  const totalCleanings = sampleData.monthlyCleanings.reduce(
+    (sum, month) => sum + month.cleanings,
+    0,
+  );
+  const totalCompleted = sampleData.monthlyCleanings.reduce(
+    (sum, month) => sum + month.completed,
+    0,
+  );
   const completionRate = Math.round((totalCompleted / totalCleanings) * 100);
-  const averageRating = sampleData.teamPerformance.reduce((sum, member) => sum + member.rating, 0) / sampleData.teamPerformance.length;
-  const totalRevenue = sampleData.monthlyCleanings.reduce((sum, month) => sum + month.revenue, 0);
+  const averageRating =
+    sampleData.teamPerformance.reduce((sum, member) => sum + member.rating, 0) /
+    sampleData.teamPerformance.length;
+  const totalRevenue = sampleData.monthlyCleanings.reduce(
+    (sum, month) => sum + month.revenue,
+    0,
+  );
 
   if (isLoading) {
     return (
@@ -154,7 +177,7 @@ export default function AnalyticsPage() {
     <RouteGuard>
       <div className="min-h-screen bg-gray-50">
         <MobileNavigation />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">
@@ -168,7 +191,7 @@ export default function AnalyticsPage() {
                   Insights e métricas de performance do B.S.O.S.
                 </p>
               </div>
-              
+
               <div className="mt-4 sm:mt-0">
                 <select
                   value={timeRange}
@@ -194,7 +217,7 @@ export default function AnalyticsPage() {
               trend={{ value: 12, isPositive: true }}
               color="blue"
             />
-            
+
             <MetricCard
               title="Taxa de Conclusão"
               value={`${completionRate}%`}
@@ -202,7 +225,7 @@ export default function AnalyticsPage() {
               trend={{ value: 3, isPositive: true }}
               color="green"
             />
-            
+
             <MetricCard
               title="Satisfação do Cliente"
               value={averageRating.toFixed(1)}
@@ -210,7 +233,7 @@ export default function AnalyticsPage() {
               trend={{ value: 0.2, isPositive: true }}
               color="yellow"
             />
-            
+
             <MetricCard
               title="Receita Total"
               value={`R$ ${totalRevenue.toLocaleString()}`}
@@ -269,7 +292,11 @@ export default function AnalyticsPage() {
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="cleanings" fill="#3B82F6" name="Limpezas" />
-                  <Bar dataKey="efficiency" fill="#10B981" name="Eficiência %" />
+                  <Bar
+                    dataKey="efficiency"
+                    fill="#10B981"
+                    name="Eficiência %"
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -289,13 +316,18 @@ export default function AnalyticsPage() {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ rating, percentage }) => `${rating}: ${percentage}%`}
+                    label={({ rating, percentage }) =>
+                      `${rating}: ${percentage}%`
+                    }
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="count"
                   >
                     {sampleData.clientSatisfaction.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />

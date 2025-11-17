@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { CheckCircle, AlertCircle, Info, XCircle, X } from 'lucide-react';
-import toast from 'react-hot-toast';
+import React from "react";
+import { motion } from "framer-motion";
+import { CheckCircle, AlertCircle, Info, XCircle, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface NotificationToastProps {
   id?: string;
   title: string;
   message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
+  type: "info" | "success" | "warning" | "error";
   duration?: number;
   onClose?: () => void;
   actions?: Array<{
@@ -21,42 +21,42 @@ interface NotificationToastProps {
 
 const getTypeConfig = (type: string) => {
   switch (type) {
-    case 'success':
+    case "success":
       return {
         icon: CheckCircle,
-        bgColor: 'bg-green-50',
-        borderColor: 'border-green-200',
-        iconColor: 'text-green-500',
-        titleColor: 'text-green-800',
-        messageColor: 'text-green-700'
+        bgColor: "bg-green-50",
+        borderColor: "border-green-200",
+        iconColor: "text-green-500",
+        titleColor: "text-green-800",
+        messageColor: "text-green-700",
       };
-    case 'warning':
+    case "warning":
       return {
         icon: AlertCircle,
-        bgColor: 'bg-yellow-50',
-        borderColor: 'border-yellow-200',
-        iconColor: 'text-yellow-500',
-        titleColor: 'text-yellow-800',
-        messageColor: 'text-yellow-700'
+        bgColor: "bg-yellow-50",
+        borderColor: "border-yellow-200",
+        iconColor: "text-yellow-500",
+        titleColor: "text-yellow-800",
+        messageColor: "text-yellow-700",
       };
-    case 'error':
+    case "error":
       return {
         icon: XCircle,
-        bgColor: 'bg-red-50',
-        borderColor: 'border-red-200',
-        iconColor: 'text-red-500',
-        titleColor: 'text-red-800',
-        messageColor: 'text-red-700'
+        bgColor: "bg-red-50",
+        borderColor: "border-red-200",
+        iconColor: "text-red-500",
+        titleColor: "text-red-800",
+        messageColor: "text-red-700",
       };
-    case 'info':
+    case "info":
     default:
       return {
         icon: Info,
-        bgColor: 'bg-blue-50',
-        borderColor: 'border-blue-200',
-        iconColor: 'text-blue-500',
-        titleColor: 'text-blue-800',
-        messageColor: 'text-blue-700'
+        bgColor: "bg-blue-50",
+        borderColor: "border-blue-200",
+        iconColor: "text-blue-500",
+        titleColor: "text-blue-800",
+        messageColor: "text-blue-700",
       };
   }
 };
@@ -68,7 +68,7 @@ export function NotificationToast({
   type,
   duration = 5000,
   onClose,
-  actions
+  actions,
 }: NotificationToastProps) {
   const config = getTypeConfig(type);
   const IconComponent = config.icon;
@@ -98,15 +98,13 @@ export function NotificationToast({
           <div className="flex-shrink-0">
             <IconComponent className={`w-6 h-6 ${config.iconColor}`} />
           </div>
-          
+
           <div className="ml-3 w-0 flex-1">
             <p className={`text-sm font-medium ${config.titleColor}`}>
               {title}
             </p>
-            <p className={`mt-1 text-sm ${config.messageColor}`}>
-              {message}
-            </p>
-            
+            <p className={`mt-1 text-sm ${config.messageColor}`}>{message}</p>
+
             {actions && actions.length > 0 && (
               <div className="mt-3 flex space-x-2">
                 {actions.map((action, index) => (
@@ -115,7 +113,7 @@ export function NotificationToast({
                     onClick={action.onClick}
                     className={`
                       text-sm font-medium px-3 py-2 rounded-md transition-colors
-                      ${action.className || 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300'}
+                      ${action.className || "bg-white hover:bg-gray-50 text-gray-700 border border-gray-300"}
                     `}
                   >
                     {action.label}
@@ -124,7 +122,7 @@ export function NotificationToast({
               </div>
             )}
           </div>
-          
+
           <div className="ml-4 flex-shrink-0 flex">
             <button
               onClick={onClose}
@@ -145,7 +143,11 @@ export function NotificationToast({
 
 // Utility functions for creating toast notifications
 export const showNotificationToast = {
-  success: (title: string, message: string, actions?: NotificationToastProps['actions']) => {
+  success: (
+    title: string,
+    message: string,
+    actions?: NotificationToastProps["actions"],
+  ) => {
     toast.custom((t) => (
       <NotificationToast
         id={t.id}
@@ -157,8 +159,12 @@ export const showNotificationToast = {
       />
     ));
   },
-  
-  error: (title: string, message: string, actions?: NotificationToastProps['actions']) => {
+
+  error: (
+    title: string,
+    message: string,
+    actions?: NotificationToastProps["actions"],
+  ) => {
     toast.custom((t) => (
       <NotificationToast
         id={t.id}
@@ -170,8 +176,12 @@ export const showNotificationToast = {
       />
     ));
   },
-  
-  warning: (title: string, message: string, actions?: NotificationToastProps['actions']) => {
+
+  warning: (
+    title: string,
+    message: string,
+    actions?: NotificationToastProps["actions"],
+  ) => {
     toast.custom((t) => (
       <NotificationToast
         id={t.id}
@@ -183,8 +193,12 @@ export const showNotificationToast = {
       />
     ));
   },
-  
-  info: (title: string, message: string, actions?: NotificationToastProps['actions']) => {
+
+  info: (
+    title: string,
+    message: string,
+    actions?: NotificationToastProps["actions"],
+  ) => {
     toast.custom((t) => (
       <NotificationToast
         id={t.id}
@@ -195,7 +209,7 @@ export const showNotificationToast = {
         actions={actions}
       />
     ));
-  }
+  },
 };
 
 export default NotificationToast;

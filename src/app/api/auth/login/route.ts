@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
@@ -10,7 +10,10 @@ export async function POST(req: Request) {
     const { email, password } = await req.json();
 
     if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Email and password required" },
+        { status: 400 },
+      );
     }
 
     const user = await prisma.user.findUnique({
@@ -19,14 +22,23 @@ export async function POST(req: Request) {
 
     if (!user) {
       console.warn(`[BSOS-Auth] User not found: ${email}`);
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+      return NextResponse.json(
+        { error: "Invalid credentials" },
+        { status: 401 },
+      );
     }
 
     // ⚙️ Corrigido: comparar com user.passwordHash
-    const passwordMatch = await bcrypt.compare(password, user.passwordHash || '');
+    const passwordMatch = await bcrypt.compare(
+      password,
+      user.passwordHash || "",
+    );
     if (!passwordMatch) {
       console.warn(`[BSOS-Auth] Password mismatch for ${email}`);
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+      return NextResponse.json(
+        { error: "Invalid credentials" },
+        { status: 401 },
+      );
     }
 
     const token = jwt.sign(
@@ -35,8 +47,8 @@ export async function POST(req: Request) {
         email: user.email,
         role: user.role,
       },
-      process.env.JWT_SECRET || 'bsos-default-secret',
-      { expiresIn: '1d' }
+      process.env.JWT_SECRET || "bsos-default-secret",
+      { expiresIn: "1d" },
     );
 
     console.log(`[BSOS-Auth] ✅ Login successful for ${email} (${user.role})`);
@@ -51,7 +63,10 @@ export async function POST(req: Request) {
       token,
     });
   } catch (error) {
-    console.error('[BSOS-Auth] API login error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error("[BSOS-Auth] API login error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }
