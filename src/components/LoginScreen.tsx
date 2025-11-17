@@ -67,8 +67,9 @@ type DemoProfile = {
 };
 
 const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME ?? "BSOS";
-const SHOW_DEMO = (process.env.NEXT_PUBLIC_SHOW_DEMO ?? "true").toLowerCase() !== "false";
 const DEMO_PWD = process.env.NEXT_PUBLIC_DEMO_PWD ?? "demo123";
+// why: esconder perfis de demo em produção automaticamente
+const SHOW_DEMO = (process.env.NEXT_PUBLIC_SHOW_DEMO ?? "true").toLowerCase() !== "false" && process.env.NODE_ENV !== "production";
 
 const DEMOS: DemoProfile[] = [
   { key: "admin",      label: "Admin",      email: "admin@demo.local",      password: DEMO_PWD },
@@ -123,13 +124,11 @@ export default function LoginScreen(): JSX.Element {
   }
 
   async function onGoogle() {
-    // why: placeholder sem dependências externas; se houver rota real, redireciona
-    const url = "/api/auth/google";
+    // why: placeholder; se /api/auth/google existir, redireciona
     try {
-      // tenta GET de cortesia para detectar rota
-      const res = await fetch(url, { method: "HEAD" });
-      if (res.ok) {
-        window.location.href = url;
+      const head = await fetch("/api/auth/google", { method: "HEAD" });
+      if (head.ok) {
+        window.location.href = "/api/auth/google";
       } else {
         alert("Google Sign-In not configured yet.");
       }
@@ -194,6 +193,7 @@ export default function LoginScreen(): JSX.Element {
               onClick={onGoogle}
               disabled={busy}
               className="w-full rounded-lg border px-4 py-2 font-medium hover:bg-gray-50 disabled:opacity-60"
+              data-action="auth.google"
             >
               {t.google}
             </button>
@@ -241,6 +241,7 @@ export default function LoginScreen(): JSX.Element {
                 type="submit"
                 disabled={busy}
                 className="w-full rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-60"
+                data-action="auth.password"
               >
                 {busy ? "..." : t.login}
               </button>
@@ -273,6 +274,8 @@ export default function LoginScreen(): JSX.Element {
                       disabled={busy}
                       className="rounded-lg border px-3 py-2 text-left hover:bg-gray-50 disabled:opacity-60"
                       title={`${t.demoCTA}: ${p.label}`}
+                      data-action={`demo.${p.key}`}
+                      data-route="/dashboard"
                     >
                       <div className="text-sm font-semibold">{p.label}</div>
                       <div className="text-xs text-gray-500">{p.email}</div>

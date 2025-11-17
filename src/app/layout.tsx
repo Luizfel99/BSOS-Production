@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { BSOSProvider } from "@/contexts/BSOSContext";
 import { Analytics } from "@vercel/analytics/react";
 import DebugOverlay from "@/components/DebugOverlay";
+import GlobalActionBus from "@/components/GlobalActionBus";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,6 +41,7 @@ export default function RootLayout({
                 <div className="min-h-screen bg-gray-50">
                   {children}
                   <DebugOverlay />
+                  <GlobalActionBus />
                   <Toaster
                     position="top-right"
                     toastOptions={{

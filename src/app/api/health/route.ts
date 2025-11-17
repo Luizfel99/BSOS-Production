@@ -1,22 +1,15 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    // tenta acessar o banco
-    await prisma.$queryRaw`SELECT 1`;
+    const now = await db.$queryRawUnsafe<{ now: Date }[]>('select now() as now');
     return NextResponse.json({
-      status: "✅ BSOS API running",
-      db: "✅ Connected to Neon",
-      time: new Date().toISOString(),
+      ok: true,
+      db: "neon",
+      now: now?.[0]?.now ?? null,
     });
-  } catch (err: any) {
-    return NextResponse.json(
-      {
-        status: "⚠️ API running, but DB error",
-        message: err.message,
-      },
-      { status: 500 },
-    );
+  } catch (e: any) {
+    return NextResponse.json({ ok: false, error: String(e?.message ?? e) }, { status: 500 });
   }
 }
