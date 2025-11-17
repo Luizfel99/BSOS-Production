@@ -1,26 +1,10 @@
 "use client";
 
-// VS AI: DO NOT MODIFY CASE OF ROLE STRINGS.
-// All user roles MUST remain lowercase exactly as written.
-// Valid roles: "cleaner", "supervisor", "manager", "owner", "client", "admin".
-
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import axios from "axios";
 import { useRouter, usePathname } from "next/navigation";
 
-export type UserRole =
-  | "cleaner"
-  | "supervisor"
-  | "manager"
-  | "owner"
-  | "client"
-  | "admin"; // keep lowercase
+export type UserRole = "admin" | "manager" | "supervisor" | "cleaner" | "owner" | "client";
 
 export interface User {
   id: string;
@@ -28,8 +12,6 @@ export interface User {
   email: string;
   role: UserRole;
   avatar?: string;
-  active?: boolean;
-  createdAt?: Date;
 }
 
 interface AuthContextType {
@@ -50,33 +32,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const stored = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+    if (stored) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${stored}`;
+      fetchProfile().finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
   async function fetchProfile() {
-    setLoading(true);
     try {
       const res = await axios.get("/api/auth/me");
-      setUser(res.data.user ?? null);
-    } catch (error) {
-      console.error("Erro ao buscar perfil:", error);
+      setUser(res.data.user);
+    } catch {
       setUser(null);
-    } finally {
-      setLoading(false);
     }
   }
 
   async function login(email: string, password: string) {
+    setLoading(true);
     try {
       const res = await axios.post("/api/auth/login", { email, password });
-      const token = res.data.token;
-
+      const token = res.data.token as string;
       localStorage.setItem("auth_token", token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
       await fetchProfile();
-
       router.push("/dashboard");
-    } catch (error) {
-      console.error("Erro no login:", error);
-      throw error;
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -84,59 +69,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("auth_token");
     delete axios.defaults.headers.common["Authorization"];
     setUser(null);
-
-    const publicRoutes = [
-      "/login",
-      "/register",
-      "/forgot-password",
-      "/reset-password",
-      "/verify-code",
-    ];
-    if (!publicRoutes.includes(pathname)) {
-      router.push("/login");
-    }
+    if (pathname !== "/login") router.push("/login");
   }
 
-  async function refreshUser() {
-    await fetchProfile();
-  }
-
-  useEffect(() => {
-    const stored =
-      typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
-
-    if (!stored) {
-      setLoading(false);
-      return;
-    }
-
-    axios.defaults.headers.common["Authorization"] = `Bearer ${stored}`;
-
-    const watchdog = setTimeout(() => {
-      setLoading(false);
-    }, 8000);
-
-    fetchProfile().finally(() => {
-      clearTimeout(watchdog);
-    });
-  }, []);
-
-  const value: AuthContextType = {
-    user,
-    loading,
-    isAuthenticated: !!user,
-    login,
-    logout,
-    refreshUser,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ user, loading, isAuthenticated: !!user, login, logout, refreshUser: fetchProfile }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
 }
