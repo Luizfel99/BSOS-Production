@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 
 /**
  * Server Action for logout without JS
- * 
+ *
  * Why: Clears the HttpOnly auth_token cookie server-side and redirects to /login.
  * This provides a no-JS fallback for logout functionality.
  */

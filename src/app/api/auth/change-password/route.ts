@@ -5,7 +5,7 @@ import { db } from "@/lib/prisma";
 
 /**
  * POST /api/auth/change-password
- * 
+ *
  * Authenticated password change using JWT from cookie or Bearer token.
  * Validates current password with bcrypt.compare, then updates passwordHash.
  */
@@ -19,7 +19,8 @@ function readTokenFrom(req: Request) {
 
 export async function POST(req: Request) {
   const token = readTokenFrom(req);
-  if (!token) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!token)
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   let payload: any;
   try {
@@ -37,10 +38,14 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
   const ok = await bcrypt.compare(currentPassword, user.passwordHash);
-  if (!ok) return NextResponse.json({ error: "wrong_password" }, { status: 400 });
+  if (!ok)
+    return NextResponse.json({ error: "wrong_password" }, { status: 400 });
 
   const hash = await bcrypt.hash(newPassword, 10);
-  await db.user.update({ where: { id: user.id }, data: { passwordHash: hash } });
+  await db.user.update({
+    where: { id: user.id },
+    data: { passwordHash: hash },
+  });
 
   return NextResponse.json({ ok: true });
 }

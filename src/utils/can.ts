@@ -44,7 +44,11 @@ const MATRIX: Record<Role, Partial<Record<Resource, Action[]>>> = {
   },
 };
 
-export function can(user: MinimalUser | null | undefined, resource: Resource, action: Action): boolean {
+export function can(
+  user: MinimalUser | null | undefined,
+  resource: Resource,
+  action: Action
+): boolean {
   if (!user) return false;
   const role = user.role;
   const allowed = MATRIX[role]?.[resource] ?? [];

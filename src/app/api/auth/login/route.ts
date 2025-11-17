@@ -7,10 +7,12 @@ export async function POST(req: Request) {
   const { email, password } = await req.json();
 
   const user = await db.user.findUnique({ where: { email } });
-  if (!user) return NextResponse.json({ error: "invalid_credentials" }, { status: 401 });
+  if (!user)
+    return NextResponse.json({ error: "invalid_credentials" }, { status: 401 });
 
   const ok = await bcrypt.compare(password, user.passwordHash);
-  if (!ok) return NextResponse.json({ error: "invalid_credentials" }, { status: 401 });
+  if (!ok)
+    return NextResponse.json({ error: "invalid_credentials" }, { status: 401 });
 
   const token = jwt.sign(
     { id: user.id, email: user.email, role: user.role },

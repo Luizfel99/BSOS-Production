@@ -5,7 +5,8 @@ import { can } from "@/utils/can";
 
 export async function GET(req: Request) {
   const user = await getUserFromRequest(req);
-  if (!user || !can(user, "tasks", "read")) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!user || !can(user, "tasks", "read"))
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
 
   const url = new URL(req.url);
   const status = url.searchParams.get("status") ?? undefined;
@@ -13,7 +14,10 @@ export async function GET(req: Request) {
   const tasks = await db.task.findMany({
     where: { status: status as any | undefined },
     orderBy: { createdAt: "desc" },
-    include: { property: true, assignee: { select: { id: true, name: true, email: true } } },
+    include: {
+      property: true,
+      assignee: { select: { id: true, name: true, email: true } },
+    },
     take: 100,
   });
   return NextResponse.json({ tasks });
@@ -21,7 +25,8 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const user = await getUserFromRequest(req);
-  if (!user || !can(user, "tasks", "create")) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!user || !can(user, "tasks", "create"))
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
 
   const body = await req.json();
   const created = await db.task.create({

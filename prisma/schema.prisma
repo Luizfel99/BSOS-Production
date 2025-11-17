@@ -33,8 +33,8 @@ model User {
 
   resetTokens       ResetToken[]
   verificationCodes VerificationCode[]
-  tasks             Task[]         @relation("TaskAssignee")
-  createdTasks      Task[]         @relation("TaskCreator")
+  tasks             Task[]             @relation("TaskAssignee")
+  createdTasks      Task[]             @relation("TaskCreator")
   teamMember        TeamMember?
 }
 
@@ -90,13 +90,13 @@ enum TaskStatus {
 }
 
 model Task {
-  id          String      @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
   description String?
-  status      TaskStatus  @default(pending)
+  status      TaskStatus @default(pending)
   dueDate     DateTime?
   propertyId  String?
-  property    Property?   @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  property    Property?  @relation(fields: [propertyId], references: [id], onDelete: SetNull)
 
   assigneeId String?
   assignee   User?   @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)

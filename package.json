@@ -21,7 +21,9 @@
     "db:seed": "npx prisma db seed",
     "deploy:vercel": "vercel --prod",
     "deploy:production": "node scripts/deploy-production.js",
-    "test": "echo \"No tests specified\" && exit 0",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
     "test:api": "node scripts/test-api-routes.js",
     "predeployment:test": "npm run type-check && npm run test:api",
     "repair": "node scripts/repair.mjs",
@@ -41,6 +43,7 @@
     "autoprefixer": "^10.4.21",
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.8.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "framer-motion": "^12.23.24",
@@ -75,12 +78,15 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@vitest/ui": "^4.0.10",
     "detect-port": "^1.6.1",
     "eslint": "^8",
     "eslint-config-next": "15.5.4",
     "glob": "^12.0.0",
     "prisma": "^5.20.0",
     "puppeteer": "^24.25.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^4.0.10"
   }
 }
