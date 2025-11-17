@@ -1,15 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import LoginScreen from "@/components/LoginScreen";
 
-export default function HomePage() {
-  const router = useRouter();
-
-  // Always redirect to login
-  useEffect(() => {
-    router.replace("/login");
-  }, [router]);
-
-  return null;
+export default function LoginPage(): JSX.Element {
+  return <LoginScreen />;
 }
