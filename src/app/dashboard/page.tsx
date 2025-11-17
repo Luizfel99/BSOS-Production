@@ -1,59 +1,25 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const [stats, setStats] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadStats() {
-      try {
-        const token = localStorage.getItem("authToken");
-        if (!token) {
-          router.push("/login");
-          return;
-        }
-
-        const res = await axios.get("/api/dashboard", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setStats(res.data.stats);
-      } catch (err) {
-        router.push("/login");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadStats();
-  }, []);
-
-  if (loading) return <div className="p-4">Carregando...</div>;
-
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <p className="text-gray-600">
+        Welcome! You are authenticated. Replace this with your real dashboard
+        components (cards, charts, tables).
+      </p>
 
-      <div className="grid grid-cols-3 gap-4">
-        <div className="p-4 rounded-lg bg-gray-100">
-          <h2>Pendentes</h2>
-          <p className="text-2xl">{stats?.pending}</p>
-        </div>
-
-        <div className="p-4 rounded-lg bg-gray-100">
-          <h2>Em progresso</h2>
-          <p className="text-2xl">{stats?.inProgress}</p>
-        </div>
-
-        <div className="p-4 rounded-lg bg-gray-100">
-          <h2>Concluídas</h2>
-          <p className="text-2xl">{stats?.completed}</p>
-        </div>
+      {/* Quick Navigation placeholders */}
+      <div className="grid sm:grid-cols-3 gap-3">
+        <Link href="/tasks" className="rounded border p-4 hover:bg-gray-50">
+          Tasks (placeholder)
+        </Link>
+        <Link href="/team" className="rounded border p-4 hover:bg-gray-50">
+          Team (placeholder)
+        </Link>
+        <Link href="/properties" className="rounded border p-4 hover:bg-gray-50">
+          Properties (placeholder)
+        </Link>
       </div>
     </div>
   );

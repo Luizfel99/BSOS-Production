@@ -9,6 +9,7 @@ import { BSOSProvider } from "@/contexts/BSOSContext";
 import { Analytics } from "@vercel/analytics/react";
 import DebugOverlay from "@/components/DebugOverlay";
 import GlobalActionBus from "@/components/GlobalActionBus";
+import AppHeader from "@/components/AppHeader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,6 +40,7 @@ export default function RootLayout({
             <AuthProviderWrapper>
               <BSOSProvider>
                 <div className="min-h-screen bg-gray-50">
+                  <AppHeader />
                   {children}
                   <DebugOverlay />
                   <GlobalActionBus />

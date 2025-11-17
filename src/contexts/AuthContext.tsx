@@ -19,7 +19,7 @@ interface AuthContextType {
   loading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
@@ -65,11 +65,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function logout() {
-    localStorage.removeItem("auth_token");
-    delete axios.defaults.headers.common["Authorization"];
-    setUser(null);
-    if (pathname !== "/login") router.push("/login");
+  async function logout() {
+    // Why: Clear HttpOnly cookie on server so middleware stops recognizing the session
+    try {
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    } catch {
+      // Best effort - continue with client cleanup even if server call fails
+    } finally {
+      localStorage.removeItem("auth_token");
+      delete axios.defaults.headers.common["Authorization"];
+      setUser(null);
+      if (pathname !== "/login") router.push("/login");
+    }
   }
 
   return (
