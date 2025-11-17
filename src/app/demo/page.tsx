@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState } from "react";
 import BSOSCoreResponsive from "@/components/bsos/BSOSCoreResponsive";
@@ -18,7 +18,7 @@ import { Toaster } from "react-hot-toast";
  */
 export default function ResponsiveDemo() {
   const [activeDemo, setActiveDemo] = useState<"responsive" | "notifications">(
-    "responsive",
+    "responsive"
   );
 
   return (
@@ -34,30 +34,30 @@ export default function ResponsiveDemo() {
 
               {/* Demo Selector */}
               <div className="flex gap-4 mb-4">
-                <button
+                <WiredButton
                   onClick={() => setActiveDemo("responsive")}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    activeDemo === "responsive"
-                      ? "bg-white text-blue-600"
-                      : "bg-blue-500 text-white hover:bg-blue-400"
-                  }`}
-                >
+                  activeDemo === "responsive" ?
+                  "bg-white text-blue-600" :
+                  "bg-blue-500 text-white hover:bg-blue-400"}`
+                  }>
+
                   📱 Responsive Design
-                </button>
-                <button
+                </WiredButton>
+                <WiredButton
                   onClick={() => setActiveDemo("notifications")}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    activeDemo === "notifications"
-                      ? "bg-white text-blue-600"
-                      : "bg-blue-500 text-white hover:bg-blue-400"
-                  }`}
-                >
+                  activeDemo === "notifications" ?
+                  "bg-white text-blue-600" :
+                  "bg-blue-500 text-white hover:bg-blue-400"}`
+                  }>
+
                   🔔 Toast Notifications
-                </button>
+                </WiredButton>
               </div>
 
-              {activeDemo === "responsive" ? (
-                <div>
+              {activeDemo === "responsive" ?
+              <div>
                   <p className="text-blue-100 text-sm lg:text-base">
                     Resize your browser window to see responsive layout changes:
                   </p>
@@ -75,9 +75,9 @@ export default function ResponsiveDemo() {
                       navigation
                     </li>
                   </ul>
-                </div>
-              ) : (
-                <div>
+                </div> :
+
+              <div>
                   <p className="text-blue-100 text-sm lg:text-base">
                     Demonstração do sistema de notificações toast com diferentes
                     tipos e estilos:
@@ -98,7 +98,7 @@ export default function ResponsiveDemo() {
                     </li>
                   </ul>
                 </div>
-              )}
+              }
             </div>
           </div>
 
@@ -109,35 +109,35 @@ export default function ResponsiveDemo() {
               duration: 3000,
               style: {
                 background: "#363636",
-                color: "#fff",
+                color: "#fff"
               },
               success: {
                 duration: 3000,
                 iconTheme: {
                   primary: "#4ade80",
-                  secondary: "#fff",
-                },
+                  secondary: "#fff"
+                }
               },
               error: {
                 duration: 4000,
                 iconTheme: {
                   primary: "#ef4444",
-                  secondary: "#fff",
-                },
-              },
-            }}
-          />
+                  secondary: "#fff"
+                }
+              }
+            }} />
+
 
           {/* Main content */}
-          {activeDemo === "responsive" ? (
-            <BSOSCoreResponsive />
-          ) : (
-            <div className="max-w-7xl mx-auto p-4 lg:p-6">
+          {activeDemo === "responsive" ?
+          <BSOSCoreResponsive /> :
+
+          <div className="max-w-7xl mx-auto p-4 lg:p-6">
               <NotificationDemo />
             </div>
-          )}
+          }
         </div>
       </BSOSProvider>
-    </I18nProvider>
-  );
+    </I18nProvider>);
+
 }

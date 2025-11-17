@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -18,8 +18,8 @@ import {
   MapPin,
   Home,
   AlertCircle,
-  Sparkles,
-} from "lucide-react";
+  Sparkles } from
+"lucide-react";
 import { ProtectedComponent } from "@/components/ProtectedComponent";
 
 // Property interface
@@ -72,7 +72,7 @@ export default function PropertiesPage() {
 
     try {
       const response = await fetch(`/api/properties/${propertyId}`, {
-        method: "DELETE",
+        method: "DELETE"
       });
 
       if (response.ok) {
@@ -108,7 +108,7 @@ export default function PropertiesPage() {
       APARTMENT: "Apartamento",
       HOUSE: "Casa",
       STUDIO: "Studio",
-      COMMERCIAL: "Comercial",
+      COMMERCIAL: "Comercial"
     };
     return labels[type as keyof typeof labels] || type;
   };
@@ -130,10 +130,10 @@ export default function PropertiesPage() {
 
   const filteredProperties = properties.filter(
     (property) =>
-      property.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (property.clientName &&
-        property.clientName.toLowerCase().includes(searchTerm.toLowerCase())),
+    property.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    property.clientName &&
+    property.clientName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -144,8 +144,8 @@ export default function PropertiesPage() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
+            className="mb-8">
+
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center">
@@ -164,16 +164,16 @@ export default function PropertiesPage() {
                   <Button
                     onClick={() => handleCreateTask()}
                     variant="secondary"
-                    leftIcon={<Sparkles className="h-4 w-4" />}
-                  >
+                    leftIcon={<Sparkles className="h-4 w-4" />}>
+
                     Create Cleaning Task
                   </Button>
 
                   <Button
                     onClick={handleAddProperty}
                     variant="primary"
-                    leftIcon={<Plus className="h-4 w-4" />}
-                  >
+                    leftIcon={<Plus className="h-4 w-4" />}>
+
                     Add Property
                   </Button>
                 </div>
@@ -186,8 +186,8 @@ export default function PropertiesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-6"
-          >
+            className="mb-6">
+
             <div className="bg-white rounded-lg shadow-sm border p-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -196,32 +196,32 @@ export default function PropertiesPage() {
                   placeholder="Buscar propriedades..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+
               </div>
             </div>
           </motion.div>
 
           {/* Loading State */}
-          {isLoading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="bg-white rounded-lg shadow-sm border p-8 text-center"
-            >
+          {isLoading &&
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-white rounded-lg shadow-sm border p-8 text-center">
+
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
               <p className="text-gray-600">Carregando propriedades...</p>
             </motion.div>
-          )}
+          }
 
           {/* Empty State */}
-          {!isLoading && properties.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white rounded-lg shadow-sm border p-12 text-center"
-            >
+          {!isLoading && properties.length === 0 &&
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-lg shadow-sm border p-12 text-center">
+
               <Building2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
                 Nenhuma propriedade cadastrada
@@ -230,32 +230,32 @@ export default function PropertiesPage() {
                 No properties found. Comece adicionando sua primeira
                 propriedade.
               </p>
-              <button
-                onClick={handleAddProperty}
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-6 py-3 flex items-center gap-2 mx-auto transition-colors"
-              >
+              <WiredButton
+              onClick={handleAddProperty}
+              className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-6 py-3 flex items-center gap-2 mx-auto transition-colors">
+
                 <Plus className="h-5 w-5" />
                 Adicionar Primeira Propriedade
-              </button>
+              </WiredButton>
             </motion.div>
-          )}
+          }
 
           {/* Properties Grid */}
-          {!isLoading && filteredProperties.length > 0 && (
+          {!isLoading && filteredProperties.length > 0 &&
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+              {filteredProperties.map((property, index) =>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
-              {filteredProperties.map((property, index) => (
-                <motion.div
-                  key={property.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow"
-                >
+              key={property.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center">
@@ -272,12 +272,12 @@ export default function PropertiesPage() {
                       </div>
 
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          property.active
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    property.active ?
+                    "bg-green-100 text-green-800" :
+                    "bg-red-100 text-red-800"}`
+                    }>
+
                         {property.active ? "Ativo" : "Inativo"}
                       </span>
                     </div>
@@ -288,59 +288,59 @@ export default function PropertiesPage() {
                         {getTypeLabel(property.type)}
                       </div>
 
-                      {property.clientName && (
-                        <div className="flex items-center text-sm text-gray-600">
+                      {property.clientName &&
+                  <div className="flex items-center text-sm text-gray-600">
                           <span className="font-medium">Cliente:</span>
                           <span className="ml-2">{property.clientName}</span>
                         </div>
-                      )}
+                  }
 
-                      {property.cleaningFrequency && (
-                        <div className="flex items-center text-sm text-gray-600">
+                      {property.cleaningFrequency &&
+                  <div className="flex items-center text-sm text-gray-600">
                           <Calendar className="h-4 w-4 mr-2" />
                           {property.cleaningFrequency}
                         </div>
-                      )}
+                  }
                     </div>
 
                     <div className="flex gap-2">
-                      <button
-                        onClick={() => handleCreateTask(property.id)}
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md px-3 py-2 flex items-center justify-center gap-1 transition-colors"
-                      >
+                      <WiredButton
+                    onClick={() => handleCreateTask(property.id)}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md px-3 py-2 flex items-center justify-center gap-1 transition-colors">
+
                         <Sparkles className="h-3 w-3" />
                         Criar Tarefa
-                      </button>
+                      </WiredButton>
 
-                      <button
-                        onClick={() => handleEditProperty(property.id)}
-                        className="bg-gray-600 hover:bg-gray-700 text-white rounded-md px-3 py-2 transition-colors"
-                      >
+                      <WiredButton
+                    onClick={() => handleEditProperty(property.id)}
+                    className="bg-gray-600 hover:bg-gray-700 text-white rounded-md px-3 py-2 transition-colors">
+
                         <Edit2 className="h-4 w-4" />
-                      </button>
+                      </WiredButton>
 
-                      <button
-                        onClick={() => handleDeleteProperty(property.id)}
-                        className="bg-red-600 hover:bg-red-700 text-white rounded-md px-3 py-2 transition-colors"
-                      >
+                      <WiredButton
+                    onClick={() => handleDeleteProperty(property.id)}
+                    className="bg-red-600 hover:bg-red-700 text-white rounded-md px-3 py-2 transition-colors">
+
                         <Trash2 className="h-4 w-4" />
-                      </button>
+                      </WiredButton>
                     </div>
                   </div>
                 </motion.div>
-              ))}
+            )}
             </motion.div>
-          )}
+          }
 
           {/* No Search Results */}
           {!isLoading &&
-            properties.length > 0 &&
-            filteredProperties.length === 0 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="bg-white rounded-lg shadow-sm border p-8 text-center"
-              >
+          properties.length > 0 &&
+          filteredProperties.length === 0 &&
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-white rounded-lg shadow-sm border p-8 text-center">
+
                 <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   Nenhuma propriedade encontrada
@@ -350,9 +350,9 @@ export default function PropertiesPage() {
                   propriedade.
                 </p>
               </motion.div>
-            )}
+          }
         </div>
       </div>
-    </ProtectedComponent>
-  );
+    </ProtectedComponent>);
+
 }

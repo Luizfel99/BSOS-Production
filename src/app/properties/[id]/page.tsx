@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -15,8 +15,8 @@ import {
   Edit2,
   Trash2,
   AlertCircle,
-  CheckCircle,
-} from "lucide-react";
+  CheckCircle } from
+"lucide-react";
 import { ProtectedComponent } from "@/components/ProtectedComponent";
 import {
   getProperty,
@@ -24,8 +24,8 @@ import {
   getPropertyTypeLabel,
   getPropertyStatusLabel,
   getPropertyStatusBadgeColor,
-  type Property,
-} from "@/services/properties";
+  type Property } from
+"@/services/properties";
 
 export default function PropertyDetailPage() {
   const router = useRouter();
@@ -62,10 +62,10 @@ export default function PropertyDetailPage() {
     if (!property) return;
 
     if (
-      !confirm(
-        `Are you sure you want to delete "${property.name}"? This action cannot be undone.`,
-      )
-    ) {
+    !confirm(
+      `Are you sure you want to delete "${property.name}"? This action cannot be undone.`
+    ))
+    {
       return;
     }
 
@@ -89,8 +89,8 @@ export default function PropertyDetailPage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading property...</p>
         </div>
-      </div>
-    );
+      </div>);
+
   }
 
   if (!property) {
@@ -105,16 +105,16 @@ export default function PropertyDetailPage() {
             The property you&apos;re looking for doesn&apos;t exist or was
             deleted.
           </p>
-          <button
+          <WiredButton
             onClick={() => router.push("/properties")}
-            className="flex items-center mx-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
+            className="flex items-center mx-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Properties
-          </button>
+          </WiredButton>
         </div>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
@@ -125,15 +125,15 @@ export default function PropertyDetailPage() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
-            <button
+            className="mb-8">
+
+            <WiredButton
               onClick={() => router.back()}
-              className="flex items-center text-gray-600 hover:text-gray-800 mb-4 transition-colors"
-            >
+              className="flex items-center text-gray-600 hover:text-gray-800 mb-4 transition-colors">
+
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Properties
-            </button>
+            </WiredButton>
 
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
               <div className="flex-1">
@@ -146,33 +146,33 @@ export default function PropertyDetailPage() {
                   {property.address}
                 </div>
                 <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getPropertyStatusBadgeColor(property.active)}`}
-                >
-                  {property.active ? (
-                    <CheckCircle className="h-4 w-4 mr-1" />
-                  ) : (
-                    <AlertCircle className="h-4 w-4 mr-1" />
-                  )}
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getPropertyStatusBadgeColor(property.active)}`}>
+
+                  {property.active ?
+                  <CheckCircle className="h-4 w-4 mr-1" /> :
+
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  }
                   {getPropertyStatusLabel(property.active)}
                 </span>
               </div>
 
               <ProtectedComponent allowedRoles={["OWNER", "MANAGER"]}>
                 <div className="flex items-center space-x-3 mt-4 sm:mt-0">
-                  <button
+                  <WiredButton
                     onClick={handleEdit}
-                    className="flex items-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors"
-                  >
+                    className="flex items-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors">
+
                     <Edit2 className="h-4 w-4 mr-2" />
                     Edit Property
-                  </button>
-                  <button
+                  </WiredButton>
+                  <WiredButton
                     onClick={handleDelete}
-                    className="flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors"
-                  >
+                    className="flex items-center px-4 py-2 text-sm font-medium text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors">
+
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete
-                  </button>
+                  </WiredButton>
                 </div>
               </ProtectedComponent>
             </div>
@@ -184,8 +184,8 @@ export default function PropertyDetailPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="lg:col-span-2"
-            >
+              className="lg:col-span-2">
+
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
                   Property Details
@@ -202,8 +202,8 @@ export default function PropertyDetailPage() {
                     </div>
                   </div>
 
-                  {property.platform && (
-                    <div>
+                  {property.platform &&
+                  <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Platform
                       </label>
@@ -212,10 +212,10 @@ export default function PropertyDetailPage() {
                         {property.platform}
                       </div>
                     </div>
-                  )}
+                  }
 
-                  {property.platformId && (
-                    <div>
+                  {property.platformId &&
+                  <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Platform ID
                       </label>
@@ -224,10 +224,10 @@ export default function PropertyDetailPage() {
                         {property.platformId}
                       </div>
                     </div>
-                  )}
+                  }
 
-                  {property.ownerId && (
-                    <div>
+                  {property.ownerId &&
+                  <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Owner ID
                       </label>
@@ -236,7 +236,7 @@ export default function PropertyDetailPage() {
                         {property.ownerId}
                       </div>
                     </div>
-                  )}
+                  }
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -273,36 +273,36 @@ export default function PropertyDetailPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
+              transition={{ delay: 0.2 }}>
+
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">
                   Quick Actions
                 </h2>
 
                 <div className="space-y-4">
-                  <button
+                  <WiredButton
                     onClick={handleCreateTask}
-                    className="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
+                    className="w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+
                     <Calendar className="h-5 w-5 mr-2" />
                     Create Cleaning Task
-                  </button>
+                  </WiredButton>
 
-                  <button
+                  <WiredButton
                     onClick={() => router.push("/tasks")}
-                    className="w-full flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-                  >
+                    className="w-full flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+
                     View All Tasks
-                  </button>
+                  </WiredButton>
 
                   <ProtectedComponent allowedRoles={["OWNER", "MANAGER"]}>
-                    <button
+                    <WiredButton
                       onClick={() => router.push("/properties")}
-                      className="w-full flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-                    >
+                      className="w-full flex items-center justify-center px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+
                       Manage Properties
-                    </button>
+                    </WiredButton>
                   </ProtectedComponent>
                 </div>
               </div>
@@ -324,8 +324,8 @@ export default function PropertyDetailPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Status</span>
                     <span
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getPropertyStatusBadgeColor(property.active)}`}
-                    >
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getPropertyStatusBadgeColor(property.active)}`}>
+
                       {getPropertyStatusLabel(property.active)}
                     </span>
                   </div>
@@ -342,6 +342,6 @@ export default function PropertyDetailPage() {
           </div>
         </div>
       </div>
-    </ProtectedComponent>
-  );
+    </ProtectedComponent>);
+
 }

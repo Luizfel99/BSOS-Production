@@ -2,16 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MouseEvent } from "react";
+import { ButtonHTMLAttributes, forwardRef } from "react";
 
-type Props = {
+type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: React.ReactNode;
   href?: string;
-  onClick?: (e: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
-  action?: string;       // data-action padrão
-  route?: string;        // fallback de rota
-  className?: string;
-  disabled?: boolean;
+  action?: string; // data-action padrão
+  route?: string; // fallback de rota
 };
 
 /**
@@ -19,44 +16,63 @@ type Props = {
  * - se href: renderiza <Link>
  * - senão: <button> com onClick que navega para route (se existir) ou loga action
  */
-export default function WiredButton({
-  children, href, onClick, action, route, className, disabled
-}: Props) {
-  const router = useRouter();
+const WiredButton = forwardRef<HTMLButtonElement, Props>(
+  (
+    {
+      children,
+      href,
+      onClick,
+      action,
+      route,
+      className,
+      disabled,
+      type = "button",
+      ...rest
+    },
+    ref
+  ) => {
+    const router = useRouter();
 
-  function fallback(e: any) {
-    if (disabled) return;
-    if (onClick) return onClick(e);
-    if (route) return router.push(route);
-    if (href) return; // Link cuida
-    // por quê: marcação para o GlobalActionBus
-    console.info("[wire] click:", action ?? "(no-action)");
-  }
+    function fallback(e: any) {
+      if (disabled) return;
+      if (onClick) return onClick(e);
+      if (route) return router.push(route);
+      if (href) return; // Link cuida
+      // por quê: marcação para o GlobalActionBus
+      console.info("[wire] click:", action ?? "(no-action)");
+    }
 
-  if (href) {
+    if (href) {
+      return (
+        <Link
+          href={href}
+          className={className}
+          data-action={action}
+          data-route={route}
+          aria-disabled={disabled}
+        >
+          {children}
+        </Link>
+      );
+    }
+
     return (
-      <Link
-        href={href}
+      <button
+        ref={ref}
+        type={type}
+        onClick={fallback}
         className={className}
         data-action={action}
         data-route={route}
-        aria-disabled={disabled}
+        disabled={disabled}
+        {...rest}
       >
         {children}
-      </Link>
+      </button>
     );
   }
+);
 
-  return (
-    <button
-      type="button"
-      onClick={fallback}
-      className={className}
-      data-action={action}
-      data-route={route}
-      disabled={disabled}
-    >
-      {children}
-    </button>
-  );
-}
+WiredButton.displayName = "WiredButton";
+
+export default WiredButton;

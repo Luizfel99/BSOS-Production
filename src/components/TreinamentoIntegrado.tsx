@@ -3,7 +3,7 @@
  * Sistema completo de treinamento com vídeos, manuais e testes
  */
 
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -30,20 +30,20 @@ import {
   Trash2,
   Eye,
   Lock,
-  Unlock,
-} from "lucide-react";
+  Unlock } from
+"lucide-react";
 
 interface TrainingModule {
   id: string;
   title: string;
   description: string;
   category:
-    | "fundamentals"
-    | "techniques"
-    | "safety"
-    | "products"
-    | "customer_service"
-    | "equipment";
+  "fundamentals" |
+  "techniques" |
+  "safety" |
+  "products" |
+  "customer_service" |
+  "equipment";
 
   // Conteúdo
   content: {
@@ -191,10 +191,10 @@ export default function TreinamentoIntegrado() {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
 
   const [activeTab, setActiveTab] = useState<
-    "modules" | "progress" | "quizzes" | "analytics" | "library"
-  >("modules");
+    "modules" | "progress" | "quizzes" | "analytics" | "library">(
+    "modules");
   const [selectedModule, setSelectedModule] = useState<TrainingModule | null>(
-    null,
+    null
   );
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -219,16 +219,16 @@ export default function TreinamentoIntegrado() {
     try {
       setLoading(true);
       const [modulesRes, progressRes, quizzesRes] = await Promise.all([
-        fetch("/api/training/modules"),
-        fetch("/api/training/progress"),
-        fetch("/api/training/quizzes"),
-      ]);
+      fetch("/api/training/modules"),
+      fetch("/api/training/progress"),
+      fetch("/api/training/quizzes")]
+      );
 
       const [modulesData, progressData, quizzesData] = await Promise.all([
-        modulesRes.json(),
-        progressRes.json(),
-        quizzesRes.json(),
-      ]);
+      modulesRes.json(),
+      progressRes.json(),
+      quizzesRes.json()]
+      );
 
       setTrainingModules(modulesData.modules);
       setUserProgresses(progressData.progresses);
@@ -243,7 +243,7 @@ export default function TreinamentoIntegrado() {
   const enrollInModule = async (moduleId: string) => {
     try {
       await fetch(`/api/training/modules/${moduleId}/enroll`, {
-        method: "POST",
+        method: "POST"
       });
       fetchTrainingData();
     } catch (error) {
@@ -256,7 +256,7 @@ export default function TreinamentoIntegrado() {
       await fetch(`/api/training/progress/video`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ moduleId, videoId }),
+        body: JSON.stringify({ moduleId, videoId })
       });
       fetchTrainingData();
     } catch (error) {
@@ -269,7 +269,7 @@ export default function TreinamentoIntegrado() {
       await fetch(`/api/training/quizzes/${quizId}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers }),
+        body: JSON.stringify({ answers })
       });
       fetchTrainingData();
     } catch (error) {
@@ -280,7 +280,7 @@ export default function TreinamentoIntegrado() {
   const handleDownloadCertificate = async (moduleId: string) => {
     try {
       const response = await fetch(`/api/training/certificates/${moduleId}`, {
-        method: "GET",
+        method: "GET"
       });
 
       if (response.ok) {
@@ -337,7 +337,7 @@ export default function TreinamentoIntegrado() {
       safety: "S",
       products: "P",
       customer_service: "CS",
-      equipment: "E",
+      equipment: "E"
     };
     return icons[category as keyof typeof icons] || "G";
   };
@@ -346,11 +346,11 @@ export default function TreinamentoIntegrado() {
     const colors = {
       beginner: "bg-green-100 text-green-800",
       intermediate: "bg-yellow-100 text-yellow-800",
-      advanced: "bg-red-100 text-red-800",
+      advanced: "bg-red-100 text-red-800"
     };
     return (
-      colors[difficulty as keyof typeof colors] || "bg-gray-100 text-gray-800"
-    );
+      colors[difficulty as keyof typeof colors] || "bg-gray-100 text-gray-800");
+
   };
 
   const getStatusColor = (status: string) => {
@@ -358,7 +358,7 @@ export default function TreinamentoIntegrado() {
       not_started: "bg-gray-100 text-gray-800",
       in_progress: "bg-blue-100 text-blue-800",
       completed: "bg-green-100 text-green-800",
-      expired: "bg-red-100 text-red-800",
+      expired: "bg-red-100 text-red-800"
     };
     return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
   };
@@ -371,19 +371,19 @@ export default function TreinamentoIntegrado() {
 
   const filteredModules = trainingModules.filter((module) => {
     if (selectedCategory !== "all" && module.category !== selectedCategory)
-      return false;
+    return false;
     if (
-      searchQuery &&
-      !module.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      !module.description.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-      return false;
+    searchQuery &&
+    !module.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    !module.description.toLowerCase().includes(searchQuery.toLowerCase()))
+
+    return false;
     return true;
   });
 
   const getUserProgress = (moduleId: string) => {
     return userProgresses.find(
-      (p) => p.moduleId === moduleId && p.userId === user?.id,
+      (p) => p.moduleId === moduleId && p.userId === user?.id
     );
   };
 
@@ -391,8 +391,8 @@ export default function TreinamentoIntegrado() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
@@ -407,49 +407,49 @@ export default function TreinamentoIntegrado() {
         </div>
 
         <div className="flex gap-3">
-          {(user?.role === "owner" || user?.role === "supervisor") && (
-            <>
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-              >
+          {(user?.role === "owner" || user?.role === "supervisor") &&
+          <>
+              <WiredButton
+              onClick={() => setShowCreateModal(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+
                 <Plus className="h-4 w-4 inline mr-2" />
                 Novo Módulo
-              </button>
-              <button
-                onClick={() => setShowQuizModal(true)}
-                className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
-              >
+              </WiredButton>
+              <WiredButton
+              onClick={() => setShowQuizModal(true)}
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+
                 <Plus className="h-4 w-4 inline mr-2" />
                 Novo Teste
-              </button>
+              </WiredButton>
             </>
-          )}
+          }
         </div>
       </div>
 
       {/* Tabs */}
       <div className="flex border-b mb-6">
         {[
-          { id: "modules", label: "Módulos", icon: BookOpen },
-          { id: "progress", label: "Meu Progresso", icon: BarChart3 },
-          { id: "quizzes", label: "Testes", icon: Target },
-          { id: "analytics", label: "Analytics", icon: Award },
-          { id: "library", label: "Biblioteca", icon: FileText },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
-              activeTab === tab.id
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
+        { id: "modules", label: "Módulos", icon: BookOpen },
+        { id: "progress", label: "Meu Progresso", icon: BarChart3 },
+        { id: "quizzes", label: "Testes", icon: Target },
+        { id: "analytics", label: "Analytics", icon: Award },
+        { id: "library", label: "Biblioteca", icon: FileText }].
+        map((tab) =>
+        <WiredButton
+          key={tab.id}
+          onClick={() => setActiveTab(tab.id as any)}
+          className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
+          activeTab === tab.id ?
+          "border-b-2 border-blue-600 text-blue-600" :
+          "text-gray-600 hover:text-gray-900"}`
+          }>
+
             <tab.icon className="h-4 w-4" />
             {tab.label}
-          </button>
-        ))}
+          </WiredButton>
+        )}
       </div>
 
       {/* Estatísticas */}
@@ -490,8 +490,8 @@ export default function TreinamentoIntegrado() {
             placeholder="Buscar módulos..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="border rounded px-3 py-1"
-          />
+            className="border rounded px-3 py-1" />
+
         </div>
 
         <div className="flex items-center gap-2">
@@ -499,8 +499,8 @@ export default function TreinamentoIntegrado() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="border rounded px-3 py-1"
-          >
+            className="border rounded px-3 py-1">
+
             <option value="all">Todas as Categorias</option>
             <option value="fundamentals">Fundamentos</option>
             <option value="techniques">Técnicas</option>
@@ -513,20 +513,20 @@ export default function TreinamentoIntegrado() {
       </div>
 
       {/* Content based on active tab */}
-      {activeTab === "modules" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {activeTab === "modules" &&
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredModules.map((module) => {
-            const userProgress = getUserProgress(module.id);
-            const totalContent =
-              module.content.videos.length +
-              module.content.documents.length +
-              module.content.quizzes.length;
+          const userProgress = getUserProgress(module.id);
+          const totalContent =
+          module.content.videos.length +
+          module.content.documents.length +
+          module.content.quizzes.length;
 
-            return (
-              <div
-                key={module.id}
-                className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow"
-              >
+          return (
+            <div
+              key={module.id}
+              className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+
                 {/* Header do módulo */}
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
@@ -535,16 +535,16 @@ export default function TreinamentoIntegrado() {
                         {getCategoryIcon(module.category)}
                       </span>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(module.difficulty)}`}
-                      >
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(module.difficulty)}`}>
+
                         {module.difficulty}
                       </span>
                     </div>
-                    {module.isRequired && (
-                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
+                    {module.isRequired &&
+                  <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium">
                         Obrigatório
                       </span>
-                    )}
+                  }
                   </div>
 
                   <h3 className="font-semibold text-lg mb-2">{module.title}</h3>
@@ -575,37 +575,37 @@ export default function TreinamentoIntegrado() {
                   </div>
 
                   {/* Progresso do usuário */}
-                  {userProgress ? (
-                    <div className="mb-4">
+                  {userProgress ?
+                <div className="mb-4">
                       <div className="flex justify-between text-sm mb-1">
                         <span>Progresso</span>
                         <span>{userProgress.progressPercentage}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full ${
-                            userProgress.status === "completed"
-                              ? "bg-green-500"
-                              : "bg-blue-500"
-                          }`}
-                          style={{
-                            width: `${userProgress.progressPercentage}%`,
-                          }}
-                        ></div>
+                      className={`h-2 rounded-full ${
+                      userProgress.status === "completed" ?
+                      "bg-green-500" :
+                      "bg-blue-500"}`
+                      }
+                      style={{
+                        width: `${userProgress.progressPercentage}%`
+                      }}>
+                    </div>
                       </div>
                       <div
-                        className={`text-xs mt-1 ${getStatusColor(userProgress.status)} px-2 py-1 rounded-full inline-block`}
-                      >
+                    className={`text-xs mt-1 ${getStatusColor(userProgress.status)} px-2 py-1 rounded-full inline-block`}>
+
                         {userProgress.status}
                       </div>
-                    </div>
-                  ) : (
-                    <div className="mb-4">
+                    </div> :
+
+                <div className="mb-4">
                       <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">
                         Não iniciado
                       </span>
                     </div>
-                  )}
+                }
 
                   {/* Informações adicionais */}
                   <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
@@ -625,49 +625,49 @@ export default function TreinamentoIntegrado() {
 
                   {/* Ações */}
                   <div className="flex gap-2">
-                    {userProgress ? (
-                      <button
-                        onClick={() => setSelectedModule(module)}
-                        className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                      >
+                    {userProgress ?
+                  <WiredButton
+                    onClick={() => setSelectedModule(module)}
+                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+
                         Continuar
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => enrollInModule(module.id)}
-                        className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                      >
+                      </WiredButton> :
+
+                  <WiredButton
+                    onClick={() => enrollInModule(module.id)}
+                    className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+
                         Começar
-                      </button>
-                    )}
-                    <button
-                      onClick={() => setSelectedModule(module)}
-                      className="px-4 py-2 border rounded hover:bg-gray-50"
-                    >
+                      </WiredButton>
+                  }
+                    <WiredButton
+                    onClick={() => setSelectedModule(module)}
+                    className="px-4 py-2 border rounded hover:bg-gray-50">
+
                       <Eye className="h-4 w-4" />
-                    </button>
+                    </WiredButton>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+              </div>);
 
-      {activeTab === "progress" && (
-        <div className="space-y-6">
+        })}
+        </div>
+      }
+
+      {activeTab === "progress" &&
+      <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="bg-white p-6 rounded-lg border">
               <h3 className="font-semibold mb-2">Progresso Geral</h3>
               <div className="text-3xl font-bold text-blue-600 mb-2">
-                {userProgresses.length > 0
-                  ? Math.round(
-                      userProgresses.reduce(
-                        (acc, p) => acc + p.progressPercentage,
-                        0,
-                      ) / userProgresses.length,
-                    )
-                  : 0}
+                {userProgresses.length > 0 ?
+              Math.round(
+                userProgresses.reduce(
+                  (acc, p) => acc + p.progressPercentage,
+                  0
+                ) / userProgresses.length
+              ) :
+              0}
                 %
               </div>
               <p className="text-sm text-gray-600">Média de todos os módulos</p>
@@ -691,16 +691,16 @@ export default function TreinamentoIntegrado() {
           {/* Lista de progresso */}
           <div className="space-y-4">
             {userProgresses.map((progress) => {
-              const trainingModule = trainingModules.find(
-                (m) => m.id === progress.moduleId,
-              );
-              if (!trainingModule) return null;
+            const trainingModule = trainingModules.find(
+              (m) => m.id === progress.moduleId
+            );
+            if (!trainingModule) return null;
 
-              return (
-                <div
-                  key={progress.moduleId}
-                  className="bg-white border rounded-lg p-6"
-                >
+            return (
+              <div
+                key={progress.moduleId}
+                className="bg-white border rounded-lg p-6">
+
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-4">
                       <span className="text-2xl">
@@ -718,25 +718,25 @@ export default function TreinamentoIntegrado() {
 
                     <div className="text-right">
                       <div
-                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full font-medium ${getStatusColor(progress.status)}`}
-                      >
-                        {progress.status === "completed" && (
-                          <CheckCircle2 className="h-4 w-4" />
-                        )}
-                        {progress.status === "in_progress" && (
-                          <Clock className="h-4 w-4" />
-                        )}
-                        {progress.status === "expired" && (
-                          <AlertTriangle className="h-4 w-4" />
-                        )}
+                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full font-medium ${getStatusColor(progress.status)}`}>
+
+                        {progress.status === "completed" &&
+                      <CheckCircle2 className="h-4 w-4" />
+                      }
+                        {progress.status === "in_progress" &&
+                      <Clock className="h-4 w-4" />
+                      }
+                        {progress.status === "expired" &&
+                      <AlertTriangle className="h-4 w-4" />
+                      }
                         {progress.status}
                       </div>
-                      {progress.certificationEarned && (
-                        <div className="text-sm text-green-600 mt-1 flex items-center gap-1">
+                      {progress.certificationEarned &&
+                    <div className="text-sm text-green-600 mt-1 flex items-center gap-1">
                           <Award className="h-4 w-4" />
                           Certificado
                         </div>
-                      )}
+                    }
                     </div>
                   </div>
 
@@ -748,9 +748,9 @@ export default function TreinamentoIntegrado() {
                       </div>
                       <div className="font-medium">
                         {
-                          progress.videosWatched.filter((v) => v.completed)
-                            .length
-                        }{" "}
+                      progress.videosWatched.filter((v) => v.completed).
+                      length
+                      }{" "}
                         / {trainingModule.content.videos.length}
                       </div>
                     </div>
@@ -769,9 +769,9 @@ export default function TreinamentoIntegrado() {
                       </div>
                       <div className="font-medium">
                         {
-                          progress.quizResults.filter((q) => q.bestScore >= 70)
-                            .length
-                        }{" "}
+                      progress.quizResults.filter((q) => q.bestScore >= 70).
+                      length
+                      }{" "}
                         / {trainingModule.content.quizzes.length}
                       </div>
                     </div>
@@ -785,46 +785,46 @@ export default function TreinamentoIntegrado() {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-3">
                       <div
-                        className={`h-3 rounded-full ${
-                          progress.status === "completed"
-                            ? "bg-green-500"
-                            : "bg-blue-500"
-                        }`}
-                        style={{ width: `${progress.progressPercentage}%` }}
-                      ></div>
+                      className={`h-3 rounded-full ${
+                      progress.status === "completed" ?
+                      "bg-green-500" :
+                      "bg-blue-500"}`
+                      }
+                      style={{ width: `${progress.progressPercentage}%` }}>
+                    </div>
                     </div>
                   </div>
 
                   {/* Ações */}
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => setSelectedModule(trainingModule)}
-                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                    >
+                    <WiredButton
+                    onClick={() => setSelectedModule(trainingModule)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+
                       Continuar Estudos
-                    </button>
-                    {progress.certificationEarned && (
-                      <button
-                        onClick={() =>
-                          handleDownloadCertificate(progress.moduleId)
-                        }
-                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                      >
+                    </WiredButton>
+                    {progress.certificationEarned &&
+                  <WiredButton
+                    onClick={() =>
+                    handleDownloadCertificate(progress.moduleId)
+                    }
+                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+
                         <Download className="h-4 w-4 inline mr-2" />
                         Baixar Certificado
-                      </button>
-                    )}
+                      </WiredButton>
+                  }
                   </div>
-                </div>
-              );
-            })}
+                </div>);
+
+          })}
           </div>
         </div>
-      )}
+      }
 
       {/* Modal de detalhes do módulo */}
-      {selectedModule && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      {selectedModule &&
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto">
             {/* Header */}
             <div className="p-6 border-b bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-lg">
@@ -846,37 +846,37 @@ export default function TreinamentoIntegrado() {
                     </span>
                   </div>
                 </div>
-                <button
-                  onClick={() => setSelectedModule(null)}
-                  className="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full"
-                >
+                <WiredButton
+                onClick={() => setSelectedModule(null)}
+                className="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full">
+
                   ✕
-                </button>
+                </WiredButton>
               </div>
             </div>
 
             {/* Conteúdo */}
             <div className="p-6">
               {/* Vídeos */}
-              {selectedModule.content.videos.length > 0 && (
-                <div className="mb-8">
+              {selectedModule.content.videos.length > 0 &&
+            <div className="mb-8">
                   <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                     <Video className="h-5 w-5" />
                     Vídeos ({selectedModule.content.videos.length})
                   </h3>
                   <div className="grid gap-3">
-                    {selectedModule.content.videos.map((video) => (
-                      <div
-                        key={video.id}
-                        className="border rounded-lg p-4 hover:bg-gray-50"
-                      >
+                    {selectedModule.content.videos.map((video) =>
+                <div
+                  key={video.id}
+                  className="border rounded-lg p-4 hover:bg-gray-50">
+
                         <div className="flex items-center gap-4">
                           <div className="relative">
                             <img
-                              src={video.thumbnail || "/placeholder-video.jpg"}
-                              alt={video.title}
-                              className="w-24 h-16 object-cover rounded"
-                            />
+                        src={video.thumbnail || "/placeholder-video.jpg"}
+                        alt={video.title}
+                        className="w-24 h-16 object-cover rounded" />
+
                             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded">
                               <Play className="h-6 w-6 text-white" />
                             </div>
@@ -890,35 +890,35 @@ export default function TreinamentoIntegrado() {
                               Duração: {formatDuration(video.duration)}
                             </span>
                           </div>
-                          <button
-                            onClick={() => {
-                              setSelectedVideo(video);
-                              setShowVideoPlayer(true);
-                            }}
-                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                          >
+                          <WiredButton
+                      onClick={() => {
+                        setSelectedVideo(video);
+                        setShowVideoPlayer(true);
+                      }}
+                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+
                             Assistir
-                          </button>
+                          </WiredButton>
                         </div>
                       </div>
-                    ))}
+                )}
                   </div>
                 </div>
-              )}
+            }
 
               {/* Documentos */}
-              {selectedModule.content.documents.length > 0 && (
-                <div className="mb-8">
+              {selectedModule.content.documents.length > 0 &&
+            <div className="mb-8">
                   <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                     <FileText className="h-5 w-5" />
                     Documentos ({selectedModule.content.documents.length})
                   </h3>
                   <div className="grid gap-3">
-                    {selectedModule.content.documents.map((document) => (
-                      <div
-                        key={document.id}
-                        className="border rounded-lg p-4 hover:bg-gray-50"
-                      >
+                    {selectedModule.content.documents.map((document) =>
+                <div
+                  key={document.id}
+                  className="border rounded-lg p-4 hover:bg-gray-50">
+
                         <div className="flex items-center justify-between">
                           <div>
                             <h4 className="font-medium">{document.title}</h4>
@@ -931,46 +931,46 @@ export default function TreinamentoIntegrado() {
                             </span>
                           </div>
                           <div className="flex gap-2">
-                            <button
-                              onClick={() => handleViewDocument(document.url)}
-                              className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
-                            >
+                            <WiredButton
+                        onClick={() => handleViewDocument(document.url)}
+                        className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+
                               <Eye className="h-4 w-4 inline mr-2" />
                               Visualizar
-                            </button>
-                            <button
-                              onClick={() =>
-                                handleDownloadDocument(
-                                  document.url,
-                                  document.title,
-                                )
-                              }
-                              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                            >
+                            </WiredButton>
+                            <WiredButton
+                        onClick={() =>
+                        handleDownloadDocument(
+                          document.url,
+                          document.title
+                        )
+                        }
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+
                               <Download className="h-4 w-4 inline mr-2" />
                               Baixar
-                            </button>
+                            </WiredButton>
                           </div>
                         </div>
                       </div>
-                    ))}
+                )}
                   </div>
                 </div>
-              )}
+            }
 
               {/* Testes */}
-              {selectedModule.content.quizzes.length > 0 && (
-                <div>
+              {selectedModule.content.quizzes.length > 0 &&
+            <div>
                   <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                     <Target className="h-5 w-5" />
                     Testes ({selectedModule.content.quizzes.length})
                   </h3>
                   <div className="grid gap-3">
-                    {selectedModule.content.quizzes.map((quiz) => (
-                      <div
-                        key={quiz.id}
-                        className="border rounded-lg p-4 hover:bg-gray-50"
-                      >
+                    {selectedModule.content.quizzes.map((quiz) =>
+                <div
+                  key={quiz.id}
+                  className="border rounded-lg p-4 hover:bg-gray-50">
+
                         <div className="flex items-center justify-between">
                           <div>
                             <h4 className="font-medium">{quiz.title}</h4>
@@ -980,25 +980,25 @@ export default function TreinamentoIntegrado() {
                               <span>Nota mínima: {quiz.passingScore}%</span>
                             </div>
                           </div>
-                          <button
-                            onClick={() => handleStartQuiz(quiz.id)}
-                            className="bg-purple-600 text-white px-6 py-4 sm:px-4 sm:py-2 rounded hover:bg-purple-700 touch-target"
-                          >
+                          <WiredButton
+                      onClick={() => handleStartQuiz(quiz.id)}
+                      className="bg-purple-600 text-white px-6 py-4 sm:px-4 sm:py-2 rounded hover:bg-purple-700 touch-target">
+
                             Fazer Teste
-                          </button>
+                          </WiredButton>
                         </div>
                       </div>
-                    ))}
+                )}
                   </div>
                 </div>
-              )}
+            }
             </div>
           </div>
         </div>
-      )}
+      }
 
-      {filteredModules.length === 0 && activeTab === "modules" && (
-        <div className="text-center py-12">
+      {filteredModules.length === 0 && activeTab === "modules" &&
+      <div className="text-center py-12">
           <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
             Nenhum módulo encontrado
@@ -1007,7 +1007,7 @@ export default function TreinamentoIntegrado() {
             Ajuste os filtros ou aguarde novos conteúdos
           </p>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }

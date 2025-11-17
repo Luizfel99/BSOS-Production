@@ -3,7 +3,7 @@
  * Sistema inteligente de avaliação com bonificação automática
  */
 
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -18,8 +18,8 @@ import {
   Zap,
   Gift,
   CheckCircle2,
-  AlertTriangle,
-} from "lucide-react";
+  AlertTriangle } from
+"lucide-react";
 import { useNotifications } from "@/hooks/useNotifications";
 
 interface Rating {
@@ -95,12 +95,12 @@ export default function SistemaPontuacao() {
   const { success, error, warning, info } = useNotifications();
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [monthlyPerformances, setMonthlyPerformances] = useState<
-    MonthlyPerformance[]
-  >([]);
+    MonthlyPerformance[]>(
+    []);
   const [bonusRules, setBonusRules] = useState<BonusRule[]>([]);
   const [activeTab, setActiveTab] = useState<
-    "ratings" | "performance" | "rules" | "analytics"
-  >("ratings");
+    "ratings" | "performance" | "rules" | "analytics">(
+    "ratings");
   const [selectedMonth, setSelectedMonth] = useState("2024-10"); // Fixed date for SSR
   const [filterEmployee, setFilterEmployee] = useState<string>("all");
   const [loading, setLoading] = useState(true);
@@ -141,26 +141,26 @@ export default function SistemaPontuacao() {
   };
 
   const calculateFinalRating = (
-    clientRating: number,
-    supervisorRating: number,
-  ) => {
+  clientRating: number,
+  supervisorRating: number) =>
+  {
     // Peso: 60% cliente, 40% supervisor
     return clientRating * 0.6 + supervisorRating * 0.4;
   };
 
   const getBonusAmount = (
-    rating: number,
-    cleaningType: string = "standard",
-  ) => {
+  rating: number,
+  cleaningType: string = "standard") =>
+  {
     const activeRule = bonusRules.find(
-      (rule) => rule.active && rating >= rule.ratingThreshold,
+      (rule) => rule.active && rating >= rule.ratingThreshold
     );
 
     if (!activeRule) return 0;
 
     if (activeRule.bonusType === "percentage") {
       const baseAmount = cleaningType === "premium" ? 200 : 100;
-      return (baseAmount * activeRule.bonusAmount) / 100;
+      return baseAmount * activeRule.bonusAmount / 100;
     }
 
     return activeRule.bonusAmount;
@@ -221,7 +221,7 @@ export default function SistemaPontuacao() {
       await fetch(`/api/ratings/${ratingId}/dispute`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reason }),
+        body: JSON.stringify({ reason })
       });
       warning("Avaliação contestada. Revisão pendente.");
       fetchRatingsData();
@@ -233,19 +233,19 @@ export default function SistemaPontuacao() {
 
   const filteredRatings = ratings.filter(
     (rating) =>
-      filterEmployee === "all" || rating.employeeId === filterEmployee,
+    filterEmployee === "all" || rating.employeeId === filterEmployee
   );
 
   const filteredPerformances = monthlyPerformances.filter(
-    (perf) => filterEmployee === "all" || perf.employeeId === filterEmployee,
+    (perf) => filterEmployee === "all" || perf.employeeId === filterEmployee
   );
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
@@ -264,39 +264,39 @@ export default function SistemaPontuacao() {
             type="month"
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className="border rounded px-3 py-2"
-          />
-          <button
+            className="border rounded px-3 py-2" />
+
+          <WiredButton
             onClick={() => setShowProcessModal(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-          >
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+
             <Zap className="h-4 w-4 inline mr-2" />
             Processar Avaliações
-          </button>
+          </WiredButton>
         </div>
       </div>
 
       {/* Tabs */}
       <div className="flex border-b mb-6">
         {[
-          { id: "ratings", label: "Avaliações", icon: Star },
-          { id: "performance", label: "Performance Mensal", icon: BarChart3 },
-          { id: "rules", label: "Regras de Bônus", icon: Award },
-          { id: "analytics", label: "Analytics", icon: TrendingUp },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
-              activeTab === tab.id
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
+        { id: "ratings", label: "Avaliações", icon: Star },
+        { id: "performance", label: "Performance Mensal", icon: BarChart3 },
+        { id: "rules", label: "Regras de Bônus", icon: Award },
+        { id: "analytics", label: "Analytics", icon: TrendingUp }].
+        map((tab) =>
+        <WiredButton
+          key={tab.id}
+          onClick={() => setActiveTab(tab.id as any)}
+          className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
+          activeTab === tab.id ?
+          "border-b-2 border-blue-600 text-blue-600" :
+          "text-gray-600 hover:text-gray-900"}`
+          }>
+
             <tab.icon className="h-4 w-4" />
             {tab.label}
-          </button>
-        ))}
+          </WiredButton>
+        )}
       </div>
 
       {/* Estatísticas do Mês */}
@@ -308,12 +308,12 @@ export default function SistemaPontuacao() {
 
         <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 rounded-lg text-white">
           <div className="text-2xl font-bold">
-            {filteredRatings.length > 0
-              ? (
-                  filteredRatings.reduce((acc, r) => acc + r.finalRating, 0) /
-                  filteredRatings.length
-                ).toFixed(1)
-              : "0.0"}
+            {filteredRatings.length > 0 ?
+            (
+            filteredRatings.reduce((acc, r) => acc + r.finalRating, 0) /
+            filteredRatings.length).
+            toFixed(1) :
+            "0.0"}
           </div>
           <div className="text-green-100">Média Geral</div>
         </div>
@@ -340,8 +340,8 @@ export default function SistemaPontuacao() {
           <select
             value={filterEmployee}
             onChange={(e) => setFilterEmployee(e.target.value)}
-            className="border rounded px-3 py-1"
-          >
+            className="border rounded px-3 py-1">
+
             <option value="all">Todos</option>
             {/* Opções dinâmicas viriam da API */}
           </select>
@@ -349,8 +349,8 @@ export default function SistemaPontuacao() {
       </div>
 
       {/* Content based on active tab */}
-      {activeTab === "ratings" && (
-        <div className="space-y-4">
+      {activeTab === "ratings" &&
+      <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">Avaliações Recentes</h2>
             <div className="flex gap-2">
@@ -366,8 +366,8 @@ export default function SistemaPontuacao() {
           </div>
 
           <div className="grid gap-4">
-            {filteredRatings.map((rating) => (
-              <div key={rating.id} className="bg-white border rounded-lg p-6">
+            {filteredRatings.map((rating) =>
+          <div key={rating.id} className="bg-white border rounded-lg p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="font-semibold text-lg">
@@ -380,17 +380,17 @@ export default function SistemaPontuacao() {
 
                   <div className="text-right">
                     <div
-                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full font-medium ${getRatingColor(rating.finalRating)}`}
-                    >
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full font-medium ${getRatingColor(rating.finalRating)}`}>
+
                       <Star className="h-4 w-4 fill-current" />
                       {rating.finalRating.toFixed(1)}
                     </div>
-                    {rating.autoCalculated && (
-                      <div className="text-xs text-blue-600 mt-1 flex items-center gap-1">
+                    {rating.autoCalculated &&
+                <div className="text-xs text-blue-600 mt-1 flex items-center gap-1">
                         <Zap className="h-3 w-3" />
                         Automático
                       </div>
-                    )}
+                }
                   </div>
                 </div>
 
@@ -431,10 +431,10 @@ export default function SistemaPontuacao() {
                 </div>
 
                 {/* Feedback */}
-                {(rating.clientFeedback || rating.supervisorFeedback) && (
-                  <div className="grid md:grid-cols-2 gap-4 mb-4">
-                    {rating.clientFeedback && (
-                      <div className="bg-blue-50 p-3 rounded">
+                {(rating.clientFeedback || rating.supervisorFeedback) &&
+            <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    {rating.clientFeedback &&
+              <div className="bg-blue-50 p-3 rounded">
                         <div className="font-medium text-blue-800 mb-1">
                           Cliente:
                         </div>
@@ -442,9 +442,9 @@ export default function SistemaPontuacao() {
                           &ldquo;{rating.clientFeedback}&rdquo;
                         </p>
                       </div>
-                    )}
-                    {rating.supervisorFeedback && (
-                      <div className="bg-purple-50 p-3 rounded">
+              }
+                    {rating.supervisorFeedback &&
+              <div className="bg-purple-50 p-3 rounded">
                         <div className="font-medium text-purple-800 mb-1">
                           Supervisor:
                         </div>
@@ -452,25 +452,25 @@ export default function SistemaPontuacao() {
                           &ldquo;{rating.supervisorFeedback}&rdquo;
                         </p>
                       </div>
-                    )}
+              }
                   </div>
-                )}
+            }
 
                 {/* Bônus e Status */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-4">
-                    {rating.bonusApplied > 0 && (
-                      <div className="flex items-center gap-1 text-green-600">
+                    {rating.bonusApplied > 0 &&
+                <div className="flex items-center gap-1 text-green-600">
                         <Gift className="h-4 w-4" />
                         <span className="font-medium">
                           +R$ {rating.bonusApplied}
                         </span>
                         <span className="text-sm">({rating.bonusReason})</span>
                       </div>
-                    )}
+                }
 
-                    {rating.penalties > 0 && (
-                      <div className="flex items-center gap-1 text-red-600">
+                    {rating.penalties > 0 &&
+                <div className="flex items-center gap-1 text-red-600">
                         <AlertTriangle className="h-4 w-4" />
                         <span className="font-medium">
                           -R$ {rating.penalties}
@@ -479,70 +479,70 @@ export default function SistemaPontuacao() {
                           ({rating.penaltyReason})
                         </span>
                       </div>
-                    )}
+                }
                   </div>
 
                   <div className="flex gap-2">
-                    {rating.status === "pending" && (
-                      <>
-                        <button
-                          onClick={() => handleApproveRating(rating.id)}
-                          className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
-                        >
+                    {rating.status === "pending" &&
+                <>
+                        <WiredButton
+                    onClick={() => handleApproveRating(rating.id)}
+                    className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+
                           <CheckCircle2 className="h-4 w-4 inline mr-1" />
                           Aprovar
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleDisputeRating(rating.id, "Revisão solicitada")
-                          }
-                          className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
-                        >
-                          Contestar
-                        </button>
-                      </>
-                    )}
+                        </WiredButton>
+                        <WiredButton
+                    onClick={() =>
+                    handleDisputeRating(rating.id, "Revisão solicitada")
+                    }
+                    className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
 
-                    {rating.status === "completed" && (
-                      <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                          Contestar
+                        </WiredButton>
+                      </>
+                }
+
+                    {rating.status === "completed" &&
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
                         Aprovado
                       </span>
-                    )}
+                }
 
-                    {rating.status === "disputed" && (
-                      <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
+                    {rating.status === "disputed" &&
+                <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm">
                         Em Disputa
                       </span>
-                    )}
+                }
                   </div>
                 </div>
               </div>
-            ))}
+          )}
           </div>
         </div>
-      )}
+      }
 
-      {activeTab === "performance" && (
-        <div className="space-y-6">
+      {activeTab === "performance" &&
+      <div className="space-y-6">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">
               Performance Mensal - {selectedMonth}
             </h2>
-            <button
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-              onClick={handleProcessPayments}
-            >
+            <WiredButton
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+            onClick={handleProcessPayments}>
+
               <DollarSign className="h-4 w-4 inline mr-2" />
               Processar Pagamentos
-            </button>
+            </WiredButton>
           </div>
 
           <div className="grid gap-4">
-            {filteredPerformances.map((performance) => (
-              <div
-                key={performance.employeeId}
-                className="bg-white border rounded-lg p-6"
-              >
+            {filteredPerformances.map((performance) =>
+          <div
+            key={performance.employeeId}
+            className="bg-white border rounded-lg p-6">
+
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="font-semibold text-lg">
@@ -555,8 +555,8 @@ export default function SistemaPontuacao() {
 
                   <div className="text-right">
                     <div
-                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full font-medium ${getRatingColor(performance.averageRating)}`}
-                    >
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full font-medium ${getRatingColor(performance.averageRating)}`}>
+
                       <Star className="h-4 w-4 fill-current" />
                       {performance.averageRating.toFixed(1)}
                     </div>
@@ -623,35 +623,35 @@ export default function SistemaPontuacao() {
                     </div>
                   </div>
 
-                  <button
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                    onClick={() => handlePayBonus(performance.employeeId)}
-                  >
+                  <WiredButton
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                onClick={() => handlePayBonus(performance.employeeId)}>
+
                     Pagar Bônus
-                  </button>
+                  </WiredButton>
                 </div>
               </div>
-            ))}
+          )}
           </div>
         </div>
-      )}
+      }
 
-      {activeTab === "rules" && (
-        <div className="space-y-6">
+      {activeTab === "rules" &&
+      <div className="space-y-6">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">Regras de Bonificação</h2>
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-              onClick={handleCreateRule}
-            >
+            <WiredButton
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            onClick={handleCreateRule}>
+
               <Award className="h-4 w-4 inline mr-2" />
               Nova Regra
-            </button>
+            </WiredButton>
           </div>
 
           <div className="grid gap-4">
-            {bonusRules.map((rule) => (
-              <div key={rule.id} className="bg-white border rounded-lg p-6">
+            {bonusRules.map((rule) =>
+          <div key={rule.id} className="bg-white border rounded-lg p-6">
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <h3 className="font-semibold text-lg">{rule.name}</h3>
@@ -660,20 +660,20 @@ export default function SistemaPontuacao() {
 
                   <div className="flex items-center gap-2">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm ${
-                        rule.active
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
+                  className={`px-3 py-1 rounded-full text-sm ${
+                  rule.active ?
+                  "bg-green-100 text-green-800" :
+                  "bg-gray-100 text-gray-800"}`
+                  }>
+
                       {rule.active ? "Ativa" : "Inativa"}
                     </span>
-                    <button
-                      className="text-blue-600 hover:text-blue-800"
-                      onClick={() => handleEditRule(rule.id)}
-                    >
+                    <WiredButton
+                  className="text-blue-600 hover:text-blue-800"
+                  onClick={() => handleEditRule(rule.id)}>
+
                       Editar
-                    </button>
+                    </WiredButton>
                   </div>
                 </div>
 
@@ -687,9 +687,9 @@ export default function SistemaPontuacao() {
                   <div>
                     <div className="text-sm text-gray-600">Bônus:</div>
                     <div className="font-bold text-green-600">
-                      {rule.bonusType === "percentage"
-                        ? `${rule.bonusAmount}%`
-                        : `R$ ${rule.bonusAmount}`}
+                      {rule.bonusType === "percentage" ?
+                  `${rule.bonusAmount}%` :
+                  `R$ ${rule.bonusAmount}`}
                     </div>
                   </div>
                   <div>
@@ -698,13 +698,13 @@ export default function SistemaPontuacao() {
                   </div>
                 </div>
               </div>
-            ))}
+          )}
           </div>
         </div>
-      )}
+      }
 
-      {filteredRatings.length === 0 && activeTab === "ratings" && (
-        <div className="text-center py-12">
+      {filteredRatings.length === 0 && activeTab === "ratings" &&
+      <div className="text-center py-12">
           <Star className="h-16 w-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
             Nenhuma avaliação encontrada
@@ -713,22 +713,22 @@ export default function SistemaPontuacao() {
             Selecione um período diferente ou aguarde novas avaliações
           </p>
         </div>
-      )}
+      }
 
       {/* Modal Processar Avaliações */}
-      {showProcessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      {showProcessModal &&
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">
                 Processar Avaliações Automáticas
               </h3>
-              <button
-                onClick={() => setShowProcessModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
+              <WiredButton
+              onClick={() => setShowProcessModal(false)}
+              className="text-gray-400 hover:text-gray-600">
+
                 ✕
-              </button>
+              </WiredButton>
             </div>
             <div className="mb-4">
               <p className="text-gray-600 mb-4">
@@ -742,25 +742,25 @@ export default function SistemaPontuacao() {
               </div>
             </div>
             <div className="flex gap-3">
-              <button
-                onClick={() => setShowProcessModal(false)}
-                className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50"
-              >
+              <WiredButton
+              onClick={() => setShowProcessModal(false)}
+              className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50">
+
                 Cancelar
-              </button>
-              <button
-                onClick={() => {
-                  // Add processing logic here
-                  setShowProcessModal(false);
-                }}
-                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-              >
+              </WiredButton>
+              <WiredButton
+              onClick={() => {
+                // Add processing logic here
+                setShowProcessModal(false);
+              }}
+              className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+
                 Processar Agora
-              </button>
+              </WiredButton>
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }

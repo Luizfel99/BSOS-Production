@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -14,14 +14,14 @@ import {
   MapPin,
   User,
   Mail,
-  Clock,
-} from "lucide-react";
+  Clock } from
+"lucide-react";
 import { ProtectedComponent } from "@/components/ProtectedComponent";
 import {
   getProperty,
   updateProperty,
-  type Property,
-} from "@/services/properties";
+  type Property } from
+"@/services/properties";
 
 const propertySchema = z.object({
   name: z.string().min(1, "Nome da propriedade é obrigatório"),
@@ -30,7 +30,7 @@ const propertySchema = z.object({
   size: z.string().optional(),
   clientName: z.string().optional(),
   contactEmail: z.string().email("Email inválido").optional().or(z.literal("")),
-  cleaningFrequency: z.string().optional(),
+  cleaningFrequency: z.string().optional()
 });
 
 type PropertyFormData = z.infer<typeof propertySchema>;
@@ -49,9 +49,9 @@ export default function EditPropertyPage() {
     handleSubmit,
     formState: { errors },
     setValue,
-    reset,
+    reset
   } = useForm<PropertyFormData>({
-    resolver: zodResolver(propertySchema),
+    resolver: zodResolver(propertySchema)
   });
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function EditPropertyPage() {
         size: propertyData.size || "",
         clientName: propertyData.clientName || "",
         contactEmail: propertyData.contactEmail || "",
-        cleaningFrequency: propertyData.cleaningFrequency || "",
+        cleaningFrequency: propertyData.cleaningFrequency || ""
       });
     } catch (error) {
       console.error("Error loading property:", error);
@@ -90,7 +90,7 @@ export default function EditPropertyPage() {
     try {
       await updateProperty(propertyId, {
         ...data,
-        contactEmail: data.contactEmail || undefined,
+        contactEmail: data.contactEmail || undefined
       });
 
       toast.success("Propriedade atualizada com sucesso!");
@@ -110,8 +110,8 @@ export default function EditPropertyPage() {
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Carregando propriedade...</p>
         </div>
-      </div>
-    );
+      </div>);
+
   }
 
   if (!property) {
@@ -120,8 +120,8 @@ export default function EditPropertyPage() {
         <div className="text-center">
           <p className="text-gray-600">Propriedade não encontrada</p>
         </div>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
@@ -132,16 +132,16 @@ export default function EditPropertyPage() {
           <motion.div
             className="mb-8"
             initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+            animate={{ opacity: 1, y: 0 }}>
+
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <button
+                <WiredButton
                   onClick={() => router.back()}
-                  className="p-2 hover:bg-gray-200 rounded-full transition-colors"
-                >
+                  className="p-2 hover:bg-gray-200 rounded-full transition-colors">
+
                   <ArrowLeft className="h-5 w-5" />
-                </button>
+                </WiredButton>
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900">
                     Editar Propriedade
@@ -157,8 +157,8 @@ export default function EditPropertyPage() {
             className="bg-white rounded-xl shadow-sm border border-gray-200"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
+            transition={{ delay: 0.1 }}>
+
             <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
               {/* Basic Information */}
               <div>
@@ -175,13 +175,13 @@ export default function EditPropertyPage() {
                       {...register("name")}
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Ex: Apartamento Centro - 301"
-                    />
-                    {errors.name && (
-                      <p className="text-red-500 text-sm mt-1">
+                      placeholder="Ex: Apartamento Centro - 301" />
+
+                    {errors.name &&
+                    <p className="text-red-500 text-sm mt-1">
                         {errors.name.message}
                       </p>
-                    )}
+                    }
                   </div>
 
                   <div>
@@ -190,18 +190,18 @@ export default function EditPropertyPage() {
                     </label>
                     <select
                       {...register("type")}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                       <option value="APARTMENT">Apartamento</option>
                       <option value="HOUSE">Casa</option>
                       <option value="STUDIO">Studio</option>
                       <option value="COMMERCIAL">Comercial</option>
                     </select>
-                    {errors.type && (
-                      <p className="text-red-500 text-sm mt-1">
+                    {errors.type &&
+                    <p className="text-red-500 text-sm mt-1">
                         {errors.type.message}
                       </p>
-                    )}
+                    }
                   </div>
 
                   <div className="md:col-span-2">
@@ -213,13 +213,13 @@ export default function EditPropertyPage() {
                       {...register("address")}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Rua, número, bairro, cidade, CEP"
-                    />
-                    {errors.address && (
-                      <p className="text-red-500 text-sm mt-1">
+                      placeholder="Rua, número, bairro, cidade, CEP" />
+
+                    {errors.address &&
+                    <p className="text-red-500 text-sm mt-1">
                         {errors.address.message}
                       </p>
-                    )}
+                    }
                   </div>
 
                   <div>
@@ -230,8 +230,8 @@ export default function EditPropertyPage() {
                       {...register("size")}
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Ex: 80m², 3 quartos"
-                    />
+                      placeholder="Ex: 80m², 3 quartos" />
+
                   </div>
 
                   <div>
@@ -241,8 +241,8 @@ export default function EditPropertyPage() {
                     </label>
                     <select
                       {...register("cleaningFrequency")}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                       <option value="">Selecionar frequência</option>
                       <option value="daily">Diária</option>
                       <option value="weekly">Semanal</option>
@@ -269,8 +269,8 @@ export default function EditPropertyPage() {
                       {...register("clientName")}
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Nome completo do cliente"
-                    />
+                      placeholder="Nome completo do cliente" />
+
                   </div>
 
                   <div>
@@ -282,39 +282,39 @@ export default function EditPropertyPage() {
                       {...register("contactEmail")}
                       type="email"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="email@exemplo.com"
-                    />
-                    {errors.contactEmail && (
-                      <p className="text-red-500 text-sm mt-1">
+                      placeholder="email@exemplo.com" />
+
+                    {errors.contactEmail &&
+                    <p className="text-red-500 text-sm mt-1">
                         {errors.contactEmail.message}
                       </p>
-                    )}
+                    }
                   </div>
                 </div>
               </div>
 
               {/* Submit Button */}
               <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-                <button
+                <WiredButton
                   type="button"
                   onClick={() => router.back()}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-                >
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+
                   Cancelar
-                </button>
-                <button
+                </WiredButton>
+                <WiredButton
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors flex items-center disabled:opacity-50"
-                >
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors flex items-center disabled:opacity-50" data-action="wire.auto">
+
                   <Save className="h-4 w-4 mr-2" />
                   {isSubmitting ? "Salvando..." : "Salvar Alterações"}
-                </button>
+                </WiredButton>
               </div>
             </form>
           </motion.div>
         </div>
       </div>
-    </ProtectedComponent>
-  );
+    </ProtectedComponent>);
+
 }

@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -6,137 +6,137 @@ import RelatoriosAutomaticos from "../RelatoriosAutomaticos";
 import PainelAdministrativo from "../PainelAdministrativo";
 
 // Component Icons
-const AnalyticsIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-    />
-  </svg>
-);
+const AnalyticsIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
 
-const AIIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
     <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-    />
-  </svg>
-);
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
 
-const TrendIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-    />
-  </svg>
-);
+  </svg>;
 
-const AlertIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.084 16.5c-.77.833.192 2.5 1.732 2.5z"
-    />
-  </svg>
-);
 
-const PredictionIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
+const AIIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
+
     <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-    />
-  </svg>
-);
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+
+  </svg>;
+
+
+const TrendIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
+
+    <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+
+  </svg>;
+
+
+const AlertIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
+
+    <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.084 16.5c-.77.833.192 2.5 1.732 2.5z" />
+
+  </svg>;
+
+
+const PredictionIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
+
+    <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+
+  </svg>;
+
 
 export default function BSOSAnalytics() {
   const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState("dashboard");
 
   const sections = [
-    {
-      id: "dashboard",
-      name: "AI Dashboard",
-      icon: AnalyticsIcon,
-      component: null,
-    },
-    {
-      id: "insights",
-      name: "AI Insights",
-      icon: AIIcon,
-      component: null,
-    },
-    {
-      id: "trends",
-      name: "Análise de Tendências",
-      icon: TrendIcon,
-      component: null,
-    },
-    {
-      id: "alerts",
-      name: "Alertas Inteligentes",
-      icon: AlertIcon,
-      component: null,
-    },
-    {
-      id: "predictions",
-      name: "Previsões",
-      icon: PredictionIcon,
-      component: null,
-    },
-    {
-      id: "reports",
-      name: "Relatórios Executivos",
-      icon: AnalyticsIcon,
-      component: RelatoriosAutomaticos,
-    },
-    {
-      id: "admin",
-      name: "Painel Executivo",
-      icon: AnalyticsIcon,
-      component: PainelAdministrativo,
-    },
-  ];
+  {
+    id: "dashboard",
+    name: "AI Dashboard",
+    icon: AnalyticsIcon,
+    component: null
+  },
+  {
+    id: "insights",
+    name: "AI Insights",
+    icon: AIIcon,
+    component: null
+  },
+  {
+    id: "trends",
+    name: "Análise de Tendências",
+    icon: TrendIcon,
+    component: null
+  },
+  {
+    id: "alerts",
+    name: "Alertas Inteligentes",
+    icon: AlertIcon,
+    component: null
+  },
+  {
+    id: "predictions",
+    name: "Previsões",
+    icon: PredictionIcon,
+    component: null
+  },
+  {
+    id: "reports",
+    name: "Relatórios Executivos",
+    icon: AnalyticsIcon,
+    component: RelatoriosAutomaticos
+  },
+  {
+    id: "admin",
+    name: "Painel Executivo",
+    icon: AnalyticsIcon,
+    component: PainelAdministrativo
+  }];
 
-  const AIInsightsComponent = () => (
-    <div className="space-y-6">
+
+  const AIInsightsComponent = () =>
+  <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-lg">
           <div className="flex items-center justify-between">
@@ -151,9 +151,9 @@ export default function BSOSAnalytics() {
               Reagrupar as limpezas de Copacabana pode reduzir o tempo de
               deslocamento em 23% e economizar R$ 340/semana.
             </p>
-            <button className="mt-3 bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg text-sm hover:bg-opacity-30">
+            <WiredButton className="mt-3 bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg text-sm hover:bg-opacity-30" data-action="wire.auto">
               Aplicar Sugestão
-            </button>
+            </WiredButton>
           </div>
         </div>
 
@@ -170,9 +170,9 @@ export default function BSOSAnalytics() {
               Esperado aumento de 18% na demanda durante Carnaval (fev 15-20).
               Recomendar contratar 2 funcionários temporários.
             </p>
-            <button className="mt-3 bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg text-sm hover:bg-opacity-30">
+            <WiredButton className="mt-3 bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg text-sm hover:bg-opacity-30" data-action="wire.auto">
               Ver Detalhes
-            </button>
+            </WiredButton>
           </div>
         </div>
       </div>
@@ -205,11 +205,11 @@ export default function BSOSAnalytics() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 
-  const TrendsComponent = () => (
-    <div className="space-y-6">
+
+  const TrendsComponent = () =>
+  <div className="space-y-6">
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">
           Tendências de Mercado
@@ -256,11 +256,11 @@ export default function BSOSAnalytics() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 
-  const AlertsComponent = () => (
-    <div className="space-y-6">
+
+  const AlertsComponent = () =>
+  <div className="space-y-6">
       <div className="bg-white rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-medium text-gray-900">Alertas Ativos</h3>
@@ -280,9 +280,9 @@ export default function BSOSAnalytics() {
                   Cliente será notificado automaticamente em 15min
                 </p>
               </div>
-              <button className="text-red-600 text-sm hover:underline">
+              <WiredButton className="text-red-600 text-sm hover:underline" data-action="wire.auto">
                 Resolver
-              </button>
+              </WiredButton>
             </div>
 
             <div className="flex items-start space-x-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -296,9 +296,9 @@ export default function BSOSAnalytics() {
                   Desinfetante: 3 unidades restantes
                 </p>
               </div>
-              <button className="text-yellow-600 text-sm hover:underline">
+              <WiredButton className="text-yellow-600 text-sm hover:underline" data-action="wire.auto">
                 Comprar
-              </button>
+              </WiredButton>
             </div>
 
             <div className="flex items-start space-x-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -315,9 +315,9 @@ export default function BSOSAnalytics() {
                   Baseado no padrão de reservas
                 </p>
               </div>
-              <button className="text-blue-600 text-sm hover:underline">
+              <WiredButton className="text-blue-600 text-sm hover:underline" data-action="wire.auto">
                 Contatar
-              </button>
+              </WiredButton>
             </div>
 
             <div className="flex items-start space-x-4 p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -333,18 +333,18 @@ export default function BSOSAnalytics() {
                   Elegível para bônus de performance
                 </p>
               </div>
-              <button className="text-green-600 text-sm hover:underline">
+              <WiredButton className="text-green-600 text-sm hover:underline" data-action="wire.auto">
                 Premiar
-              </button>
+              </WiredButton>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 
-  const PredictionsComponent = () => (
-    <div className="space-y-6">
+
+  const PredictionsComponent = () =>
+  <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between mb-4">
@@ -458,11 +458,11 @@ export default function BSOSAnalytics() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 
-  const AnalyticsDashboard = () => (
-    <div className="space-y-6">
+
+  const AnalyticsDashboard = () =>
+  <div className="space-y-6">
       {/* Executive KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-lg">
@@ -629,9 +629,9 @@ export default function BSOSAnalytics() {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-blue-600 h-2 rounded-full"
-                  style={{ width: "67%" }}
-                ></div>
+                className="bg-blue-600 h-2 rounded-full"
+                style={{ width: "67%" }}>
+              </div>
               </div>
             </div>
             <div>
@@ -641,9 +641,9 @@ export default function BSOSAnalytics() {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-green-600 h-2 rounded-full"
-                  style={{ width: "89%" }}
-                ></div>
+                className="bg-green-600 h-2 rounded-full"
+                style={{ width: "89%" }}>
+              </div>
               </div>
             </div>
             <div>
@@ -653,16 +653,16 @@ export default function BSOSAnalytics() {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-purple-600 h-2 rounded-full"
-                  style={{ width: "100%" }}
-                ></div>
+                className="bg-purple-600 h-2 rounded-full"
+                style={{ width: "100%" }}>
+              </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
+
 
   return (
     <div className="space-y-6">
@@ -692,19 +692,19 @@ export default function BSOSAnalytics() {
             {sections.map((section) => {
               const IconComponent = section.icon;
               return (
-                <button
+                <WiredButton
                   key={section.id}
                   onClick={() => setActiveSection(section.id)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 whitespace-nowrap ${
-                    activeSection === section.id
-                      ? "border-red-500 text-red-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }`}
-                >
+                  activeSection === section.id ?
+                  "border-red-500 text-red-600" :
+                  "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}`
+                  }>
+
                   <IconComponent />
                   <span>{section.name}</span>
-                </button>
-              );
+                </WiredButton>);
+
             })}
           </nav>
         </div>
@@ -725,6 +725,6 @@ export default function BSOSAnalytics() {
           })}
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }

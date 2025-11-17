@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
@@ -75,7 +75,7 @@ export default function VerifyCodePage() {
 
       const res = await axios.post("/api/auth/verify-code", {
         email,
-        code: fullCode,
+        code: fullCode
       });
 
       if (res.data.success) {
@@ -89,7 +89,7 @@ export default function VerifyCodePage() {
       }
     } catch (error: any) {
       const errorMsg =
-        error.response?.data?.error || "Código inválido ou expirado.";
+      error.response?.data?.error || "Código inválido ou expirado.";
       setMsg(`❌ ${errorMsg}`);
 
       // Limpar código em caso de erro
@@ -117,59 +117,59 @@ export default function VerifyCodePage() {
 
         {/* Inputs do código */}
         <div className="flex justify-center gap-2" onPaste={handlePaste}>
-          {code.map((digit, index) => (
-            <input
-              key={index}
-              ref={(el) => {
-                if (el) inputRefs.current[index] = el;
-              }}
-              type="text"
-              inputMode="numeric"
-              maxLength={1}
-              className="w-12 h-14 text-center text-2xl font-bold border-2 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
-              value={digit}
-              onChange={(e) => handleChange(index, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(index, e)}
-            />
-          ))}
+          {code.map((digit, index) =>
+          <input
+            key={index}
+            ref={(el) => {
+              if (el) inputRefs.current[index] = el;
+            }}
+            type="text"
+            inputMode="numeric"
+            maxLength={1}
+            className="w-12 h-14 text-center text-2xl font-bold border-2 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+            value={digit}
+            onChange={(e) => handleChange(index, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(index, e)} />
+
+          )}
         </div>
 
-        <button
+        <WiredButton
           onClick={handleVerify}
           disabled={loading || code.join("").length !== 6}
-          className="w-full bg-blue-600 text-white p-4 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? "Verificando..." : "Verificar Código"}
-        </button>
+          className="w-full bg-blue-600 text-white p-4 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
 
-        {msg && (
-          <div
-            className={`p-3 rounded-lg text-sm ${
-              msg.includes("✅")
-                ? "bg-green-50 text-green-700 border border-green-200"
-                : "bg-red-50 text-red-700 border border-red-200"
-            }`}
-          >
+          {loading ? "Verificando..." : "Verificar Código"}
+        </WiredButton>
+
+        {msg &&
+        <div
+          className={`p-3 rounded-lg text-sm ${
+          msg.includes("✅") ?
+          "bg-green-50 text-green-700 border border-green-200" :
+          "bg-red-50 text-red-700 border border-red-200"}`
+          }>
+
             {msg}
           </div>
-        )}
+        }
 
         <div className="space-y-2 pt-4">
-          <button
+          <WiredButton
             onClick={() => router.push("/forgot-password")}
-            className="text-blue-600 hover:underline text-sm"
-          >
+            className="text-blue-600 hover:underline text-sm">
+
             Não recebeu o código? Reenviar
-          </button>
+          </WiredButton>
           <br />
-          <button
+          <WiredButton
             onClick={() => router.push("/login")}
-            className="text-gray-600 hover:underline text-sm"
-          >
+            className="text-gray-600 hover:underline text-sm">
+
             ← Voltar para login
-          </button>
+          </WiredButton>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }

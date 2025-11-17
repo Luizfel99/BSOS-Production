@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -18,15 +18,15 @@ const taskSchema = z.object({
   description: z.string().optional(),
   type: z.enum(["cleaning", "maintenance", "inspection", "other"]),
   priority: z.enum(["low", "medium", "high", "urgent"]),
-  status: z
-    .enum(["pending", "in_progress", "completed", "cancelled"])
-    .default("pending"),
+  status: z.
+  enum(["pending", "in_progress", "completed", "cancelled"]).
+  default("pending"),
   assignedTo: z.string().optional(),
   propertyId: z.string().optional(),
   dueDate: z.string().optional(),
   estimatedDuration: z.number().optional(),
   materials: z.string().optional(),
-  instructions: z.string().optional(),
+  instructions: z.string().optional()
 });
 
 type TaskFormData = z.infer<typeof taskSchema>;
@@ -36,32 +36,32 @@ const pageVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6 },
-  },
+    transition: { duration: 0.6 }
+  }
 };
 
 export default function NewTaskPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState<Array<{ id: string; name: string }>>([]);
+  const [users, setUsers] = useState<Array<{id: string;name: string;}>>([]);
   const [properties, setProperties] = useState<
-    Array<{ id: string; name: string; address: string }>
-  >([]);
+    Array<{id: string;name: string;address: string;}>>(
+    []);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
+    setValue
   } = useForm<TaskFormData>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
       status: "pending",
       priority: "medium",
-      type: "cleaning",
-    },
+      type: "cleaning"
+    }
   });
 
   useEffect(() => {
@@ -78,9 +78,9 @@ export default function NewTaskPage() {
     try {
       // Load users and properties for dropdowns
       const [usersResponse, propertiesResponse] = await Promise.all([
-        fetch("/api/users").then((res) => res.json()),
-        fetch("/api/properties").then((res) => res.json()),
-      ]);
+      fetch("/api/users").then((res) => res.json()),
+      fetch("/api/properties").then((res) => res.json())]
+      );
 
       if (usersResponse.success) setUsers(usersResponse.data);
       if (propertiesResponse.success) setProperties(propertiesResponse.data);
@@ -95,10 +95,10 @@ export default function NewTaskPage() {
 
       const taskData = {
         ...data,
-        estimatedDuration: data.estimatedDuration
-          ? Number(data.estimatedDuration)
-          : undefined,
-        dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
+        estimatedDuration: data.estimatedDuration ?
+        Number(data.estimatedDuration) :
+        undefined,
+        dueDate: data.dueDate ? new Date(data.dueDate) : undefined
       };
 
       const response = await createTask(taskData);
@@ -123,16 +123,16 @@ export default function NewTaskPage() {
           className="p-6"
           variants={pageVariants}
           initial="hidden"
-          animate="visible"
-        >
+          animate="visible">
+
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-4 mb-6">
-              <button
+              <WiredButton
                 onClick={() => router.back()}
-                className="p-2 hover:bg-gray-100 rounded-lg"
-              >
+                className="p-2 hover:bg-gray-100 rounded-lg">
+
                 <ArrowLeft className="h-5 w-5" />
-              </button>
+              </WiredButton>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
                   Nova Tarefa
@@ -144,13 +144,13 @@ export default function NewTaskPage() {
             </div>
 
             <ProtectedComponent
-              allowedRoles={["owner", "manager", "supervisor"]}
-            >
+              allowedRoles={["owner", "manager", "supervisor"]}>
+
               <div className="bg-white rounded-lg shadow">
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="p-6 space-y-6"
-                >
+                  className="p-6 space-y-6">
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -160,13 +160,13 @@ export default function NewTaskPage() {
                         type="text"
                         {...register("title")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Digite o título da tarefa"
-                      />
-                      {errors.title && (
-                        <p className="mt-1 text-sm text-red-600">
+                        placeholder="Digite o título da tarefa" />
+
+                      {errors.title &&
+                      <p className="mt-1 text-sm text-red-600">
                           {errors.title.message}
                         </p>
-                      )}
+                      }
                     </div>
 
                     <div>
@@ -175,8 +175,8 @@ export default function NewTaskPage() {
                       </label>
                       <select
                         {...register("type")}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                         <option value="cleaning">Limpeza</option>
                         <option value="maintenance">Manutenção</option>
                         <option value="inspection">Inspeção</option>
@@ -190,8 +190,8 @@ export default function NewTaskPage() {
                       </label>
                       <select
                         {...register("priority")}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                         <option value="low">Baixa</option>
                         <option value="medium">Média</option>
                         <option value="high">Alta</option>
@@ -205,8 +205,8 @@ export default function NewTaskPage() {
                       </label>
                       <select
                         {...register("status")}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                         <option value="pending">Pendente</option>
                         <option value="in_progress">Em Andamento</option>
                         <option value="completed">Concluída</option>
@@ -220,14 +220,14 @@ export default function NewTaskPage() {
                       </label>
                       <select
                         {...register("assignedTo")}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                         <option value="">Selecione um responsável</option>
-                        {users.map((user) => (
-                          <option key={user.id} value={user.id}>
+                        {users.map((user) =>
+                        <option key={user.id} value={user.id}>
                             {user.name}
                           </option>
-                        ))}
+                        )}
                       </select>
                     </div>
 
@@ -237,14 +237,14 @@ export default function NewTaskPage() {
                       </label>
                       <select
                         {...register("propertyId")}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                         <option value="">Selecione uma propriedade</option>
-                        {properties.map((property) => (
-                          <option key={property.id} value={property.id}>
+                        {properties.map((property) =>
+                        <option key={property.id} value={property.id}>
                             {property.name} - {property.address}
                           </option>
-                        ))}
+                        )}
                       </select>
                     </div>
 
@@ -255,8 +255,8 @@ export default function NewTaskPage() {
                       <input
                         type="datetime-local"
                         {...register("dueDate")}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
                     </div>
 
                     <div>
@@ -266,11 +266,11 @@ export default function NewTaskPage() {
                       <input
                         type="number"
                         {...register("estimatedDuration", {
-                          valueAsNumber: true,
+                          valueAsNumber: true
                         })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: 120"
-                      />
+                        placeholder="Ex: 120" />
+
                     </div>
                   </div>
 
@@ -282,8 +282,8 @@ export default function NewTaskPage() {
                       {...register("description")}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Descreva os detalhes da tarefa"
-                    />
+                      placeholder="Descreva os detalhes da tarefa" />
+
                   </div>
 
                   <div>
@@ -294,8 +294,8 @@ export default function NewTaskPage() {
                       {...register("materials")}
                       rows={2}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Liste os materiais necessários"
-                    />
+                      placeholder="Liste os materiais necessários" />
+
                   </div>
 
                   <div>
@@ -306,26 +306,26 @@ export default function NewTaskPage() {
                       {...register("instructions")}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Instruções especiais para a execução da tarefa"
-                    />
+                      placeholder="Instruções especiais para a execução da tarefa" />
+
                   </div>
 
                   <div className="flex justify-end gap-4 pt-4 border-t">
-                    <button
+                    <WiredButton
                       type="button"
                       onClick={() => router.back()}
-                      className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
-                    >
+                      className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
+
                       Cancelar
-                    </button>
-                    <button
+                    </WiredButton>
+                    <WiredButton
                       type="submit"
                       disabled={loading}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center gap-2 disabled:opacity-50"
-                    >
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center gap-2 disabled:opacity-50" data-action="wire.auto">
+
                       <Save className="h-4 w-4" />
                       {loading ? "Salvando..." : "Criar Tarefa"}
-                    </button>
+                    </WiredButton>
                   </div>
                 </form>
               </div>
@@ -333,6 +333,6 @@ export default function NewTaskPage() {
           </div>
         </motion.div>
       </MobileNavigation>
-    </RouteGuard>
-  );
+    </RouteGuard>);
+
 }

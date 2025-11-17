@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -7,101 +7,101 @@ import CanalComunicacao from "../CanalComunicacao";
 import SistemaAvaliacao from "../SistemaAvaliacao";
 
 // Component Icons
-const DashboardIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2H3a2 2 0 00-2 2v2z"
-    />
-  </svg>
-);
+const DashboardIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
 
-const PhotoIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
     <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-    />
-  </svg>
-);
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2H3a2 2 0 00-2 2v2z" />
 
-const StatusIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-    />
-  </svg>
-);
+  </svg>;
 
-const HistoryIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-    />
-  </svg>
-);
 
-const ChatIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-    />
-  </svg>
-);
+const PhotoIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
 
-const RatingIcon = () => (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
     <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-    />
-  </svg>
-);
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+
+  </svg>;
+
+
+const StatusIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
+
+    <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+  </svg>;
+
+
+const HistoryIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
+
+    <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+  </svg>;
+
+
+const ChatIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
+
+    <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+
+  </svg>;
+
+
+const RatingIcon = () =>
+<svg
+  className="w-5 h-5"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
+
+    <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+
+  </svg>;
+
 
 export default function BSOSClient() {
   const { t } = useTranslation();
@@ -133,34 +133,34 @@ export default function BSOSClient() {
   };
 
   const sections = [
-    {
-      id: "dashboard",
-      name: "Dashboard Cliente",
-      icon: DashboardIcon,
-      component: null,
-    },
-    {
-      id: "portal",
-      name: "Portal Completo",
-      icon: PhotoIcon,
-      component: PortalCliente,
-    },
-    {
-      id: "communication",
-      name: "Comunicação",
-      icon: ChatIcon,
-      component: CanalComunicacao,
-    },
-    {
-      id: "evaluation",
-      name: "Avaliações",
-      icon: RatingIcon,
-      component: SistemaAvaliacao,
-    },
-  ];
+  {
+    id: "dashboard",
+    name: "Dashboard Cliente",
+    icon: DashboardIcon,
+    component: null
+  },
+  {
+    id: "portal",
+    name: "Portal Completo",
+    icon: PhotoIcon,
+    component: PortalCliente
+  },
+  {
+    id: "communication",
+    name: "Comunicação",
+    icon: ChatIcon,
+    component: CanalComunicacao
+  },
+  {
+    id: "evaluation",
+    name: "Avaliações",
+    icon: RatingIcon,
+    component: SistemaAvaliacao
+  }];
 
-  const ClientDashboard = () => (
-    <div className="space-y-6">
+
+  const ClientDashboard = () =>
+  <div className="space-y-6">
       {/* Property Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white p-6 rounded-lg shadow">
@@ -210,38 +210,38 @@ export default function BSOSClient() {
         <div className="p-6">
           <div className="space-y-4">
             {[
-              {
-                property: "Casa Copacabana #123",
-                date: "2025-01-08",
-                time: "09:00 - 11:00",
-                status: "Concluída",
-                cleaner: "Maria Silva",
-                rating: 5,
-                photos: 12,
-              },
-              {
-                property: "Apartamento Ipanema #456",
-                date: "2025-01-07",
-                time: "14:00 - 16:00",
-                status: "Concluída",
-                cleaner: "João Santos",
-                rating: 5,
-                photos: 8,
-              },
-              {
-                property: "Casa Barra #789",
-                date: "2025-01-06",
-                time: "10:00 - 12:00",
-                status: "Concluída",
-                cleaner: "Ana Costa",
-                rating: 4,
-                photos: 15,
-              },
-            ].map((cleaning, index) => (
-              <div
-                key={index}
-                className="border border-gray-200 rounded-lg p-4"
-              >
+          {
+            property: "Casa Copacabana #123",
+            date: "2025-01-08",
+            time: "09:00 - 11:00",
+            status: "Concluída",
+            cleaner: "Maria Silva",
+            rating: 5,
+            photos: 12
+          },
+          {
+            property: "Apartamento Ipanema #456",
+            date: "2025-01-07",
+            time: "14:00 - 16:00",
+            status: "Concluída",
+            cleaner: "João Santos",
+            rating: 5,
+            photos: 8
+          },
+          {
+            property: "Casa Barra #789",
+            date: "2025-01-06",
+            time: "10:00 - 12:00",
+            status: "Concluída",
+            cleaner: "Ana Costa",
+            rating: 4,
+            photos: 15
+          }].
+          map((cleaning, index) =>
+          <div
+            key={index}
+            className="border border-gray-200 rounded-lg p-4">
+
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <h4 className="font-medium text-gray-900">
@@ -269,16 +269,16 @@ export default function BSOSClient() {
                     <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
                       {cleaning.status}
                     </span>
-                    <button
-                      className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200"
-                      onClick={() => handleViewDetails("cleaning-1")}
-                    >
+                    <WiredButton
+                  className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200"
+                  onClick={() => handleViewDetails("cleaning-1")}>
+
                       Ver Detalhes
-                    </button>
+                    </WiredButton>
                   </div>
                 </div>
               </div>
-            ))}
+          )}
           </div>
         </div>
       </div>
@@ -300,12 +300,12 @@ export default function BSOSClient() {
                   </p>
                   <p className="text-sm text-gray-600">Amanhã, 10:00 - 12:00</p>
                 </div>
-                <button
-                  className="text-blue-600 text-sm hover:underline"
-                  onClick={() => handleViewDetails("cleaning-2")}
-                >
+                <WiredButton
+                className="text-blue-600 text-sm hover:underline"
+                onClick={() => handleViewDetails("cleaning-2")}>
+
                   Detalhes
-                </button>
+                </WiredButton>
               </div>
               <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
                 <div>
@@ -314,12 +314,12 @@ export default function BSOSClient() {
                   </p>
                   <p className="text-sm text-gray-600">10/01, 15:00 - 17:00</p>
                 </div>
-                <button
-                  className="text-blue-600 text-sm hover:underline"
-                  onClick={() => handleViewDetails("cleaning-3")}
-                >
+                <WiredButton
+                className="text-blue-600 text-sm hover:underline"
+                onClick={() => handleViewDetails("cleaning-3")}>
+
                   Detalhes
-                </button>
+                </WiredButton>
               </div>
             </div>
           </div>
@@ -330,46 +330,46 @@ export default function BSOSClient() {
             <h3 className="text-lg font-medium text-gray-900">Ações Rápidas</h3>
           </div>
           <div className="p-6 space-y-3">
-            <button
-              className="w-full flex items-center justify-between p-4 sm:p-3 border border-gray-200 rounded-lg hover:bg-gray-50 touch-target"
-              onClick={handleViewPhotos}
-            >
+            <WiredButton
+            className="w-full flex items-center justify-between p-4 sm:p-3 border border-gray-200 rounded-lg hover:bg-gray-50 touch-target"
+            onClick={handleViewPhotos}>
+
               <div className="flex items-center space-x-3">
                 <PhotoIcon />
                 <span>Ver Todas as Fotos</span>
               </div>
               <span className="text-gray-400">›</span>
-            </button>
-            <button
-              className="w-full flex items-center justify-between p-4 sm:p-3 border border-gray-200 rounded-lg hover:bg-gray-50 touch-target"
-              onClick={handleContactTeam}
-            >
+            </WiredButton>
+            <WiredButton
+            className="w-full flex items-center justify-between p-4 sm:p-3 border border-gray-200 rounded-lg hover:bg-gray-50 touch-target"
+            onClick={handleContactTeam}>
+
               <div className="flex items-center space-x-3">
                 <ChatIcon />
                 <span>Contatar Equipe</span>
               </div>
               <span className="text-gray-400">›</span>
-            </button>
-            <button
-              className="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
-              onClick={handleViewHistory}
-            >
+            </WiredButton>
+            <WiredButton
+            className="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+            onClick={handleViewHistory}>
+
               <div className="flex items-center space-x-3">
                 <HistoryIcon />
                 <span>Histórico Completo</span>
               </div>
               <span className="text-gray-400">›</span>
-            </button>
-            <button
-              className="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
-              onClick={handleEvaluateServices}
-            >
+            </WiredButton>
+            <WiredButton
+            className="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+            onClick={handleEvaluateServices}>
+
               <div className="flex items-center space-x-3">
                 <RatingIcon />
                 <span>Avaliar Serviços</span>
               </div>
               <span className="text-gray-400">›</span>
-            </button>
+            </WiredButton>
           </div>
         </div>
       </div>
@@ -413,8 +413,8 @@ export default function BSOSClient() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
+
 
   return (
     <div className="space-y-6">
@@ -446,19 +446,19 @@ export default function BSOSClient() {
             {sections.map((section) => {
               const IconComponent = section.icon;
               return (
-                <button
+                <WiredButton
                   key={section.id}
                   onClick={() => setActiveSection(section.id)}
                   className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
-                    activeSection === section.id
-                      ? "border-purple-500 text-purple-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }`}
-                >
+                  activeSection === section.id ?
+                  "border-purple-500 text-purple-600" :
+                  "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}`
+                  }>
+
                   <IconComponent />
                   <span>{section.name}</span>
-                </button>
-              );
+                </WiredButton>);
+
             })}
           </nav>
         </div>
@@ -475,6 +475,6 @@ export default function BSOSClient() {
           })}
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }

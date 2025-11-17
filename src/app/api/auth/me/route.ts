@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db as prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
 export async function GET(req: Request) {
@@ -18,7 +18,7 @@ export async function GET(req: Request) {
 
     // Verificar e decodificar token
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-      id: number;
+      id: string;
       email: string;
       role: string;
     };

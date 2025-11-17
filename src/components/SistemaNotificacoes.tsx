@@ -1,5 +1,5 @@
 // Sistema de Notificações Automáticas
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState, useEffect } from "react";
 
@@ -8,12 +8,12 @@ interface Notificacao {
   tipo: "email" | "whatsapp" | "sms" | "push";
   destinatario: string;
   categoria:
-    | "checkout"
-    | "limpeza_agendada"
-    | "limpeza_concluida"
-    | "checkin_proximo"
-    | "avaliacao"
-    | "promocao";
+  "checkout" |
+  "limpeza_agendada" |
+  "limpeza_concluida" |
+  "checkin_proximo" |
+  "avaliacao" |
+  "promocao";
   titulo: string;
   mensagem: string;
   status: "pendente" | "enviado" | "falhou" | "agendado";
@@ -33,112 +33,112 @@ interface ConfigNotificacao {
 
 export default function SistemaNotificacoes() {
   const [activeTab, setActiveTab] = useState<
-    "fila" | "configuracoes" | "templates" | "historico"
-  >("fila");
+    "fila" | "configuracoes" | "templates" | "historico">(
+    "fila");
 
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([
-    {
-      id: "1",
-      tipo: "whatsapp",
-      destinatario: "+5511999998888",
-      categoria: "checkout",
-      titulo: "Checkout Realizado - Limpeza Necessária",
-      mensagem:
-        "Olá Maria! O checkout do Apto Centro foi realizado às 11:00. Sua limpeza está agendada para 12:00. Chaves na portaria com Sr. João.",
-      status: "enviado",
-      enviado_em: "2024-10-08T11:05:00",
-      dados_contexto: {
-        cleaner: "Maria Silva",
-        propriedade: "Apto Centro - Vista Mar",
-        guest: "John Smith",
-        checkout_time: "11:00",
-      },
-    },
-    {
-      id: "2",
-      tipo: "email",
-      destinatario: "john.smith@email.com",
-      categoria: "avaliacao",
-      titulo: "Como foi sua estadia? Avalie nosso serviço!",
-      mensagem:
-        "Hi John! We hope you enjoyed your stay at our apartment. Your opinion is very important to us. Please rate our service: [LINK]",
-      status: "agendado",
-      agendado_para: "2024-10-10T15:00:00",
-      dados_contexto: {
-        guest: "John Smith",
-        propriedade: "Apto Centro - Vista Mar",
-        checkout: "2024-10-10",
-      },
-    },
-    {
-      id: "3",
-      tipo: "whatsapp",
-      destinatario: "+5511888887777",
-      categoria: "limpeza_concluida",
-      titulo: "Limpeza Concluída - Propriedade Pronta",
-      mensagem:
-        "Atenção! A limpeza do Apto Centro foi concluída às 14:30. Propriedade pronta para o próximo hóspede. Check-in às 16:00.",
-      status: "pendente",
-      dados_contexto: {
-        propriedade: "Apto Centro - Vista Mar",
-        cleaner: "Maria Silva",
-        proximo_checkin: "16:00",
-      },
-    },
-  ]);
+  {
+    id: "1",
+    tipo: "whatsapp",
+    destinatario: "+5511999998888",
+    categoria: "checkout",
+    titulo: "Checkout Realizado - Limpeza Necessária",
+    mensagem:
+    "Olá Maria! O checkout do Apto Centro foi realizado às 11:00. Sua limpeza está agendada para 12:00. Chaves na portaria com Sr. João.",
+    status: "enviado",
+    enviado_em: "2024-10-08T11:05:00",
+    dados_contexto: {
+      cleaner: "Maria Silva",
+      propriedade: "Apto Centro - Vista Mar",
+      guest: "John Smith",
+      checkout_time: "11:00"
+    }
+  },
+  {
+    id: "2",
+    tipo: "email",
+    destinatario: "john.smith@email.com",
+    categoria: "avaliacao",
+    titulo: "Como foi sua estadia? Avalie nosso serviço!",
+    mensagem:
+    "Hi John! We hope you enjoyed your stay at our apartment. Your opinion is very important to us. Please rate our service: [LINK]",
+    status: "agendado",
+    agendado_para: "2024-10-10T15:00:00",
+    dados_contexto: {
+      guest: "John Smith",
+      propriedade: "Apto Centro - Vista Mar",
+      checkout: "2024-10-10"
+    }
+  },
+  {
+    id: "3",
+    tipo: "whatsapp",
+    destinatario: "+5511888887777",
+    categoria: "limpeza_concluida",
+    titulo: "Limpeza Concluída - Propriedade Pronta",
+    mensagem:
+    "Atenção! A limpeza do Apto Centro foi concluída às 14:30. Propriedade pronta para o próximo hóspede. Check-in às 16:00.",
+    status: "pendente",
+    dados_contexto: {
+      propriedade: "Apto Centro - Vista Mar",
+      cleaner: "Maria Silva",
+      proximo_checkin: "16:00"
+    }
+  }]
+  );
 
   const [configuracoes, setConfiguracoes] = useState<ConfigNotificacao[]>([
-    {
-      categoria: "checkout",
-      ativo: true,
-      tempo_antecedencia: 15,
-      canais: ["whatsapp", "sms"],
-      template_cleaner:
-        "Checkout realizado em {propriedade} às {checkout_time}. Limpeza agendada para {limpeza_time}. Chaves: {chaves_localizacao}",
-      template_cliente:
-        "Thank you for staying at {propriedade}! We hope you enjoyed your time. Check-out confirmed at {checkout_time}.",
-    },
-    {
-      categoria: "limpeza_agendada",
-      ativo: true,
-      tempo_antecedencia: 30,
-      canais: ["whatsapp", "push"],
-      template_cleaner:
-        "Limpeza agendada para {propriedade} em {tempo} minutos. Tempo estimado: {duracao}min. Instruções: {instrucoes}",
-      template_cliente:
-        "Your accommodation is being prepared for your arrival. Expected completion: {tempo_conclusao}",
-    },
-    {
-      categoria: "limpeza_concluida",
-      ativo: true,
-      tempo_antecedencia: 0,
-      canais: ["whatsapp", "email"],
-      template_cleaner:
-        "Limpeza de {propriedade} concluída! Por favor, confirme o status e anexe fotos.",
-      template_cliente:
-        "Your accommodation at {propriedade} is ready! Check-in available from {checkin_time}.",
-    },
-    {
-      categoria: "checkin_proximo",
-      ativo: true,
-      tempo_antecedencia: 60,
-      canais: ["whatsapp", "email"],
-      template_cleaner:
-        "Check-in em {propriedade} em 1 hora. Certifique-se de que está tudo pronto.",
-      template_cliente:
-        "Welcome! Your check-in at {propriedade} is in 1 hour. Address: {endereco}. Keys: {chaves_info}",
-    },
-    {
-      categoria: "avaliacao",
-      ativo: true,
-      tempo_antecedencia: 180, // 3 horas após checkout
-      canais: ["email", "whatsapp"],
-      template_cleaner:
-        "Solicitação de avaliação enviada para {guest} sobre {propriedade}.",
-      template_cliente:
-        "How was your stay at {propriedade}? Your feedback helps us improve. Rate us: {avaliacao_link}",
-    },
-  ]);
+  {
+    categoria: "checkout",
+    ativo: true,
+    tempo_antecedencia: 15,
+    canais: ["whatsapp", "sms"],
+    template_cleaner:
+    "Checkout realizado em {propriedade} às {checkout_time}. Limpeza agendada para {limpeza_time}. Chaves: {chaves_localizacao}",
+    template_cliente:
+    "Thank you for staying at {propriedade}! We hope you enjoyed your time. Check-out confirmed at {checkout_time}."
+  },
+  {
+    categoria: "limpeza_agendada",
+    ativo: true,
+    tempo_antecedencia: 30,
+    canais: ["whatsapp", "push"],
+    template_cleaner:
+    "Limpeza agendada para {propriedade} em {tempo} minutos. Tempo estimado: {duracao}min. Instruções: {instrucoes}",
+    template_cliente:
+    "Your accommodation is being prepared for your arrival. Expected completion: {tempo_conclusao}"
+  },
+  {
+    categoria: "limpeza_concluida",
+    ativo: true,
+    tempo_antecedencia: 0,
+    canais: ["whatsapp", "email"],
+    template_cleaner:
+    "Limpeza de {propriedade} concluída! Por favor, confirme o status e anexe fotos.",
+    template_cliente:
+    "Your accommodation at {propriedade} is ready! Check-in available from {checkin_time}."
+  },
+  {
+    categoria: "checkin_proximo",
+    ativo: true,
+    tempo_antecedencia: 60,
+    canais: ["whatsapp", "email"],
+    template_cleaner:
+    "Check-in em {propriedade} em 1 hora. Certifique-se de que está tudo pronto.",
+    template_cliente:
+    "Welcome! Your check-in at {propriedade} is in 1 hour. Address: {endereco}. Keys: {chaves_info}"
+  },
+  {
+    categoria: "avaliacao",
+    ativo: true,
+    tempo_antecedencia: 180, // 3 horas após checkout
+    canais: ["email", "whatsapp"],
+    template_cleaner:
+    "Solicitação de avaliação enviada para {guest} sobre {propriedade}.",
+    template_cliente:
+    "How was your stay at {propriedade}? Your feedback helps us improve. Rate us: {avaliacao_link}"
+  }]
+  );
 
   const [novaNotificacao, setNovaNotificacao] = useState({
     destinatario: "",
@@ -146,7 +146,7 @@ export default function SistemaNotificacoes() {
     titulo: "",
     mensagem: "",
     tipo: "whatsapp",
-    agendado_para: "",
+    agendado_para: ""
   });
 
   const criarNotificacao = () => {
@@ -155,7 +155,7 @@ export default function SistemaNotificacoes() {
         id: Date.now().toString(),
         ...(novaNotificacao as any),
         status: novaNotificacao.agendado_para ? "agendado" : "pendente",
-        dados_contexto: {},
+        dados_contexto: {}
       };
       setNotificacoes([nova, ...notificacoes]);
       setNovaNotificacao({
@@ -164,7 +164,7 @@ export default function SistemaNotificacoes() {
         titulo: "",
         mensagem: "",
         tipo: "whatsapp",
-        agendado_para: "",
+        agendado_para: ""
       });
     }
   };
@@ -172,22 +172,22 @@ export default function SistemaNotificacoes() {
   const enviarNotificacao = (id: string) => {
     setNotificacoes(
       notificacoes.map((n) =>
-        n.id === id
-          ? { ...n, status: "enviado", enviado_em: new Date().toISOString() }
-          : n,
-      ),
+      n.id === id ?
+      { ...n, status: "enviado", enviado_em: new Date().toISOString() } :
+      n
+      )
     );
   };
 
   const atualizarConfiguracao = (
-    categoria: string,
-    campo: string,
-    valor: any,
-  ) => {
+  categoria: string,
+  campo: string,
+  valor: any) =>
+  {
     setConfiguracoes(
       configuracoes.map((config) =>
-        config.categoria === categoria ? { ...config, [campo]: valor } : config,
-      ),
+      config.categoria === categoria ? { ...config, [campo]: valor } : config
+      )
     );
   };
 
@@ -229,15 +229,15 @@ export default function SistemaNotificacoes() {
 
       // Verificar notificações agendadas
       setNotificacoes((prev) =>
-        prev.map((n) => {
-          if (n.status === "agendado" && n.agendado_para) {
-            const agendado = new Date(n.agendado_para);
-            if (agendado <= agora) {
-              return { ...n, status: "pendente" };
-            }
+      prev.map((n) => {
+        if (n.status === "agendado" && n.agendado_para) {
+          const agendado = new Date(n.agendado_para);
+          if (agendado <= agora) {
+            return { ...n, status: "pendente" };
           }
-          return n;
-        }),
+        }
+        return n;
+      })
       );
     }, 30000); // Verificar a cada 30 segundos
 
@@ -251,46 +251,46 @@ export default function SistemaNotificacoes() {
           Sistema de Notificações
         </h2>
         <div className="flex space-x-2">
-          <button
+          <WiredButton
             onClick={() => setActiveTab("fila")}
             className={`px-4 py-2 rounded-lg ${
-              activeTab === "fila"
-                ? "bg-primary-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
+            activeTab === "fila" ?
+            "bg-primary-600 text-white" :
+            "bg-gray-200 text-gray-700"}`
+            }>
+
             Fila
-          </button>
-          <button
+          </WiredButton>
+          <WiredButton
             onClick={() => setActiveTab("configuracoes")}
             className={`px-4 py-2 rounded-lg ${
-              activeTab === "configuracoes"
-                ? "bg-primary-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
+            activeTab === "configuracoes" ?
+            "bg-primary-600 text-white" :
+            "bg-gray-200 text-gray-700"}`
+            }>
+
             Configurações
-          </button>
-          <button
+          </WiredButton>
+          <WiredButton
             onClick={() => setActiveTab("templates")}
             className={`px-4 py-2 rounded-lg ${
-              activeTab === "templates"
-                ? "bg-primary-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
+            activeTab === "templates" ?
+            "bg-primary-600 text-white" :
+            "bg-gray-200 text-gray-700"}`
+            }>
+
             Templates
-          </button>
-          <button
+          </WiredButton>
+          <WiredButton
             onClick={() => setActiveTab("historico")}
             className={`px-4 py-2 rounded-lg ${
-              activeTab === "historico"
-                ? "bg-primary-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
+            activeTab === "historico" ?
+            "bg-primary-600 text-white" :
+            "bg-gray-200 text-gray-700"}`
+            }>
+
             Histórico
-          </button>
+          </WiredButton>
         </div>
       </div>
 
@@ -312,32 +312,32 @@ export default function SistemaNotificacoes() {
           <h3 className="text-sm font-medium text-gray-500">Enviadas Hoje</h3>
           <p className="text-2xl font-bold text-green-600">
             {
-              notificacoes.filter(
-                (n) =>
-                  n.status === "enviado" &&
-                  n.enviado_em?.startsWith("2024-10-08"),
-              ).length
+            notificacoes.filter(
+              (n) =>
+              n.status === "enviado" &&
+              n.enviado_em?.startsWith("2024-10-08")
+            ).length
             }
           </p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h3 className="text-sm font-medium text-gray-500">Taxa de Sucesso</h3>
           <p className="text-2xl font-bold text-green-600">
-            {notificacoes.length > 0
-              ? Math.round(
-                  (notificacoes.filter((n) => n.status === "enviado").length /
-                    notificacoes.length) *
-                    100,
-                )
-              : 0}
+            {notificacoes.length > 0 ?
+            Math.round(
+              notificacoes.filter((n) => n.status === "enviado").length /
+              notificacoes.length *
+              100
+            ) :
+            0}
             %
           </p>
         </div>
       </div>
 
       {/* Fila de Notificações */}
-      {activeTab === "fila" && (
-        <div className="space-y-6">
+      {activeTab === "fila" &&
+      <div className="space-y-6">
           {/* Nova Notificação */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -349,17 +349,17 @@ export default function SistemaNotificacoes() {
                   Destinatário
                 </label>
                 <input
-                  type="text"
-                  value={novaNotificacao.destinatario}
-                  onChange={(e) =>
-                    setNovaNotificacao({
-                      ...novaNotificacao,
-                      destinatario: e.target.value,
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                  placeholder="Telefone ou email"
-                />
+                type="text"
+                value={novaNotificacao.destinatario}
+                onChange={(e) =>
+                setNovaNotificacao({
+                  ...novaNotificacao,
+                  destinatario: e.target.value
+                })
+                }
+                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                placeholder="Telefone ou email" />
+
               </div>
 
               <div>
@@ -367,15 +367,15 @@ export default function SistemaNotificacoes() {
                   Tipo
                 </label>
                 <select
-                  value={novaNotificacao.tipo}
-                  onChange={(e) =>
-                    setNovaNotificacao({
-                      ...novaNotificacao,
-                      tipo: e.target.value,
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                >
+                value={novaNotificacao.tipo}
+                onChange={(e) =>
+                setNovaNotificacao({
+                  ...novaNotificacao,
+                  tipo: e.target.value
+                })
+                }
+                className="w-full border border-gray-300 rounded-lg px-3 py-2">
+
                   <option value="whatsapp">WhatsApp</option>
                   <option value="email">Email</option>
                   <option value="sms">SMS</option>
@@ -388,15 +388,15 @@ export default function SistemaNotificacoes() {
                   Categoria
                 </label>
                 <select
-                  value={novaNotificacao.categoria}
-                  onChange={(e) =>
-                    setNovaNotificacao({
-                      ...novaNotificacao,
-                      categoria: e.target.value,
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                >
+                value={novaNotificacao.categoria}
+                onChange={(e) =>
+                setNovaNotificacao({
+                  ...novaNotificacao,
+                  categoria: e.target.value
+                })
+                }
+                className="w-full border border-gray-300 rounded-lg px-3 py-2">
+
                   <option value="checkout">Checkout</option>
                   <option value="limpeza_agendada">Limpeza Agendada</option>
                   <option value="limpeza_concluida">Limpeza Concluída</option>
@@ -411,16 +411,16 @@ export default function SistemaNotificacoes() {
                   Agendar Para (Opcional)
                 </label>
                 <input
-                  type="datetime-local"
-                  value={novaNotificacao.agendado_para}
-                  onChange={(e) =>
-                    setNovaNotificacao({
-                      ...novaNotificacao,
-                      agendado_para: e.target.value,
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                />
+                type="datetime-local"
+                value={novaNotificacao.agendado_para}
+                onChange={(e) =>
+                setNovaNotificacao({
+                  ...novaNotificacao,
+                  agendado_para: e.target.value
+                })
+                }
+                className="w-full border border-gray-300 rounded-lg px-3 py-2" />
+
               </div>
 
               <div className="md:col-span-2">
@@ -428,17 +428,17 @@ export default function SistemaNotificacoes() {
                   Título
                 </label>
                 <input
-                  type="text"
-                  value={novaNotificacao.titulo}
-                  onChange={(e) =>
-                    setNovaNotificacao({
-                      ...novaNotificacao,
-                      titulo: e.target.value,
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                  placeholder="Título da notificação"
-                />
+                type="text"
+                value={novaNotificacao.titulo}
+                onChange={(e) =>
+                setNovaNotificacao({
+                  ...novaNotificacao,
+                  titulo: e.target.value
+                })
+                }
+                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                placeholder="Título da notificação" />
+
               </div>
 
               <div className="md:col-span-2">
@@ -446,26 +446,26 @@ export default function SistemaNotificacoes() {
                   Mensagem
                 </label>
                 <textarea
-                  value={novaNotificacao.mensagem}
-                  onChange={(e) =>
-                    setNovaNotificacao({
-                      ...novaNotificacao,
-                      mensagem: e.target.value,
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                  rows={3}
-                  placeholder="Conteúdo da mensagem"
-                />
+                value={novaNotificacao.mensagem}
+                onChange={(e) =>
+                setNovaNotificacao({
+                  ...novaNotificacao,
+                  mensagem: e.target.value
+                })
+                }
+                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                rows={3}
+                placeholder="Conteúdo da mensagem" />
+
               </div>
             </div>
 
-            <button
-              onClick={criarNotificacao}
-              className="mt-4 bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700"
-            >
+            <WiredButton
+            onClick={criarNotificacao}
+            className="mt-4 bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700">
+
               Criar Notificação
-            </button>
+            </WiredButton>
           </div>
 
           {/* Lista de Notificações */}
@@ -475,11 +475,11 @@ export default function SistemaNotificacoes() {
                 Fila de Notificações
               </h3>
               <div className="space-y-4">
-                {notificacoes.map((notificacao) => (
-                  <div
-                    key={notificacao.id}
-                    className="border border-gray-200 rounded-lg p-4"
-                  >
+                {notificacoes.map((notificacao) =>
+              <div
+                key={notificacao.id}
+                className="border border-gray-200 rounded-lg p-4">
+
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
@@ -490,8 +490,8 @@ export default function SistemaNotificacoes() {
                             {notificacao.titulo}
                           </h4>
                           <span
-                            className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(notificacao.status)}`}
-                          >
+                        className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(notificacao.status)}`}>
+
                             {notificacao.status}
                           </span>
                         </div>
@@ -503,81 +503,81 @@ export default function SistemaNotificacoes() {
                         </p>
                         <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
                           <span>Categoria: {notificacao.categoria}</span>
-                          {notificacao.agendado_para && (
-                            <span>
+                          {notificacao.agendado_para &&
+                      <span>
                               Agendado:{" "}
                               {new Date(
-                                notificacao.agendado_para,
-                              ).toLocaleString("pt-BR")}
+                          notificacao.agendado_para
+                        ).toLocaleString("pt-BR")}
                             </span>
-                          )}
-                          {notificacao.enviado_em && (
-                            <span>
+                      }
+                          {notificacao.enviado_em &&
+                      <span>
                               Enviado:{" "}
                               {new Date(notificacao.enviado_em).toLocaleString(
-                                "pt-BR",
-                              )}
+                          "pt-BR"
+                        )}
                             </span>
-                          )}
+                      }
                         </div>
                       </div>
                       <div className="flex space-x-2 ml-4">
-                        {notificacao.status === "pendente" && (
-                          <button
-                            onClick={() => enviarNotificacao(notificacao.id)}
-                            className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
-                          >
+                        {notificacao.status === "pendente" &&
+                    <WiredButton
+                      onClick={() => enviarNotificacao(notificacao.id)}
+                      className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+
                             Enviar Agora
-                          </button>
-                        )}
-                        {notificacao.status === "falhou" && (
-                          <button
-                            onClick={() => enviarNotificacao(notificacao.id)}
-                            className="bg-yellow-600 text-white px-3 py-1 rounded text-sm hover:bg-yellow-700"
-                          >
+                          </WiredButton>
+                    }
+                        {notificacao.status === "falhou" &&
+                    <WiredButton
+                      onClick={() => enviarNotificacao(notificacao.id)}
+                      className="bg-yellow-600 text-white px-3 py-1 rounded text-sm hover:bg-yellow-700">
+
                             Reenviar
-                          </button>
-                        )}
+                          </WiredButton>
+                    }
                       </div>
                     </div>
                   </div>
-                ))}
+              )}
               </div>
             </div>
           </div>
         </div>
-      )}
+      }
 
       {/* Configurações */}
-      {activeTab === "configuracoes" && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      {activeTab === "configuracoes" &&
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Configurações de Notificação
             </h3>
             <div className="space-y-6">
-              {configuracoes.map((config, index) => (
-                <div
-                  key={config.categoria}
-                  className="border border-gray-200 rounded-lg p-4"
-                >
+              {configuracoes.map((config, index) =>
+            <div
+              key={config.categoria}
+              className="border border-gray-200 rounded-lg p-4">
+
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="font-semibold text-gray-900 capitalize">
                       {config.categoria.replace("_", " ")}
                     </h4>
                     <label className="flex items-center">
                       <input
-                        type="checkbox"
-                        checked={config.ativo}
-                        onChange={(e) =>
-                          atualizarConfiguracao(
-                            config.categoria,
-                            "ativo",
-                            e.target.checked,
-                          )
-                        }
-                        className="mr-2"
-                      />
+                    type="checkbox"
+                    checked={config.ativo}
+                    onChange={(e) =>
+                    atualizarConfiguracao(
+                      config.categoria,
+                      "ativo",
+                      e.target.checked
+                    )
+                    }
+                    className="mr-2" />
+
                       <span className="text-sm text-gray-700">Ativo</span>
                     </label>
                   </div>
@@ -588,18 +588,18 @@ export default function SistemaNotificacoes() {
                         Tempo de Antecedência (minutos)
                       </label>
                       <input
-                        type="number"
-                        value={config.tempo_antecedencia}
-                        onChange={(e) =>
-                          atualizarConfiguracao(
-                            config.categoria,
-                            "tempo_antecedencia",
-                            parseInt(e.target.value),
-                          )
-                        }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                        min="0"
-                      />
+                    type="number"
+                    value={config.tempo_antecedencia}
+                    onChange={(e) =>
+                    atualizarConfiguracao(
+                      config.categoria,
+                      "tempo_antecedencia",
+                      parseInt(e.target.value)
+                    )
+                    }
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    min="0" />
+
                     </div>
 
                     <div>
@@ -607,49 +607,49 @@ export default function SistemaNotificacoes() {
                         Canais
                       </label>
                       <div className="flex space-x-4">
-                        {["whatsapp", "email", "sms", "push"].map((canal) => (
-                          <label key={canal} className="flex items-center">
+                        {["whatsapp", "email", "sms", "push"].map((canal) =>
+                    <label key={canal} className="flex items-center">
                             <input
-                              type="checkbox"
-                              checked={config.canais.includes(canal)}
-                              onChange={(e) => {
-                                const novosCanais = e.target.checked
-                                  ? [...config.canais, canal]
-                                  : config.canais.filter((c) => c !== canal);
-                                atualizarConfiguracao(
-                                  config.categoria,
-                                  "canais",
-                                  novosCanais,
-                                );
-                              }}
-                              className="mr-1"
-                            />
+                        type="checkbox"
+                        checked={config.canais.includes(canal)}
+                        onChange={(e) => {
+                          const novosCanais = e.target.checked ?
+                          [...config.canais, canal] :
+                          config.canais.filter((c) => c !== canal);
+                          atualizarConfiguracao(
+                            config.categoria,
+                            "canais",
+                            novosCanais
+                          );
+                        }}
+                        className="mr-1" />
+
                             <span className="text-sm">{canal}</span>
                           </label>
-                        ))}
+                    )}
                       </div>
                     </div>
                   </div>
                 </div>
-              ))}
+            )}
             </div>
           </div>
         </div>
-      )}
+      }
 
       {/* Templates */}
-      {activeTab === "templates" && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      {activeTab === "templates" &&
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Templates de Mensagens
             </h3>
             <div className="space-y-6">
-              {configuracoes.map((config) => (
-                <div
-                  key={config.categoria}
-                  className="border border-gray-200 rounded-lg p-4"
-                >
+              {configuracoes.map((config) =>
+            <div
+              key={config.categoria}
+              className="border border-gray-200 rounded-lg p-4">
+
                   <h4 className="font-semibold text-gray-900 mb-4 capitalize">
                     {config.categoria.replace("_", " ")}
                   </h4>
@@ -660,17 +660,17 @@ export default function SistemaNotificacoes() {
                         Template para Cleaners
                       </label>
                       <textarea
-                        value={config.template_cleaner}
-                        onChange={(e) =>
-                          atualizarConfiguracao(
-                            config.categoria,
-                            "template_cleaner",
-                            e.target.value,
-                          )
-                        }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                        rows={3}
-                      />
+                    value={config.template_cleaner}
+                    onChange={(e) =>
+                    atualizarConfiguracao(
+                      config.categoria,
+                      "template_cleaner",
+                      e.target.value
+                    )
+                    }
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    rows={3} />
+
                     </div>
 
                     <div>
@@ -678,29 +678,29 @@ export default function SistemaNotificacoes() {
                         Template para Clientes
                       </label>
                       <textarea
-                        value={config.template_cliente}
-                        onChange={(e) =>
-                          atualizarConfiguracao(
-                            config.categoria,
-                            "template_cliente",
-                            e.target.value,
-                          )
-                        }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                        rows={3}
-                      />
+                    value={config.template_cliente}
+                    onChange={(e) =>
+                    atualizarConfiguracao(
+                      config.categoria,
+                      "template_cliente",
+                      e.target.value
+                    )
+                    }
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    rows={3} />
+
                     </div>
                   </div>
                 </div>
-              ))}
+            )}
             </div>
           </div>
         </div>
-      )}
+      }
 
       {/* Histórico */}
-      {activeTab === "historico" && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+      {activeTab === "historico" &&
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Histórico de Notificações
@@ -732,15 +732,15 @@ export default function SistemaNotificacoes() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {notificacoes
-                    .filter((n) => n.status === "enviado")
-                    .map((notificacao) => (
-                      <tr key={notificacao.id}>
+                  {notificacoes.
+                filter((n) => n.status === "enviado").
+                map((notificacao) =>
+                <tr key={notificacao.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {notificacao.enviado_em &&
-                            new Date(notificacao.enviado_em).toLocaleString(
-                              "pt-BR",
-                            )}
+                    new Date(notificacao.enviado_em).toLocaleString(
+                      "pt-BR"
+                    )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {getTipoIcon(notificacao.tipo)} {notificacao.tipo}
@@ -753,8 +753,8 @@ export default function SistemaNotificacoes() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(notificacao.status)}`}
-                          >
+                      className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(notificacao.status)}`}>
+
                             {notificacao.status}
                           </span>
                         </td>
@@ -762,20 +762,20 @@ export default function SistemaNotificacoes() {
                           {notificacao.mensagem}
                         </td>
                       </tr>
-                    ))}
+                )}
                 </tbody>
               </table>
             </div>
 
             {/* Mobile Card View */}
             <div className="lg:hidden space-y-4">
-              {notificacoes
-                .filter((n) => n.status === "enviado")
-                .map((notificacao) => (
-                  <div
-                    key={notificacao.id}
-                    className="border border-gray-200 rounded-lg p-4"
-                  >
+              {notificacoes.
+            filter((n) => n.status === "enviado").
+            map((notificacao) =>
+            <div
+              key={notificacao.id}
+              className="border border-gray-200 rounded-lg p-4">
+
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center space-x-2">
                         <span className="text-lg">
@@ -786,8 +786,8 @@ export default function SistemaNotificacoes() {
                         </span>
                       </div>
                       <span
-                        className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(notificacao.status)}`}
-                      >
+                  className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(notificacao.status)}`}>
+
                         {notificacao.status}
                       </span>
                     </div>
@@ -809,9 +809,9 @@ export default function SistemaNotificacoes() {
                         <span className="text-gray-500">Data:</span>
                         <span className="ml-2 text-gray-900">
                           {notificacao.enviado_em &&
-                            new Date(notificacao.enviado_em).toLocaleString(
-                              "pt-BR",
-                            )}
+                    new Date(notificacao.enviado_em).toLocaleString(
+                      "pt-BR"
+                    )}
                         </span>
                       </div>
                     </div>
@@ -822,11 +822,11 @@ export default function SistemaNotificacoes() {
                       </p>
                     </div>
                   </div>
-                ))}
+            )}
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }

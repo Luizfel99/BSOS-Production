@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -16,8 +16,8 @@ import {
   Plus,
   AlertTriangle,
   CheckCircle,
-  Clock,
-} from "lucide-react";
+  Clock } from
+"lucide-react";
 import { ProtectedComponent } from "@/components/ProtectedComponent";
 
 interface FinanceSummary {
@@ -30,14 +30,14 @@ interface FinanceSummary {
 
 export default function FinancePage() {
   const [activeTab, setActiveTab] = useState<
-    "invoices" | "transactions" | "payouts"
-  >("invoices");
+    "invoices" | "transactions" | "payouts">(
+    "invoices");
   const [summary, setSummary] = useState<FinanceSummary>({
     totalIncome: 12450.8,
     pendingAmount: 2300.5,
     paidAmount: 10150.3,
     invoiceCount: 24,
-    transactionCount: 156,
+    transactionCount: 156
   });
   const [loading, setLoading] = useState(false);
 
@@ -52,22 +52,22 @@ export default function FinancePage() {
         body: JSON.stringify({
           amount: 1000,
           description: "Nova fatura de teste",
-          clientEmail: "client@example.com",
-        }),
+          clientEmail: "client@example.com"
+        })
       });
 
       if (response.ok) {
         toast.success("Operação concluída / Operation successful", {
-          id: "create-invoice",
+          id: "create-invoice"
         });
       } else {
         toast.error("Em desenvolvimento / In development", {
-          id: "create-invoice",
+          id: "create-invoice"
         });
       }
     } catch (error) {
       toast.error("Em desenvolvimento / In development", {
-        id: "create-invoice",
+        id: "create-invoice"
       });
     } finally {
       setLoading(false);
@@ -81,16 +81,16 @@ export default function FinancePage() {
 
       const response = await fetch("/api/finance/sync", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }
       });
 
       if (response.ok) {
         toast.success("Operação concluída / Operation successful", {
-          id: "sync-stripe",
+          id: "sync-stripe"
         });
       } else {
         toast.error("Em desenvolvimento / In development", {
-          id: "sync-stripe",
+          id: "sync-stripe"
         });
       }
     } catch (error) {
@@ -117,12 +117,12 @@ export default function FinancePage() {
               disabled={loading}
               leftIcon={<Plus className="h-5 w-5" />}
               variant="primary"
-              size="lg"
-            >
+              size="lg">
+
               Criar Primera Fatura
             </Button>
-          </div>
-        );
+          </div>);
+
 
       case "transactions":
         return (
@@ -135,8 +135,8 @@ export default function FinancePage() {
               No transactions yet. As transações aparecerão aqui
               automaticamente.
             </p>
-          </div>
-        );
+          </div>);
+
 
       case "payouts":
         return (
@@ -148,8 +148,8 @@ export default function FinancePage() {
             <p className="text-gray-600">
               No payouts yet. Os pagamentos aparecerão após as transações.
             </p>
-          </div>
-        );
+          </div>);
+
 
       default:
         return null;
@@ -164,8 +164,8 @@ export default function FinancePage() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
+            className="mb-8">
+
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center">
@@ -186,11 +186,11 @@ export default function FinancePage() {
                     disabled={loading}
                     variant="secondary"
                     leftIcon={
-                      <RefreshCw
-                        className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
-                      />
-                    }
-                  >
+                    <RefreshCw
+                      className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+
+                    }>
+
                     Sync Stripe
                   </Button>
 
@@ -198,8 +198,8 @@ export default function FinancePage() {
                     onClick={handleCreateInvoice}
                     disabled={loading}
                     variant="primary"
-                    leftIcon={<Plus className="h-4 w-4" />}
-                  >
+                    leftIcon={<Plus className="h-4 w-4" />}>
+
                     Nova Fatura
                   </Button>
                 </div>
@@ -212,8 +212,8 @@ export default function FinancePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
-          >
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -223,7 +223,7 @@ export default function FinancePage() {
                   <p className="text-2xl font-bold text-gray-900">
                     R${" "}
                     {summary.totalIncome.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
+                      minimumFractionDigits: 2
                     })}
                   </p>
                 </div>
@@ -240,7 +240,7 @@ export default function FinancePage() {
                   <p className="text-2xl font-bold text-orange-600">
                     R${" "}
                     {summary.pendingAmount.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
+                      minimumFractionDigits: 2
                     })}
                   </p>
                 </div>
@@ -257,7 +257,7 @@ export default function FinancePage() {
                   <p className="text-2xl font-bold text-green-600">
                     R${" "}
                     {summary.paidAmount.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
+                      minimumFractionDigits: 2
                     })}
                   </p>
                 </div>
@@ -273,35 +273,35 @@ export default function FinancePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mb-6"
-          >
+            className="mb-6">
+
             <div className="bg-white rounded-lg shadow-sm border">
               <div className="border-b border-gray-200">
                 <nav className="flex space-x-8 px-6" aria-label="Tabs">
                   {[
-                    { id: "invoices", name: "Invoices", icon: FileText },
-                    {
-                      id: "transactions",
-                      name: "Transactions",
-                      icon: TrendingUp,
-                    },
-                    { id: "payouts", name: "Payouts", icon: CreditCard },
-                  ].map((tab) => {
+                  { id: "invoices", name: "Invoices", icon: FileText },
+                  {
+                    id: "transactions",
+                    name: "Transactions",
+                    icon: TrendingUp
+                  },
+                  { id: "payouts", name: "Payouts", icon: CreditCard }].
+                  map((tab) => {
                     const Icon = tab.icon;
                     return (
-                      <button
+                      <WiredButton
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id as any)}
                         className={`${
-                          activeTab === tab.id
-                            ? "border-blue-500 text-blue-600"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                        } flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors`}
-                      >
+                        activeTab === tab.id ?
+                        "border-blue-500 text-blue-600" :
+                        "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"} flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors`
+                        }>
+
                         <Icon className="h-4 w-4" />
                         {tab.name}
-                      </button>
-                    );
+                      </WiredButton>);
+
                   })}
                 </nav>
               </div>
@@ -315,8 +315,8 @@ export default function FinancePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-yellow-50 border border-yellow-200 rounded-lg p-4"
-          >
+            className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+
             <div className="flex items-start">
               <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
               <div>
@@ -333,6 +333,6 @@ export default function FinancePage() {
           </motion.div>
         </div>
       </div>
-    </ProtectedComponent>
-  );
+    </ProtectedComponent>);
+
 }

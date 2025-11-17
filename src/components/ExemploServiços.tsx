@@ -3,7 +3,7 @@
  * Demonstração de como usar os novos serviços nos componentes
  */
 
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState, useEffect } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -13,16 +13,16 @@ import {
   createCleaning,
   getCleanings,
   startCleaning,
-  completeCleaning,
-} from "@/services/cleanings";
+  completeCleaning } from
+"@/services/cleanings";
 
 import { getProperties } from "@/services/properties";
 
 import {
   getEmployees,
   employeeCheckin,
-  employeeCheckout,
-} from "@/services/employees";
+  employeeCheckout } from
+"@/services/employees";
 
 import { createTask, getTasks, completeTask } from "@/services/tasks";
 
@@ -42,7 +42,7 @@ interface CleaningExampleProps {
 
 export default function CleaningExample({
   propertyId,
-  employeeId,
+  employeeId
 }: CleaningExampleProps) {
   const [cleanings, setCleanings] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -54,7 +54,7 @@ export default function CleaningExample({
       setLoading(true);
       const response = await getCleanings({
         propertyId,
-        status: "scheduled",
+        status: "scheduled"
       });
 
       if (response.success) {
@@ -76,7 +76,7 @@ export default function CleaningExample({
         type: "regular",
         priority: "medium",
         scheduledDate: new Date().toISOString(),
-        estimatedDuration: 120, // 2 horas
+        estimatedDuration: 120 // 2 horas
       });
 
       if (newCleaning.success) {
@@ -94,7 +94,7 @@ export default function CleaningExample({
       // Primeiro fazer check-in do funcionário
       await employeeCheckin(employeeId, {
         propertyId,
-        notes: "Iniciando limpeza",
+        notes: "Iniciando limpeza"
       });
 
       // Depois iniciar a limpeza
@@ -116,14 +116,14 @@ export default function CleaningExample({
       // Completar a limpeza
       await completeCleaning(cleaningId, {
         notes: "Limpeza concluída com sucesso",
-        rating: 5,
+        rating: 5
       });
 
       // Fazer check-out do funcionário
       await employeeCheckout(employeeId, {
         completed_tasks: [cleaningId],
         notes: "Limpeza finalizada",
-        rating_request: true,
+        rating_request: true
       });
 
       // TODO: Implementar atualização de status da propriedade quando necessário
@@ -142,12 +142,12 @@ export default function CleaningExample({
       await createTask({
         title: "Verificar produtos de limpeza",
         description:
-          "Verificar se há produtos suficientes para próximas limpezas",
+        "Verificar se há produtos suficientes para próximas limpezas",
         type: "other",
         priority: "medium",
         assignedTo: employeeId,
         propertyId,
-        dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Amanhã
+        dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000) // Amanhã
       });
 
       success("Tarefa criada!");
@@ -165,31 +165,31 @@ export default function CleaningExample({
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Gerenciamento de Limpezas</h2>
         <div className="space-x-3">
-          <button
+          <WiredButton
             onClick={handleCreateCleaning}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+
             Agendar Limpeza
-          </button>
-          <button
+          </WiredButton>
+          <WiredButton
             onClick={handleCreateTask}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-          >
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+
             Criar Tarefa
-          </button>
+          </WiredButton>
         </div>
       </div>
 
-      {loading ? (
-        <div className="text-center py-8">Carregando...</div>
-      ) : (
-        <div className="grid gap-4">
-          {cleanings.map((cleaning: any) => (
-            <div
-              key={cleaning.id}
-              className="bg-white rounded-lg shadow p-6 border-l-4"
-              style={{ borderLeftColor: getStatusColor(cleaning.status) }}
-            >
+      {loading ?
+      <div className="text-center py-8">Carregando...</div> :
+
+      <div className="grid gap-4">
+          {cleanings.map((cleaning: any) =>
+        <div
+          key={cleaning.id}
+          className="bg-white rounded-lg shadow p-6 border-l-4"
+          style={{ borderLeftColor: getStatusColor(cleaning.status) }}>
+
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="text-lg font-semibold">
@@ -203,66 +203,66 @@ export default function CleaningExample({
                     {formatRelativeTime(cleaning.scheduledDate)}
                   </p>
 
-                  {cleaning.estimatedDuration && (
-                    <p className="text-sm text-gray-500">
+                  {cleaning.estimatedDuration &&
+              <p className="text-sm text-gray-500">
                       Duração estimada:{" "}
                       {Math.floor(cleaning.estimatedDuration / 60)}h{" "}
                       {cleaning.estimatedDuration % 60}m
                     </p>
-                  )}
+              }
 
-                  {cleaning.cost && (
-                    <p className="text-lg font-semibold text-green-600">
+                  {cleaning.cost &&
+              <p className="text-lg font-semibold text-green-600">
                       {formatCurrency(cleaning.cost)}
                     </p>
-                  )}
+              }
                 </div>
 
                 <div className="flex flex-col space-y-2">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium text-white`}
-                    style={{ backgroundColor: getStatusColor(cleaning.status) }}
-                  >
+                className={`px-3 py-1 rounded-full text-sm font-medium text-white`}
+                style={{ backgroundColor: getStatusColor(cleaning.status) }}>
+
                     {cleaning.status}
                   </span>
 
-                  {cleaning.status === "scheduled" && (
-                    <button
-                      onClick={() => handleStartCleaning(cleaning.id)}
-                      className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                      Iniciar
-                    </button>
-                  )}
+                  {cleaning.status === "scheduled" &&
+              <WiredButton
+                onClick={() => handleStartCleaning(cleaning.id)}
+                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
 
-                  {cleaning.status === "in-progress" && (
-                    <button
-                      onClick={() => handleCompleteCleaning(cleaning.id)}
-                      className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                    >
+                      Iniciar
+                    </WiredButton>
+              }
+
+                  {cleaning.status === "in-progress" &&
+              <WiredButton
+                onClick={() => handleCompleteCleaning(cleaning.id)}
+                className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+
                       Finalizar
-                    </button>
-                  )}
+                    </WiredButton>
+              }
                 </div>
               </div>
 
-              {cleaning.notes && (
-                <div className="mt-4 p-3 bg-gray-50 rounded">
+              {cleaning.notes &&
+          <div className="mt-4 p-3 bg-gray-50 rounded">
                   <p className="text-sm text-gray-700">{cleaning.notes}</p>
                 </div>
-              )}
+          }
             </div>
-          ))}
+        )}
 
-          {cleanings.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
+          {cleanings.length === 0 &&
+        <div className="text-center py-8 text-gray-500">
               Nenhuma limpeza agendada
             </div>
-          )}
+        }
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }
 
 // Exemplo de hook customizado usando os serviços
@@ -277,7 +277,7 @@ export function useCleanings(propertyId?: string) {
       setError(null);
 
       const response = await getCleanings(
-        propertyId ? { propertyId } : undefined,
+        propertyId ? { propertyId } : undefined
       );
 
       if (response.success) {
@@ -300,12 +300,12 @@ export function useCleanings(propertyId?: string) {
     cleanings,
     loading,
     error,
-    refetch,
+    refetch
   };
 }
 
 // Exemplo de componente mais simples usando hook
-export function CleaningList({ propertyId }: { propertyId: string }) {
+export function CleaningList({ propertyId }: {propertyId: string;}) {
   const { cleanings, loading, error, refetch } = useCleanings(propertyId);
 
   if (loading) return <div>Carregando...</div>;
@@ -313,17 +313,17 @@ export function CleaningList({ propertyId }: { propertyId: string }) {
 
   return (
     <div className="space-y-4">
-      {cleanings.map((cleaning: any) => (
-        <div key={cleaning.id} className="p-4 border rounded">
+      {cleanings.map((cleaning: any) =>
+      <div key={cleaning.id} className="p-4 border rounded">
           <h3>{cleaning.type}</h3>
           <p>{formatDate(cleaning.scheduledDate)}</p>
           <span
-            className={`px-2 py-1 rounded text-sm bg-${getStatusColor(cleaning.status)}-100`}
-          >
+          className={`px-2 py-1 rounded text-sm bg-${getStatusColor(cleaning.status)}-100`}>
+
             {cleaning.status}
           </span>
         </div>
-      ))}
-    </div>
-  );
+      )}
+    </div>);
+
 }

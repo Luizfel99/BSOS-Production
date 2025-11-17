@@ -6,7 +6,7 @@
  * Purpose: Ensure all navigation is functional across BSOS modules
  */
 
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React from "react";
 import { useRouter } from "next/navigation";
@@ -30,7 +30,7 @@ export const SidebarButton: React.FC<SidebarButtonProps> = ({
   isActive = false,
   onClick,
   className = "",
-  disabled = false,
+  disabled = false
 }) => {
   const router = useRouter();
 
@@ -53,7 +53,7 @@ export const SidebarButton: React.FC<SidebarButtonProps> = ({
       toast("Função em desenvolvimento 🧩", {
         icon: "🚧",
         duration: 3000,
-        position: "top-right",
+        position: "top-right"
       });
     }
   };
@@ -69,29 +69,29 @@ export const SidebarButton: React.FC<SidebarButtonProps> = ({
   `;
 
   return (
-    <button
+    <WiredButton
       onClick={handleClick}
       disabled={disabled}
       className={baseClasses.trim()}
-      aria-label={`Navegar para ${label}`}
-    >
+      aria-label={`Navegar para ${label}`}>
+
       <Icon className="w-5 h-5 flex-shrink-0" />
       <span className="font-medium">{label}</span>
-    </button>
-  );
+    </WiredButton>);
+
 };
 
 // Navigation configuration with all BSOS routes
 export const navigationConfig = [
-  { id: "dashboard", label: "Dashboard", route: "/dashboard" },
-  { id: "tasks", label: "Tarefas", route: "/tasks" },
-  { id: "team", label: "Equipe", route: "/team/manage" },
-  { id: "properties", label: "Propriedades", route: "/properties" },
-  { id: "analytics", label: "Analytics", route: "/analytics" },
-  { id: "finance", label: "Financeiro", route: "/finance" },
-  { id: "notifications", label: "Notificações", route: "/notifications" },
-  { id: "settings", label: "Configurações", route: "/settings" },
-];
+{ id: "dashboard", label: "Dashboard", route: "/dashboard" },
+{ id: "tasks", label: "Tarefas", route: "/tasks" },
+{ id: "team", label: "Equipe", route: "/team/manage" },
+{ id: "properties", label: "Propriedades", route: "/properties" },
+{ id: "analytics", label: "Analytics", route: "/analytics" },
+{ id: "finance", label: "Financeiro", route: "/finance" },
+{ id: "notifications", label: "Notificações", route: "/notifications" },
+{ id: "settings", label: "Configurações", route: "/settings" }];
+
 
 export default SidebarButton;
 export type { SidebarButtonProps };

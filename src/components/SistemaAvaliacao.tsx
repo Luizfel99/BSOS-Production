@@ -1,5 +1,5 @@
 // Componente para Sistema de Avaliação e Bonificação
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState, useEffect } from "react";
 import { safeArray, safeGet, safeMath } from "@/utils/defensive";
@@ -25,37 +25,37 @@ interface FuncionarioPerformance {
 
 export default function SistemaAvaliacao() {
   const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([
-    {
-      id: 1,
-      funcionario: "Maria Silva",
-      cliente: "João Santos",
-      data: "2024-10-08",
-      nota: 5,
-      comentarios: "Excelente trabalho, muito caprichosa",
-      local: "Apartamento Centro",
-      supervisor: "Ana Costa",
-    },
-    {
-      id: 2,
-      funcionario: "Pedro Oliveira",
-      cliente: "Empresa ABC",
-      data: "2024-10-08",
-      nota: 4,
-      comentarios: "Bom trabalho, pontual",
-      local: "Escritório Comercial",
-      supervisor: "Carlos Lima",
-    },
-    {
-      id: 3,
-      funcionario: "Maria Silva",
-      cliente: "Casa Residencial",
-      data: "2024-10-07",
-      nota: 5,
-      comentarios: "Perfeito, cliente muito satisfeito",
-      local: "Casa Vila Madalena",
-      supervisor: "Ana Costa",
-    },
-  ]);
+  {
+    id: 1,
+    funcionario: "Maria Silva",
+    cliente: "João Santos",
+    data: "2024-10-08",
+    nota: 5,
+    comentarios: "Excelente trabalho, muito caprichosa",
+    local: "Apartamento Centro",
+    supervisor: "Ana Costa"
+  },
+  {
+    id: 2,
+    funcionario: "Pedro Oliveira",
+    cliente: "Empresa ABC",
+    data: "2024-10-08",
+    nota: 4,
+    comentarios: "Bom trabalho, pontual",
+    local: "Escritório Comercial",
+    supervisor: "Carlos Lima"
+  },
+  {
+    id: 3,
+    funcionario: "Maria Silva",
+    cliente: "Casa Residencial",
+    data: "2024-10-07",
+    nota: 5,
+    comentarios: "Perfeito, cliente muito satisfeito",
+    local: "Casa Vila Madalena",
+    supervisor: "Ana Costa"
+  }]
+  );
 
   const [novaAvaliacao, setNovaAvaliacao] = useState({
     funcionario: "",
@@ -63,45 +63,45 @@ export default function SistemaAvaliacao() {
     nota: 5,
     comentarios: "",
     local: "",
-    supervisor: "",
+    supervisor: ""
   });
 
   const funcionarios = [
-    "Maria Silva",
-    "Pedro Oliveira",
-    "João Costa",
-    "Ana Santos",
-  ];
+  "Maria Silva",
+  "Pedro Oliveira",
+  "João Costa",
+  "Ana Santos"];
+
   const supervisores = ["Ana Costa", "Carlos Lima", "Roberto Silva"];
 
   const calcularPerformance = (): FuncionarioPerformance[] => {
-    const performance: { [key: string]: FuncionarioPerformance } = {};
+    const performance: {[key: string]: FuncionarioPerformance;} = {};
 
     safeArray.forEach(funcionarios, (funcionario) => {
       const avaliacoesFuncionario = safeArray.filter(
         avaliacoes,
-        (av) => safeGet.string(av?.funcionario) === funcionario,
+        (av) => safeGet.string(av?.funcionario) === funcionario
       );
 
       const validAvaliacoes = safeArray.filter(
         avaliacoesFuncionario,
-        (av) => typeof av?.nota === "number" && !isNaN(av.nota),
+        (av) => typeof av?.nota === "number" && !isNaN(av.nota)
       );
 
       const total = safeArray.reduce(
         validAvaliacoes,
         (sum, av) => sum + av.nota,
-        0,
+        0
       );
       const media =
-        validAvaliacoes.length > 0
-          ? safeMath.divide(total, validAvaliacoes.length, 0)
-          : 0;
+      validAvaliacoes.length > 0 ?
+      safeMath.divide(total, validAvaliacoes.length, 0) :
+      0;
 
       let bonus = 0;
-      if (media >= 4.8) bonus = 200;
-      else if (media >= 4.5) bonus = 150;
-      else if (media >= 4.0) bonus = 100;
+      if (media >= 4.8) bonus = 200;else
+      if (media >= 4.5) bonus = 150;else
+      if (media >= 4.0) bonus = 100;
 
       if (funcionario) {
         performance[funcionario] = {
@@ -109,7 +109,7 @@ export default function SistemaAvaliacao() {
           mediaMensal: Number(media.toFixed(2)),
           totalAvaliacoes: validAvaliacoes.length,
           bonus,
-          historico: validAvaliacoes,
+          historico: validAvaliacoes
         };
       }
     });
@@ -122,7 +122,7 @@ export default function SistemaAvaliacao() {
       const nova: Avaliacao = {
         id: Date.now(),
         ...novaAvaliacao,
-        data: new Date().toISOString().split("T")[0],
+        data: new Date().toISOString().split("T")[0]
       };
       setAvaliacoes([...avaliacoes, nova]);
       setNovaAvaliacao({
@@ -131,7 +131,7 @@ export default function SistemaAvaliacao() {
         nota: 5,
         comentarios: "",
         local: "",
-        supervisor: "",
+        supervisor: ""
       });
     }
   };
@@ -139,23 +139,23 @@ export default function SistemaAvaliacao() {
   const renderEstrelas = (nota: number, readonly = true) => {
     return (
       <div className="flex space-x-1">
-        {[1, 2, 3, 4, 5].map((estrela) => (
-          <button
-            key={estrela}
-            type="button"
-            disabled={readonly}
-            onClick={() =>
-              !readonly && setNovaAvaliacao({ ...novaAvaliacao, nota: estrela })
-            }
-            className={`text-2xl ${
-              estrela <= nota ? "text-yellow-400" : "text-gray-300"
-            } ${!readonly ? "hover:text-yellow-300 cursor-pointer" : ""}`}
-          >
+        {[1, 2, 3, 4, 5].map((estrela) =>
+        <WiredButton
+          key={estrela}
+          type="button"
+          disabled={readonly}
+          onClick={() =>
+          !readonly && setNovaAvaliacao({ ...novaAvaliacao, nota: estrela })
+          }
+          className={`text-2xl ${
+          estrela <= nota ? "text-yellow-400" : "text-gray-300"} ${
+          !readonly ? "hover:text-yellow-300 cursor-pointer" : ""}`}>
+
             ★
-          </button>
-        ))}
-      </div>
-    );
+          </WiredButton>
+        )}
+      </div>);
+
   };
 
   const exportarPlanilha = () => {
@@ -174,7 +174,7 @@ export default function SistemaAvaliacao() {
     // Adicionar detalhes das avaliações
     csvContent += "\n\nDetalhes das Avaliações\n";
     csvContent +=
-      "Funcionário,Cliente,Data,Nota,Local,Supervisor,Comentários\n";
+    "Funcionário,Cliente,Data,Nota,Local,Supervisor,Comentários\n";
 
     safeArray.forEach(avaliacoes, (av) => {
       const funcionario = safeGet.string(av?.funcionario, "N/A");
@@ -183,9 +183,9 @@ export default function SistemaAvaliacao() {
       const nota = safeGet.number(av?.nota, 0);
       const local = safeGet.string(av?.local, "N/A");
       const supervisor = safeGet.string(av?.supervisor, "N/A");
-      const comentarios = safeGet
-        .string(av?.comentarios, "")
-        .replace(/"/g, '""'); // Escape quotes
+      const comentarios = safeGet.
+      string(av?.comentarios, "").
+      replace(/"/g, '""'); // Escape quotes
 
       csvContent += `${funcionario},${cliente},${data},${nota},${local},${supervisor},"${comentarios}"\n`;
     });
@@ -196,7 +196,7 @@ export default function SistemaAvaliacao() {
     link.setAttribute("href", url);
     link.setAttribute(
       "download",
-      `avaliacao_equipe_${new Date().toISOString().split("T")[0]}.csv`,
+      `avaliacao_equipe_${new Date().toISOString().split("T")[0]}.csv`
     );
     link.style.visibility = "hidden";
     document.body.appendChild(link);
@@ -212,12 +212,12 @@ export default function SistemaAvaliacao() {
         <h2 className="text-2xl font-bold text-gray-900">
           Sistema de Avaliação e Bonificação
         </h2>
-        <button
+        <WiredButton
           onClick={exportarPlanilha}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-        >
+          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+
           Exportar Planilha
-        </button>
+        </WiredButton>
       </div>
 
       {/* Resumo de Performance */}
@@ -226,8 +226,8 @@ export default function SistemaAvaliacao() {
           Performance da Equipe - Outubro 2024
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {performance.map((p, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4">
+          {performance.map((p, index) =>
+          <div key={index} className="border border-gray-200 rounded-lg p-4">
               <h4 className="font-semibold text-gray-900">{p.nome}</h4>
               <div className="mt-2">
                 {renderEstrelas(Math.round(p.mediaMensal))}
@@ -236,21 +236,21 @@ export default function SistemaAvaliacao() {
                   avaliações)
                 </p>
                 <div
-                  className={`mt-2 px-3 py-1 rounded-full text-sm font-medium ${
-                    p.bonus >= 200
-                      ? "bg-green-100 text-green-700"
-                      : p.bonus >= 150
-                        ? "bg-blue-100 text-blue-700"
-                        : p.bonus >= 100
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-gray-100 text-gray-700"
-                  }`}
-                >
+                className={`mt-2 px-3 py-1 rounded-full text-sm font-medium ${
+                p.bonus >= 200 ?
+                "bg-green-100 text-green-700" :
+                p.bonus >= 150 ?
+                "bg-blue-100 text-blue-700" :
+                p.bonus >= 100 ?
+                "bg-yellow-100 text-yellow-700" :
+                "bg-gray-100 text-gray-700"}`
+                }>
+
                   Bônus: R$ {p.bonus}
                 </div>
               </div>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
@@ -267,19 +267,19 @@ export default function SistemaAvaliacao() {
             <select
               value={novaAvaliacao.funcionario}
               onChange={(e) =>
-                setNovaAvaliacao({
-                  ...novaAvaliacao,
-                  funcionario: e.target.value,
-                })
+              setNovaAvaliacao({
+                ...novaAvaliacao,
+                funcionario: e.target.value
+              })
               }
-              className="w-full border border-gray-300 rounded-lg px-3 py-2"
-            >
+              className="w-full border border-gray-300 rounded-lg px-3 py-2">
+
               <option value="">Selecione o funcionário</option>
-              {funcionarios.map((func) => (
-                <option key={func} value={func}>
+              {funcionarios.map((func) =>
+              <option key={func} value={func}>
                   {func}
                 </option>
-              ))}
+              )}
             </select>
           </div>
 
@@ -291,11 +291,11 @@ export default function SistemaAvaliacao() {
               type="text"
               value={novaAvaliacao.cliente}
               onChange={(e) =>
-                setNovaAvaliacao({ ...novaAvaliacao, cliente: e.target.value })
+              setNovaAvaliacao({ ...novaAvaliacao, cliente: e.target.value })
               }
               className="w-full border border-gray-300 rounded-lg px-3 py-2"
-              placeholder="Nome do cliente"
-            />
+              placeholder="Nome do cliente" />
+
           </div>
 
           <div>
@@ -306,11 +306,11 @@ export default function SistemaAvaliacao() {
               type="text"
               value={novaAvaliacao.local}
               onChange={(e) =>
-                setNovaAvaliacao({ ...novaAvaliacao, local: e.target.value })
+              setNovaAvaliacao({ ...novaAvaliacao, local: e.target.value })
               }
               className="w-full border border-gray-300 rounded-lg px-3 py-2"
-              placeholder="Local da limpeza"
-            />
+              placeholder="Local da limpeza" />
+
           </div>
 
           <div>
@@ -320,19 +320,19 @@ export default function SistemaAvaliacao() {
             <select
               value={novaAvaliacao.supervisor}
               onChange={(e) =>
-                setNovaAvaliacao({
-                  ...novaAvaliacao,
-                  supervisor: e.target.value,
-                })
+              setNovaAvaliacao({
+                ...novaAvaliacao,
+                supervisor: e.target.value
+              })
               }
-              className="w-full border border-gray-300 rounded-lg px-3 py-2"
-            >
+              className="w-full border border-gray-300 rounded-lg px-3 py-2">
+
               <option value="">Selecione o supervisor</option>
-              {supervisores.map((sup) => (
-                <option key={sup} value={sup}>
+              {supervisores.map((sup) =>
+              <option key={sup} value={sup}>
                   {sup}
                 </option>
-              ))}
+              )}
             </select>
           </div>
 
@@ -350,24 +350,24 @@ export default function SistemaAvaliacao() {
             <textarea
               value={novaAvaliacao.comentarios}
               onChange={(e) =>
-                setNovaAvaliacao({
-                  ...novaAvaliacao,
-                  comentarios: e.target.value,
-                })
+              setNovaAvaliacao({
+                ...novaAvaliacao,
+                comentarios: e.target.value
+              })
               }
               className="w-full border border-gray-300 rounded-lg px-3 py-2"
               rows={3}
-              placeholder="Comentários sobre o trabalho realizado"
-            />
+              placeholder="Comentários sobre o trabalho realizado" />
+
           </div>
         </div>
 
-        <button
+        <WiredButton
           onClick={adicionarAvaliacao}
-          className="mt-4 bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700"
-        >
+          className="mt-4 bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700">
+
           Adicionar Avaliação
-        </button>
+        </WiredButton>
       </div>
 
       {/* Histórico de Avaliações */}
@@ -402,8 +402,8 @@ export default function SistemaAvaliacao() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {safeArray.map(avaliacoes, (avaliacao) => (
-                <tr key={avaliacao.id}>
+              {safeArray.map(avaliacoes, (avaliacao) =>
+              <tr key={avaliacao.id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {safeGet.string(avaliacao?.funcionario, "N/A")}
                   </td>
@@ -423,18 +423,18 @@ export default function SistemaAvaliacao() {
                     {safeGet.string(avaliacao?.comentarios, "N/A")}
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
 
         {/* Mobile Card View - Visible on small screens */}
         <div className="lg:hidden space-y-4">
-          {safeArray.map(avaliacoes, (avaliacao) => (
-            <div
-              key={avaliacao.id}
-              className="border border-gray-200 rounded-lg p-4 bg-gray-50"
-            >
+          {safeArray.map(avaliacoes, (avaliacao) =>
+          <div
+            key={avaliacao.id}
+            className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <h4 className="text-sm font-semibold text-gray-900">
@@ -462,8 +462,8 @@ export default function SistemaAvaliacao() {
                   </span>
                 </div>
 
-                {avaliacao.comentarios && (
-                  <div>
+                {avaliacao.comentarios &&
+              <div>
                     <span className="font-medium text-gray-700">
                       Comentários:
                     </span>
@@ -471,12 +471,12 @@ export default function SistemaAvaliacao() {
                       {safeGet.string(avaliacao?.comentarios, "N/A")}
                     </p>
                   </div>
-                )}
+              }
               </div>
             </div>
-          ))}
+          )}
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }

@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,9 +24,9 @@ const pageVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
-    },
-  },
+      duration: 0.6
+    }
+  }
 };
 
 const cardVariants = {
@@ -34,8 +34,8 @@ const cardVariants = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.3 },
-  },
+    transition: { duration: 0.3 }
+  }
 };
 
 const modalVariants = {
@@ -43,68 +43,68 @@ const modalVariants = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.3 },
+    transition: { duration: 0.3 }
   },
   exit: {
     opacity: 0,
     scale: 0.8,
-    transition: { duration: 0.2 },
-  },
+    transition: { duration: 0.2 }
+  }
 };
 
 const buttonVariants = {
   hover: { scale: 1.02, transition: { duration: 0.2 } },
-  tap: { scale: 0.98, transition: { duration: 0.1 } },
+  tap: { scale: 0.98, transition: { duration: 0.1 } }
 };
 
 export default function GestaoEstoque() {
   const { success } = useNotifications();
   const [products, setProducts] = useState<Product[]>([
-    {
-      id: 1,
-      name: "Detergente Multiuso",
-      category: "Produtos de Limpeza",
-      quantity: 25,
-      minQuantity: 10,
-      unit: "Litros",
-      cost: 8.5,
-      supplier: "CleanPro Ltda",
-      lastRestocked: "2024-01-15",
-    },
-    {
-      id: 2,
-      name: "Papel Higiênico",
-      category: "Descartáveis",
-      quantity: 150,
-      minQuantity: 50,
-      unit: "Rolos",
-      cost: 2.8,
-      supplier: "Higiene Total",
-      lastRestocked: "2024-01-20",
-    },
-    {
-      id: 3,
-      name: "Aspirador de Pó Portátil",
-      category: "Equipamentos",
-      quantity: 3,
-      minQuantity: 2,
-      unit: "Unidades",
-      cost: 450.0,
-      supplier: "Tech Clean",
-      lastRestocked: "2023-12-10",
-    },
-    {
-      id: 4,
-      name: "Desinfetante",
-      category: "Produtos de Limpeza",
-      quantity: 8,
-      minQuantity: 15,
-      unit: "Litros",
-      cost: 12.0,
-      supplier: "CleanPro Ltda",
-      lastRestocked: "2024-01-10",
-    },
-  ]);
+  {
+    id: 1,
+    name: "Detergente Multiuso",
+    category: "Produtos de Limpeza",
+    quantity: 25,
+    minQuantity: 10,
+    unit: "Litros",
+    cost: 8.5,
+    supplier: "CleanPro Ltda",
+    lastRestocked: "2024-01-15"
+  },
+  {
+    id: 2,
+    name: "Papel Higiênico",
+    category: "Descartáveis",
+    quantity: 150,
+    minQuantity: 50,
+    unit: "Rolos",
+    cost: 2.8,
+    supplier: "Higiene Total",
+    lastRestocked: "2024-01-20"
+  },
+  {
+    id: 3,
+    name: "Aspirador de Pó Portátil",
+    category: "Equipamentos",
+    quantity: 3,
+    minQuantity: 2,
+    unit: "Unidades",
+    cost: 450.0,
+    supplier: "Tech Clean",
+    lastRestocked: "2023-12-10"
+  },
+  {
+    id: 4,
+    name: "Desinfetante",
+    category: "Produtos de Limpeza",
+    quantity: 8,
+    minQuantity: 15,
+    unit: "Litros",
+    cost: 12.0,
+    supplier: "CleanPro Ltda",
+    lastRestocked: "2024-01-10"
+  }]
+  );
 
   const [newProduct, setNewProduct] = useState<Partial<Product>>({});
   const [showAddForm, setShowAddForm] = useState(false);
@@ -112,20 +112,20 @@ export default function GestaoEstoque() {
   const [showLowStock, setShowLowStock] = useState(false);
 
   const categories = [
-    "Todos",
-    "Produtos de Limpeza",
-    "Descartáveis",
-    "Equipamentos",
-    "Uniformes",
-  ];
+  "Todos",
+  "Produtos de Limpeza",
+  "Descartáveis",
+  "Equipamentos",
+  "Uniformes"];
+
 
   const handleAddProduct = () => {
     if (
-      newProduct.name &&
-      newProduct.category &&
-      newProduct.quantity &&
-      newProduct.minQuantity
-    ) {
+    newProduct.name &&
+    newProduct.category &&
+    newProduct.quantity &&
+    newProduct.minQuantity)
+    {
       const product: Product = {
         id: products.length + 1,
         name: newProduct.name,
@@ -135,7 +135,7 @@ export default function GestaoEstoque() {
         unit: newProduct.unit || "Unidades",
         cost: newProduct.cost || 0,
         supplier: newProduct.supplier || "",
-        lastRestocked: new Date().toISOString().split("T")[0],
+        lastRestocked: new Date().toISOString().split("T")[0]
       };
       setProducts([...products, product]);
       setNewProduct({});
@@ -146,20 +146,20 @@ export default function GestaoEstoque() {
   const handleUpdateQuantity = (id: number, newQuantity: number) => {
     setProducts(
       products.map((product) =>
-        product.id === id
-          ? {
-              ...product,
-              quantity: newQuantity,
-              lastRestocked: new Date().toISOString().split("T")[0],
-            }
-          : product,
-      ),
+      product.id === id ?
+      {
+        ...product,
+        quantity: newQuantity,
+        lastRestocked: new Date().toISOString().split("T")[0]
+      } :
+      product
+      )
     );
   };
 
   const handleEditProduct = (productId: number) => {
     success(
-      `Funcionalidade de edição em desenvolvimento para produto ${productId}`,
+      `Funcionalidade de edição em desenvolvimento para produto ${productId}`
     );
   };
 
@@ -177,17 +177,17 @@ export default function GestaoEstoque() {
 
   const filteredProducts = products.filter((product) => {
     const categoryMatch =
-      selectedCategory === "Todos" || product.category === selectedCategory;
+    selectedCategory === "Todos" || product.category === selectedCategory;
     const stockMatch = !showLowStock || product.quantity <= product.minQuantity;
     return categoryMatch && stockMatch;
   });
 
   const lowStockCount = products.filter(
-    (p) => p.quantity <= p.minQuantity,
+    (p) => p.quantity <= p.minQuantity
   ).length;
   const totalValue = products.reduce(
     (total, product) => total + product.quantity * product.cost,
-    0,
+    0
   );
 
   return (
@@ -201,8 +201,8 @@ export default function GestaoEstoque() {
         className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
+        transition={{ delay: 0.1 }}>
+
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h3 className="text-sm font-medium text-gray-500">
             Total de Produtos
@@ -234,13 +234,13 @@ export default function GestaoEstoque() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm"
-            >
-              {categories.map((category) => (
-                <option key={category} value={category}>
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm">
+
+              {categories.map((category) =>
+              <option key={category} value={category}>
                   {category}
                 </option>
-              ))}
+              )}
             </select>
 
             <label className="flex items-center gap-2 text-sm">
@@ -248,8 +248,8 @@ export default function GestaoEstoque() {
                 type="checkbox"
                 checked={showLowStock}
                 onChange={(e) => setShowLowStock(e.target.checked)}
-                className="rounded border-gray-300"
-              />
+                className="rounded border-gray-300" />
+
               Apenas estoque baixo
             </label>
           </div>
@@ -259,118 +259,118 @@ export default function GestaoEstoque() {
             variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm"
-          >
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm">
+
             + Adicionar Produto
           </motion.button>
         </div>
       </div>
 
       {/* Add Product Form */}
-      {showAddForm && (
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
+      {showAddForm &&
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Adicionar Novo Produto
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
-              type="text"
-              placeholder="Nome do produto"
-              value={newProduct.name || ""}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, name: e.target.value })
-              }
-              className="border border-gray-300 rounded-md px-3 py-2"
-            />
+            type="text"
+            placeholder="Nome do produto"
+            value={newProduct.name || ""}
+            onChange={(e) =>
+            setNewProduct({ ...newProduct, name: e.target.value })
+            }
+            className="border border-gray-300 rounded-md px-3 py-2" />
+
             <select
-              value={newProduct.category || ""}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, category: e.target.value })
-              }
-              className="border border-gray-300 rounded-md px-3 py-2"
-            >
+            value={newProduct.category || ""}
+            onChange={(e) =>
+            setNewProduct({ ...newProduct, category: e.target.value })
+            }
+            className="border border-gray-300 rounded-md px-3 py-2">
+
               <option value="">Selecione a categoria</option>
-              {categories.slice(1).map((category) => (
-                <option key={category} value={category}>
+              {categories.slice(1).map((category) =>
+            <option key={category} value={category}>
                   {category}
                 </option>
-              ))}
+            )}
             </select>
             <input
-              type="number"
-              placeholder="Quantidade atual"
-              value={newProduct.quantity || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  quantity: parseInt(e.target.value),
-                })
-              }
-              className="border border-gray-300 rounded-md px-3 py-2"
-            />
+            type="number"
+            placeholder="Quantidade atual"
+            value={newProduct.quantity || ""}
+            onChange={(e) =>
+            setNewProduct({
+              ...newProduct,
+              quantity: parseInt(e.target.value)
+            })
+            }
+            className="border border-gray-300 rounded-md px-3 py-2" />
+
             <input
-              type="number"
-              placeholder="Quantidade mínima"
-              value={newProduct.minQuantity || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  minQuantity: parseInt(e.target.value),
-                })
-              }
-              className="border border-gray-300 rounded-md px-3 py-2"
-            />
+            type="number"
+            placeholder="Quantidade mínima"
+            value={newProduct.minQuantity || ""}
+            onChange={(e) =>
+            setNewProduct({
+              ...newProduct,
+              minQuantity: parseInt(e.target.value)
+            })
+            }
+            className="border border-gray-300 rounded-md px-3 py-2" />
+
             <input
-              type="text"
-              placeholder="Unidade (ex: Litros, Unidades)"
-              value={newProduct.unit || ""}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, unit: e.target.value })
-              }
-              className="border border-gray-300 rounded-md px-3 py-2"
-            />
+            type="text"
+            placeholder="Unidade (ex: Litros, Unidades)"
+            value={newProduct.unit || ""}
+            onChange={(e) =>
+            setNewProduct({ ...newProduct, unit: e.target.value })
+            }
+            className="border border-gray-300 rounded-md px-3 py-2" />
+
             <input
-              type="number"
-              step="0.01"
-              placeholder="Custo unitário"
-              value={newProduct.cost || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  cost: parseFloat(e.target.value),
-                })
-              }
-              className="border border-gray-300 rounded-md px-3 py-2"
-            />
+            type="number"
+            step="0.01"
+            placeholder="Custo unitário"
+            value={newProduct.cost || ""}
+            onChange={(e) =>
+            setNewProduct({
+              ...newProduct,
+              cost: parseFloat(e.target.value)
+            })
+            }
+            className="border border-gray-300 rounded-md px-3 py-2" />
+
             <input
-              type="text"
-              placeholder="Fornecedor"
-              value={newProduct.supplier || ""}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, supplier: e.target.value })
-              }
-              className="border border-gray-300 rounded-md px-3 py-2"
-            />
+            type="text"
+            placeholder="Fornecedor"
+            value={newProduct.supplier || ""}
+            onChange={(e) =>
+            setNewProduct({ ...newProduct, supplier: e.target.value })
+            }
+            className="border border-gray-300 rounded-md px-3 py-2" />
+
           </div>
           <div className="flex gap-3 mt-4">
-            <button
-              onClick={handleAddProduct}
-              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
-            >
+            <WiredButton
+            onClick={handleAddProduct}
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+
               Adicionar
-            </button>
-            <button
-              onClick={() => {
-                setShowAddForm(false);
-                setNewProduct({});
-              }}
-              className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-            >
+            </WiredButton>
+            <WiredButton
+            onClick={() => {
+              setShowAddForm(false);
+              setNewProduct({});
+            }}
+            className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+
               Cancelar
-            </button>
+            </WiredButton>
           </div>
         </div>
-      )}
+      }
 
       {/* Products Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -403,15 +403,15 @@ export default function GestaoEstoque() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {safeArray.map(filteredProducts, (product, index) => (
-                <motion.tr
-                  key={product.id}
-                  className="hover:bg-gray-50"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ backgroundColor: "#f9fafb" }}
-                >
+              {safeArray.map(filteredProducts, (product, index) =>
+              <motion.tr
+                key={product.id}
+                className="hover:bg-gray-50"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ backgroundColor: "#f9fafb" }}>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">
@@ -437,23 +437,23 @@ export default function GestaoEstoque() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        safeGet.number(product?.quantity, 0) <=
-                        safeGet.number(product?.minQuantity, 0)
-                          ? "bg-red-100 text-red-800"
-                          : safeGet.number(product?.quantity, 0) <=
-                              safeGet.number(product?.minQuantity, 0) * 1.5
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-green-100 text-green-800"
-                      }`}
-                    >
+                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                    safeGet.number(product?.quantity, 0) <=
+                    safeGet.number(product?.minQuantity, 0) ?
+                    "bg-red-100 text-red-800" :
+                    safeGet.number(product?.quantity, 0) <=
+                    safeGet.number(product?.minQuantity, 0) * 1.5 ?
+                    "bg-yellow-100 text-yellow-800" :
+                    "bg-green-100 text-green-800"}`
+                    }>
+
                       {safeGet.number(product?.quantity, 0) <=
-                      safeGet.number(product?.minQuantity, 0)
-                        ? "Estoque Baixo"
-                        : safeGet.number(product?.quantity, 0) <=
-                            safeGet.number(product?.minQuantity, 0) * 1.5
-                          ? "Atenção"
-                          : "OK"}
+                    safeGet.number(product?.minQuantity, 0) ?
+                    "Estoque Baixo" :
+                    safeGet.number(product?.quantity, 0) <=
+                    safeGet.number(product?.minQuantity, 0) * 1.5 ?
+                    "Atenção" :
+                    "OK"}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -465,44 +465,44 @@ export default function GestaoEstoque() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center gap-2">
                       <input
-                        type="number"
-                        value={safeGet.number(product?.quantity, 0)}
-                        onChange={(e) =>
-                          handleUpdateQuantity(
-                            product.id,
-                            parseInt(e.target.value) || 0,
-                          )
-                        }
-                        className="w-20 border border-gray-300 rounded px-2 py-1 text-sm"
-                      />
+                      type="number"
+                      value={safeGet.number(product?.quantity, 0)}
+                      onChange={(e) =>
+                      handleUpdateQuantity(
+                        product.id,
+                        parseInt(e.target.value) || 0
+                      )
+                      }
+                      className="w-20 border border-gray-300 rounded px-2 py-1 text-sm" />
+
                       <motion.button
-                        className="text-blue-600 hover:text-blue-900 text-sm"
-                        onClick={() => handleEditProduct(product.id)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
+                      className="text-blue-600 hover:text-blue-900 text-sm"
+                      onClick={() => handleEditProduct(product.id)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}>
+
                         Editar
                       </motion.button>
                     </div>
                   </td>
                 </motion.tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
 
         {/* Mobile Card View */}
         <div className="lg:hidden divide-y divide-gray-200">
-          {safeArray.map(filteredProducts, (product, index) => (
-            <motion.div
-              key={product.id}
-              className="p-4 bg-white"
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-            >
+          {safeArray.map(filteredProducts, (product, index) =>
+          <motion.div
+            key={product.id}
+            className="p-4 bg-white"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: index * 0.1 }}
+            whileHover={{ scale: 1.02 }}>
+
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <h4 className="text-sm font-semibold text-gray-900 mb-1">
@@ -514,23 +514,23 @@ export default function GestaoEstoque() {
                   </p>
                 </div>
                 <span
-                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full flex-shrink-0 ${
-                    safeGet.number(product?.quantity, 0) <=
-                    safeGet.number(product?.minQuantity, 0)
-                      ? "bg-red-100 text-red-800"
-                      : safeGet.number(product?.quantity, 0) <=
-                          safeGet.number(product?.minQuantity, 0) * 1.5
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-green-100 text-green-800"
-                  }`}
-                >
+                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full flex-shrink-0 ${
+                safeGet.number(product?.quantity, 0) <=
+                safeGet.number(product?.minQuantity, 0) ?
+                "bg-red-100 text-red-800" :
+                safeGet.number(product?.quantity, 0) <=
+                safeGet.number(product?.minQuantity, 0) * 1.5 ?
+                "bg-yellow-100 text-yellow-800" :
+                "bg-green-100 text-green-800"}`
+                }>
+
                   {safeGet.number(product?.quantity, 0) <=
-                  safeGet.number(product?.minQuantity, 0)
-                    ? "Baixo"
-                    : safeGet.number(product?.quantity, 0) <=
-                        safeGet.number(product?.minQuantity, 0) * 1.5
-                      ? "Atenção"
-                      : "OK"}
+                safeGet.number(product?.minQuantity, 0) ?
+                "Baixo" :
+                safeGet.number(product?.quantity, 0) <=
+                safeGet.number(product?.minQuantity, 0) * 1.5 ?
+                "Atenção" :
+                "OK"}
                 </span>
               </div>
 
@@ -573,28 +573,28 @@ export default function GestaoEstoque() {
                     Qtd:
                   </label>
                   <input
-                    type="number"
-                    value={safeGet.number(product?.quantity, 0)}
-                    onChange={(e) =>
-                      handleUpdateQuantity(
-                        product.id,
-                        parseInt(e.target.value) || 0,
-                      )
-                    }
-                    className="w-20 border border-gray-300 rounded px-2 py-1 text-sm"
-                  />
+                  type="number"
+                  value={safeGet.number(product?.quantity, 0)}
+                  onChange={(e) =>
+                  handleUpdateQuantity(
+                    product.id,
+                    parseInt(e.target.value) || 0
+                  )
+                  }
+                  className="w-20 border border-gray-300 rounded px-2 py-1 text-sm" />
+
                 </div>
                 <motion.button
-                  className="text-blue-600 hover:text-blue-900 text-sm font-medium touch-target"
-                  onClick={() => handleEditProduct(product.id)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
+                className="text-blue-600 hover:text-blue-900 text-sm font-medium touch-target"
+                onClick={() => handleEditProduct(product.id)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}>
+
                   Editar
                 </motion.button>
               </div>
             </motion.div>
-          ))}
+          )}
         </div>
       </div>
 
@@ -609,8 +609,8 @@ export default function GestaoEstoque() {
             onClick={handleGenerateReport}
             variants={buttonVariants}
             whileHover="hover"
-            whileTap="tap"
-          >
+            whileTap="tap">
+
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 <span className="text-blue-600 font-semibold">R</span>
@@ -629,8 +629,8 @@ export default function GestaoEstoque() {
             onClick={handleGenerateShoppingList}
             variants={buttonVariants}
             whileHover="hover"
-            whileTap="tap"
-          >
+            whileTap="tap">
+
             <div className="flex items-center gap-3">
               <span className="text-2xl">🛒</span>
               <div>
@@ -645,8 +645,8 @@ export default function GestaoEstoque() {
             onClick={handleConfigureSMSAlerts}
             variants={buttonVariants}
             whileHover="hover"
-            whileTap="tap"
-          >
+            whileTap="tap">
+
             <div className="flex items-center gap-3">
               <span className="text-2xl">📱</span>
               <div>
@@ -657,6 +657,6 @@ export default function GestaoEstoque() {
           </motion.button>
         </div>
       </div>
-    </motion.div>
-  );
+    </motion.div>);
+
 }

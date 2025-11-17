@@ -1,5 +1,5 @@
 // Componente para Relatório de Supervisão e Auditoria
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState } from "react";
 
@@ -32,75 +32,75 @@ interface RelatorioAuditoria {
 
 export default function RelatorioSupervisao() {
   const [relatorios, setRelatorios] = useState<RelatorioAuditoria[]>([
+  {
+    id: "1",
+    data: "2024-10-08",
+    local: "Apartamento Centro - Rua das Flores, 123",
+    responsavel: "Maria Silva",
+    supervisor: "Ana Costa",
+    avaliacoes: [
     {
-      id: "1",
-      data: "2024-10-08",
-      local: "Apartamento Centro - Rua das Flores, 123",
-      responsavel: "Maria Silva",
-      supervisor: "Ana Costa",
-      avaliacoes: [
-        {
-          ambiente: "Sala de Estar",
-          pontuacao: 9,
-          observacoes: "Excelente limpeza, móveis bem organizados",
-          fotos: [],
-        },
-        {
-          ambiente: "Cozinha",
-          pontuacao: 8,
-          observacoes: "Boa limpeza, atenção nos detalhes do fogão",
-          fotos: [],
-        },
-        {
-          ambiente: "Banheiro",
-          pontuacao: 10,
-          observacoes: "Perfeito, sanitários impecáveis",
-          fotos: [],
-        },
-      ],
-      observacoesGerais: "Trabalho de alta qualidade, cliente muito satisfeito",
-      assinaturaDigital: "Ana Costa - 08/10/2024 14:30",
-      status: "aprovado",
-      pontuacaoTotal: 9.0,
+      ambiente: "Sala de Estar",
+      pontuacao: 9,
+      observacoes: "Excelente limpeza, móveis bem organizados",
+      fotos: []
     },
-  ]);
+    {
+      ambiente: "Cozinha",
+      pontuacao: 8,
+      observacoes: "Boa limpeza, atenção nos detalhes do fogão",
+      fotos: []
+    },
+    {
+      ambiente: "Banheiro",
+      pontuacao: 10,
+      observacoes: "Perfeito, sanitários impecáveis",
+      fotos: []
+    }],
+
+    observacoesGerais: "Trabalho de alta qualidade, cliente muito satisfeito",
+    assinaturaDigital: "Ana Costa - 08/10/2024 14:30",
+    status: "aprovado",
+    pontuacaoTotal: 9.0
+  }]
+  );
 
   const [novoRelatorio, setNovoRelatorio] = useState({
     local: "",
     responsavel: "",
     supervisor: "",
-    observacoesGerais: "",
+    observacoesGerais: ""
   });
 
   const [avaliacaoAtual, setAvaliacaoAtual] = useState<AvaliacaoAmbiente>({
     ambiente: "",
     pontuacao: 10,
     observacoes: "",
-    fotos: [],
+    fotos: []
   });
 
   const [avaliacoes, setAvaliacoes] = useState<AvaliacaoAmbiente[]>([]);
   const [mostrarNovoFormulario, setMostrarNovoFormulario] = useState(false);
 
   const ambientes = [
-    "Sala de Estar",
-    "Cozinha",
-    "Banheiro",
-    "Quarto 1",
-    "Quarto 2",
-    "Área de Serviço",
-    "Varanda",
-    "Escritório",
-    "Despensa",
-    "Lavabo",
-  ];
+  "Sala de Estar",
+  "Cozinha",
+  "Banheiro",
+  "Quarto 1",
+  "Quarto 2",
+  "Área de Serviço",
+  "Varanda",
+  "Escritório",
+  "Despensa",
+  "Lavabo"];
+
 
   const funcionarios = [
-    "Maria Silva",
-    "Pedro Oliveira",
-    "João Costa",
-    "Ana Santos",
-  ];
+  "Maria Silva",
+  "Pedro Oliveira",
+  "João Costa",
+  "Ana Santos"];
+
   const supervisores = ["Ana Costa", "Carlos Lima", "Roberto Silva"];
 
   const adicionarAvaliacao = () => {
@@ -110,7 +110,7 @@ export default function RelatorioSupervisao() {
         ambiente: "",
         pontuacao: 10,
         observacoes: "",
-        fotos: [],
+        fotos: []
       });
     }
   };
@@ -127,18 +127,18 @@ export default function RelatorioSupervisao() {
 
   const salvarRelatorio = () => {
     if (
-      novoRelatorio.local &&
-      novoRelatorio.responsavel &&
-      novoRelatorio.supervisor &&
-      avaliacoes.length > 0
-    ) {
+    novoRelatorio.local &&
+    novoRelatorio.responsavel &&
+    novoRelatorio.supervisor &&
+    avaliacoes.length > 0)
+    {
       const pontuacaoTotal = calcularPontuacaoTotal(avaliacoes);
       const status: "pendente" | "aprovado" | "correcao" =
-        pontuacaoTotal >= 9
-          ? "aprovado"
-          : pontuacaoTotal >= 7
-            ? "pendente"
-            : "correcao";
+      pontuacaoTotal >= 9 ?
+      "aprovado" :
+      pontuacaoTotal >= 7 ?
+      "pendente" :
+      "correcao";
 
       const novoRel: RelatorioAuditoria = {
         id: Date.now().toString(),
@@ -147,7 +147,7 @@ export default function RelatorioSupervisao() {
         avaliacoes: [...avaliacoes],
         assinaturaDigital: `${novoRelatorio.supervisor} - ${new Date().toLocaleString("pt-BR")}`,
         status,
-        pontuacaoTotal,
+        pontuacaoTotal
       };
 
       setRelatorios([novoRel, ...relatorios]);
@@ -157,7 +157,7 @@ export default function RelatorioSupervisao() {
         local: "",
         responsavel: "",
         supervisor: "",
-        observacoesGerais: "",
+        observacoesGerais: ""
       });
       setAvaliacoes([]);
       setMostrarNovoFormulario(false);
@@ -230,12 +230,12 @@ export default function RelatorioSupervisao() {
         <h2 className="text-2xl font-bold text-gray-900">
           Relatório de Supervisão e Auditoria
         </h2>
-        <button
+        <WiredButton
           onClick={() => setMostrarNovoFormulario(!mostrarNovoFormulario)}
-          className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700"
-        >
+          className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700">
+
           {mostrarNovoFormulario ? "Cancelar" : "Novo Relatório"}
-        </button>
+        </WiredButton>
       </div>
 
       {/* Estatísticas Rápidas */}
@@ -263,20 +263,20 @@ export default function RelatorioSupervisao() {
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
           <h3 className="text-sm font-medium text-gray-500">Média Geral</h3>
           <p className="text-2xl font-bold text-blue-600">
-            {relatorios.length > 0
-              ? (
-                  relatorios.reduce((acc, r) => acc + r.pontuacaoTotal, 0) /
-                  relatorios.length
-                ).toFixed(1)
-              : "0.0"}
+            {relatorios.length > 0 ?
+            (
+            relatorios.reduce((acc, r) => acc + r.pontuacaoTotal, 0) /
+            relatorios.length).
+            toFixed(1) :
+            "0.0"}
             /10
           </p>
         </div>
       </div>
 
       {/* Formulário Novo Relatório */}
-      {mostrarNovoFormulario && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      {mostrarNovoFormulario &&
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Novo Relatório de Auditoria
           </h3>
@@ -288,14 +288,14 @@ export default function RelatorioSupervisao() {
                 Local
               </label>
               <input
-                type="text"
-                value={novoRelatorio.local}
-                onChange={(e) =>
-                  setNovoRelatorio({ ...novoRelatorio, local: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                placeholder="Endereço completo do local"
-              />
+              type="text"
+              value={novoRelatorio.local}
+              onChange={(e) =>
+              setNovoRelatorio({ ...novoRelatorio, local: e.target.value })
+              }
+              className="w-full border border-gray-300 rounded-lg px-3 py-2"
+              placeholder="Endereço completo do local" />
+
             </div>
 
             <div>
@@ -303,21 +303,21 @@ export default function RelatorioSupervisao() {
                 Responsável pela Limpeza
               </label>
               <select
-                value={novoRelatorio.responsavel}
-                onChange={(e) =>
-                  setNovoRelatorio({
-                    ...novoRelatorio,
-                    responsavel: e.target.value,
-                  })
-                }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2"
-              >
+              value={novoRelatorio.responsavel}
+              onChange={(e) =>
+              setNovoRelatorio({
+                ...novoRelatorio,
+                responsavel: e.target.value
+              })
+              }
+              className="w-full border border-gray-300 rounded-lg px-3 py-2">
+
                 <option value="">Selecione o funcionário</option>
-                {funcionarios.map((func) => (
-                  <option key={func} value={func}>
+                {funcionarios.map((func) =>
+              <option key={func} value={func}>
                     {func}
                   </option>
-                ))}
+              )}
               </select>
             </div>
 
@@ -326,21 +326,21 @@ export default function RelatorioSupervisao() {
                 Supervisor
               </label>
               <select
-                value={novoRelatorio.supervisor}
-                onChange={(e) =>
-                  setNovoRelatorio({
-                    ...novoRelatorio,
-                    supervisor: e.target.value,
-                  })
-                }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2"
-              >
+              value={novoRelatorio.supervisor}
+              onChange={(e) =>
+              setNovoRelatorio({
+                ...novoRelatorio,
+                supervisor: e.target.value
+              })
+              }
+              className="w-full border border-gray-300 rounded-lg px-3 py-2">
+
                 <option value="">Selecione o supervisor</option>
-                {supervisores.map((sup) => (
-                  <option key={sup} value={sup}>
+                {supervisores.map((sup) =>
+              <option key={sup} value={sup}>
                     {sup}
                   </option>
-                ))}
+              )}
               </select>
             </div>
           </div>
@@ -357,25 +357,25 @@ export default function RelatorioSupervisao() {
                   Ambiente
                 </label>
                 <select
-                  value={avaliacaoAtual.ambiente}
-                  onChange={(e) =>
-                    setAvaliacaoAtual({
-                      ...avaliacaoAtual,
-                      ambiente: e.target.value,
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                >
+                value={avaliacaoAtual.ambiente}
+                onChange={(e) =>
+                setAvaliacaoAtual({
+                  ...avaliacaoAtual,
+                  ambiente: e.target.value
+                })
+                }
+                className="w-full border border-gray-300 rounded-lg px-3 py-2">
+
                   <option value="">Selecione o ambiente</option>
-                  {ambientes
-                    .filter(
-                      (amb) => !avaliacoes.some((av) => av.ambiente === amb),
-                    )
-                    .map((amb) => (
-                      <option key={amb} value={amb}>
+                  {ambientes.
+                filter(
+                  (amb) => !avaliacoes.some((av) => av.ambiente === amb)
+                ).
+                map((amb) =>
+                <option key={amb} value={amb}>
                         {amb}
                       </option>
-                    ))}
+                )}
                 </select>
               </div>
 
@@ -384,18 +384,18 @@ export default function RelatorioSupervisao() {
                   Pontuação (0-10)
                 </label>
                 <input
-                  type="number"
-                  min="0"
-                  max="10"
-                  value={avaliacaoAtual.pontuacao}
-                  onChange={(e) =>
-                    setAvaliacaoAtual({
-                      ...avaliacaoAtual,
-                      pontuacao: parseInt(e.target.value),
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                />
+                type="number"
+                min="0"
+                max="10"
+                value={avaliacaoAtual.pontuacao}
+                onChange={(e) =>
+                setAvaliacaoAtual({
+                  ...avaliacaoAtual,
+                  pontuacao: parseInt(e.target.value)
+                })
+                }
+                className="w-full border border-gray-300 rounded-lg px-3 py-2" />
+
               </div>
 
               <div className="md:col-span-2">
@@ -403,68 +403,68 @@ export default function RelatorioSupervisao() {
                   Observações
                 </label>
                 <input
-                  type="text"
-                  value={avaliacaoAtual.observacoes}
-                  onChange={(e) =>
-                    setAvaliacaoAtual({
-                      ...avaliacaoAtual,
-                      observacoes: e.target.value,
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                  placeholder="Observações sobre este ambiente"
-                />
+                type="text"
+                value={avaliacaoAtual.observacoes}
+                onChange={(e) =>
+                setAvaliacaoAtual({
+                  ...avaliacaoAtual,
+                  observacoes: e.target.value
+                })
+                }
+                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                placeholder="Observações sobre este ambiente" />
+
               </div>
             </div>
 
-            <button
-              onClick={adicionarAvaliacao}
-              disabled={!avaliacaoAtual.ambiente}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-300"
-            >
+            <WiredButton
+            onClick={adicionarAvaliacao}
+            disabled={!avaliacaoAtual.ambiente}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-300">
+
               Adicionar Avaliação
-            </button>
+            </WiredButton>
           </div>
 
           {/* Lista de Avaliações */}
-          {avaliacoes.length > 0 && (
-            <div className="mb-6">
+          {avaliacoes.length > 0 &&
+        <div className="mb-6">
               <h4 className="text-md font-semibold text-gray-900 mb-3">
                 Ambientes Avaliados
               </h4>
               <div className="space-y-2">
-                {avaliacoes.map((av, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between bg-gray-50 p-3 rounded-lg"
-                  >
+                {avaliacoes.map((av, index) =>
+            <div
+              key={index}
+              className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+
                     <div className="flex-1">
                       <span className="font-medium">{av.ambiente}</span>
                       <span
-                        className={`ml-2 px-2 py-1 rounded text-sm ${
-                          av.pontuacao >= 9
-                            ? "bg-green-100 text-green-700"
-                            : av.pontuacao >= 7
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
-                        }`}
-                      >
+                  className={`ml-2 px-2 py-1 rounded text-sm ${
+                  av.pontuacao >= 9 ?
+                  "bg-green-100 text-green-700" :
+                  av.pontuacao >= 7 ?
+                  "bg-yellow-100 text-yellow-700" :
+                  "bg-red-100 text-red-700"}`
+                  }>
+
                         {av.pontuacao}/10
                       </span>
-                      {av.observacoes && (
-                        <p className="text-sm text-gray-600 mt-1">
+                      {av.observacoes &&
+                <p className="text-sm text-gray-600 mt-1">
                           {av.observacoes}
                         </p>
-                      )}
+                }
                     </div>
-                    <button
-                      onClick={() => removerAvaliacao(index)}
-                      className="text-red-600 hover:text-red-700 ml-4"
-                    >
+                    <WiredButton
+                onClick={() => removerAvaliacao(index)}
+                className="text-red-600 hover:text-red-700 ml-4">
+
                       Remover
-                    </button>
+                    </WiredButton>
                   </div>
-                ))}
+            )}
               </div>
               <div className="mt-3 p-3 bg-blue-50 rounded-lg">
                 <p className="text-sm font-medium text-blue-900">
@@ -473,7 +473,7 @@ export default function RelatorioSupervisao() {
                 </p>
               </div>
             </div>
-          )}
+        }
 
           {/* Observações Gerais */}
           <div className="mb-6">
@@ -481,41 +481,41 @@ export default function RelatorioSupervisao() {
               Observações Gerais
             </label>
             <textarea
-              value={novoRelatorio.observacoesGerais}
-              onChange={(e) =>
-                setNovoRelatorio({
-                  ...novoRelatorio,
-                  observacoesGerais: e.target.value,
-                })
-              }
-              className="w-full border border-gray-300 rounded-lg px-3 py-2"
-              rows={3}
-              placeholder="Observações gerais sobre o trabalho realizado"
-            />
+            value={novoRelatorio.observacoesGerais}
+            onChange={(e) =>
+            setNovoRelatorio({
+              ...novoRelatorio,
+              observacoesGerais: e.target.value
+            })
+            }
+            className="w-full border border-gray-300 rounded-lg px-3 py-2"
+            rows={3}
+            placeholder="Observações gerais sobre o trabalho realizado" />
+
           </div>
 
           <div className="flex space-x-3">
-            <button
-              onClick={salvarRelatorio}
-              disabled={
-                !novoRelatorio.local ||
-                !novoRelatorio.responsavel ||
-                !novoRelatorio.supervisor ||
-                avaliacoes.length === 0
-              }
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-300"
-            >
+            <WiredButton
+            onClick={salvarRelatorio}
+            disabled={
+            !novoRelatorio.local ||
+            !novoRelatorio.responsavel ||
+            !novoRelatorio.supervisor ||
+            avaliacoes.length === 0
+            }
+            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-300">
+
               Salvar Relatório
-            </button>
-            <button
-              onClick={() => setMostrarNovoFormulario(false)}
-              className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700"
-            >
+            </WiredButton>
+            <WiredButton
+            onClick={() => setMostrarNovoFormulario(false)}
+            className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700">
+
               Cancelar
-            </button>
+            </WiredButton>
           </div>
         </div>
-      )}
+      }
 
       {/* Lista de Relatórios */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -524,11 +524,11 @@ export default function RelatorioSupervisao() {
             Histórico de Relatórios
           </h3>
           <div className="space-y-4">
-            {relatorios.map((relatorio) => (
-              <div
-                key={relatorio.id}
-                className="border border-gray-200 rounded-lg p-4"
-              >
+            {relatorios.map((relatorio) =>
+            <div
+              key={relatorio.id}
+              className="border border-gray-200 rounded-lg p-4">
+
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <h4 className="font-semibold text-gray-900">
@@ -542,8 +542,8 @@ export default function RelatorioSupervisao() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(relatorio.status)}`}
-                    >
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(relatorio.status)}`}>
+
                       {getStatusText(relatorio.status)}
                     </span>
                     <span className="text-lg font-bold text-gray-900">
@@ -553,57 +553,57 @@ export default function RelatorioSupervisao() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
-                  {relatorio.avaliacoes.map((av, index) => (
-                    <div key={index} className="bg-gray-50 p-3 rounded">
+                  {relatorio.avaliacoes.map((av, index) =>
+                <div key={index} className="bg-gray-50 p-3 rounded">
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-medium">
                           {av.ambiente}
                         </span>
                         <span
-                          className={`px-2 py-1 rounded text-xs ${
-                            av.pontuacao >= 9
-                              ? "bg-green-100 text-green-700"
-                              : av.pontuacao >= 7
-                                ? "bg-yellow-100 text-yellow-700"
-                                : "bg-red-100 text-red-700"
-                          }`}
-                        >
+                      className={`px-2 py-1 rounded text-xs ${
+                      av.pontuacao >= 9 ?
+                      "bg-green-100 text-green-700" :
+                      av.pontuacao >= 7 ?
+                      "bg-yellow-100 text-yellow-700" :
+                      "bg-red-100 text-red-700"}`
+                      }>
+
                           {av.pontuacao}/10
                         </span>
                       </div>
-                      {av.observacoes && (
-                        <p className="text-xs text-gray-600 mt-1">
+                      {av.observacoes &&
+                  <p className="text-xs text-gray-600 mt-1">
                           {av.observacoes}
                         </p>
-                      )}
+                  }
                     </div>
-                  ))}
+                )}
                 </div>
 
-                {relatorio.observacoesGerais && (
-                  <div className="bg-blue-50 p-3 rounded mb-3">
+                {relatorio.observacoesGerais &&
+              <div className="bg-blue-50 p-3 rounded mb-3">
                     <p className="text-sm text-gray-700">
                       {relatorio.observacoesGerais}
                     </p>
                   </div>
-                )}
+              }
 
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600">
                     Assinatura: {relatorio.assinaturaDigital}
                   </span>
-                  <button
-                    onClick={() => exportarRelatorio(relatorio)}
-                    className="text-primary-600 hover:text-primary-700"
-                  >
+                  <WiredButton
+                  onClick={() => exportarRelatorio(relatorio)}
+                  className="text-primary-600 hover:text-primary-700">
+
                     Exportar Relatório
-                  </button>
+                  </WiredButton>
                 </div>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }

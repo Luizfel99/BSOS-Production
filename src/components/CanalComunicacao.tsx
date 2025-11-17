@@ -3,7 +3,7 @@
  * Sistema centralizado de comunicação sem dependência do WhatsApp
  */
 
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,8 +28,8 @@ import {
   Trash2,
   Reply,
   Heart,
-  ThumbsUp,
-} from "lucide-react";
+  ThumbsUp } from
+"lucide-react";
 
 interface Message {
   id: string;
@@ -40,13 +40,13 @@ interface Message {
 
   content: string;
   type:
-    | "text"
-    | "image"
-    | "video"
-    | "file"
-    | "announcement"
-    | "poll"
-    | "reminder";
+  "text" |
+  "image" |
+  "video" |
+  "file" |
+  "announcement" |
+  "poll" |
+  "reminder";
 
   channelId: string;
   channelName: string;
@@ -178,7 +178,7 @@ export default function CanalComunicacao() {
 
       // Seleciona o canal geral por padrão
       const generalChannel = data.channels.find(
-        (c: Channel) => c.type === "general",
+        (c: Channel) => c.type === "general"
       );
       if (generalChannel) {
         setActiveChannel(generalChannel);
@@ -191,7 +191,7 @@ export default function CanalComunicacao() {
   const fetchMessages = async (channelId: string) => {
     try {
       const response = await fetch(
-        `/api/communication/messages?channelId=${channelId}`,
+        `/api/communication/messages?channelId=${channelId}`
       );
       const data = await response.json();
       setMessages(data.messages);
@@ -221,13 +221,13 @@ export default function CanalComunicacao() {
         content: newMessage,
         channelId: activeChannel.id,
         type: "text",
-        parentId: replyingTo?.id,
+        parentId: replyingTo?.id
       };
 
       await fetch("/api/communication/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(messageData),
+        body: JSON.stringify(messageData)
       });
 
       setNewMessage("");
@@ -241,14 +241,14 @@ export default function CanalComunicacao() {
   const markChannelAsRead = async (channelId: string) => {
     try {
       await fetch(`/api/communication/channels/${channelId}/read`, {
-        method: "POST",
+        method: "POST"
       });
 
       // Atualiza o contador local
       setChannels((prev) =>
-        prev.map((channel) =>
-          channel.id === channelId ? { ...channel, unreadCount: 0 } : channel,
-        ),
+      prev.map((channel) =>
+      channel.id === channelId ? { ...channel, unreadCount: 0 } : channel
+      )
       );
     } catch (error) {
       console.error("Erro ao marcar como lido:", error);
@@ -260,7 +260,7 @@ export default function CanalComunicacao() {
       await fetch(`/api/communication/messages/${messageId}/react`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ emoji }),
+        body: JSON.stringify({ emoji })
       });
 
       fetchMessages(activeChannel!.id);
@@ -272,7 +272,7 @@ export default function CanalComunicacao() {
   const pinMessage = async (messageId: string) => {
     try {
       await fetch(`/api/communication/messages/${messageId}/pin`, {
-        method: "POST",
+        method: "POST"
       });
 
       fetchMessages(activeChannel!.id);
@@ -301,7 +301,7 @@ export default function CanalComunicacao() {
       announcements: "",
       team: "",
       training: "",
-      support: "",
+      support: ""
     };
     return icons[type as keyof typeof icons] || "";
   };
@@ -311,7 +311,7 @@ export default function CanalComunicacao() {
       admin: "text-red-600",
       supervisor: "text-blue-600",
       leader: "text-purple-600",
-      cleaner: "text-green-600",
+      cleaner: "text-green-600"
     };
     return colors[role as keyof typeof colors] || "text-gray-600";
   };
@@ -320,16 +320,16 @@ export default function CanalComunicacao() {
     const icons = {
       announcement: <Bell className="h-4 w-4 text-orange-500" />,
       reminder: <Clock className="h-4 w-4 text-blue-500" />,
-      poll: <Star className="h-4 w-4 text-purple-500" />,
+      poll: <Star className="h-4 w-4 text-purple-500" />
     };
     return icons[type as keyof typeof icons];
   };
 
   const filteredMessages = messages.filter((message) => {
     if (
-      searchQuery &&
-      !message.content.toLowerCase().includes(searchQuery.toLowerCase())
-    ) {
+    searchQuery &&
+    !message.content.toLowerCase().includes(searchQuery.toLowerCase()))
+    {
       return false;
     }
     if (filterType !== "all" && message.type !== filterType) {
@@ -339,7 +339,7 @@ export default function CanalComunicacao() {
   });
 
   const unreadNotificationsCount = notifications.filter(
-    (n) => !n.isRead,
+    (n) => !n.isRead
   ).length;
 
   return (
@@ -354,18 +354,18 @@ export default function CanalComunicacao() {
         </div>
 
         <div className="flex gap-3">
-          <button
+          <WiredButton
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-          >
+            className="relative bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+
             <Bell className="h-4 w-4 inline mr-2" />
             Notificações
-            {unreadNotificationsCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            {unreadNotificationsCount > 0 &&
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 {unreadNotificationsCount}
               </span>
-            )}
-          </button>
+            }
+          </WiredButton>
         </div>
       </div>
 
@@ -382,23 +382,23 @@ export default function CanalComunicacao() {
                   placeholder="Buscar canais..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
+                  className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+
               </div>
             </div>
 
             {/* Canais */}
             <div className="p-2">
-              {channels.map((channel) => (
-                <button
-                  key={channel.id}
-                  onClick={() => setActiveChannel(channel)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
-                    activeChannel?.id === channel.id
-                      ? "bg-blue-100 text-blue-700"
-                      : "hover:bg-gray-100"
-                  }`}
-                >
+              {channels.map((channel) =>
+              <WiredButton
+                key={channel.id}
+                onClick={() => setActiveChannel(channel)}
+                className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
+                activeChannel?.id === channel.id ?
+                "bg-blue-100 text-blue-700" :
+                "hover:bg-gray-100"}`
+                }>
+
                   <span className="text-lg">
                     {getChannelIcon(channel.type)}
                   </span>
@@ -407,20 +407,20 @@ export default function CanalComunicacao() {
                       <span className="font-medium truncate">
                         {channel.name}
                       </span>
-                      {channel.unreadCount > 0 && (
-                        <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {channel.unreadCount > 0 &&
+                    <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                           {channel.unreadCount}
                         </span>
-                      )}
+                    }
                     </div>
-                    {channel.lastMessage && (
-                      <p className="text-xs text-gray-600 truncate">
+                    {channel.lastMessage &&
+                  <p className="text-xs text-gray-600 truncate">
                         {channel.lastMessage.content}
                       </p>
-                    )}
+                  }
                   </div>
-                </button>
-              ))}
+                </WiredButton>
+              )}
             </div>
           </div>
 
@@ -430,16 +430,16 @@ export default function CanalComunicacao() {
               <h3 className="font-semibold">Membros Online</h3>
             </div>
             <div className="p-2">
-              {activeChannel?.members
-                .filter((member) => member.status === "online")
-                .map((member) => (
-                  <div key={member.id} className="flex items-center gap-3 p-2">
+              {activeChannel?.members.
+              filter((member) => member.status === "online").
+              map((member) =>
+              <div key={member.id} className="flex items-center gap-3 p-2">
                     <div className="relative">
                       <img
-                        src={member.photo || "/default-avatar.png"}
-                        alt={member.name}
-                        className="w-8 h-8 rounded-full"
-                      />
+                    src={member.photo || "/default-avatar.png"}
+                    alt={member.name}
+                    className="w-8 h-8 rounded-full" />
+
                       <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                     </div>
                     <div>
@@ -449,15 +449,15 @@ export default function CanalComunicacao() {
                       </div>
                     </div>
                   </div>
-                ))}
+              )}
             </div>
           </div>
         </div>
 
         {/* Main Chat Area */}
         <div className="lg:col-span-3">
-          {activeChannel ? (
-            <div className="bg-white rounded-lg shadow-sm border h-[700px] flex flex-col">
+          {activeChannel ?
+          <div className="bg-white rounded-lg shadow-sm border h-[700px] flex flex-col">
               {/* Channel Header */}
               <div className="p-4 border-b">
                 <div className="flex justify-between items-center">
@@ -472,42 +472,42 @@ export default function CanalComunicacao() {
                   </div>
 
                   <div className="flex gap-2">
-                    <button
-                      className="p-2 hover:bg-gray-100 rounded"
-                      onClick={handleSearchChannel}
-                    >
+                    <WiredButton
+                    className="p-2 hover:bg-gray-100 rounded"
+                    onClick={handleSearchChannel}>
+
                       <Search className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() =>
-                        setShowChannelSettings(!showChannelSettings)
-                      }
-                      className="p-2 hover:bg-gray-100 rounded"
-                    >
+                    </WiredButton>
+                    <WiredButton
+                    onClick={() =>
+                    setShowChannelSettings(!showChannelSettings)
+                    }
+                    className="p-2 hover:bg-gray-100 rounded">
+
                       <Filter className="h-4 w-4" />
-                    </button>
+                    </WiredButton>
                   </div>
                 </div>
               </div>
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {filteredMessages.map((message) => (
-                  <div key={message.id} className="group">
-                    {replyingTo?.id === message.id && (
-                      <div className="bg-blue-50 border-l-4 border-blue-500 p-2 mb-2 text-sm">
+                {filteredMessages.map((message) =>
+              <div key={message.id} className="group">
+                    {replyingTo?.id === message.id &&
+                <div className="bg-blue-50 border-l-4 border-blue-500 p-2 mb-2 text-sm">
                         Respondendo a: {message.content.substring(0, 50)}...
                       </div>
-                    )}
+                }
 
                     <div
-                      className={`flex gap-3 ${message.isPinned ? "bg-yellow-50 p-3 rounded-lg" : ""}`}
-                    >
+                  className={`flex gap-3 ${message.isPinned ? "bg-yellow-50 p-3 rounded-lg" : ""}`}>
+
                       <img
-                        src={message.senderPhoto || "/default-avatar.png"}
-                        alt={message.senderName}
-                        className="w-10 h-10 rounded-full"
-                      />
+                    src={message.senderPhoto || "/default-avatar.png"}
+                    alt={message.senderName}
+                    className="w-10 h-10 rounded-full" />
+
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
@@ -515,131 +515,131 @@ export default function CanalComunicacao() {
                             {message.senderName}
                           </span>
                           <span
-                            className={`text-xs px-2 py-1 rounded ${getRoleColor(message.senderRole)}`}
-                          >
+                        className={`text-xs px-2 py-1 rounded ${getRoleColor(message.senderRole)}`}>
+
                             {message.senderRole}
                           </span>
                           <span className="text-xs text-gray-500">
                             {message.timestamp}
                           </span>
-                          {message.isPinned && (
-                            <Pin className="h-3 w-3 text-yellow-600" />
-                          )}
+                          {message.isPinned &&
+                      <Pin className="h-3 w-3 text-yellow-600" />
+                      }
                           {getMessageTypeIcon(message.type)}
                         </div>
 
                         <div className="text-gray-900 mb-2">
                           {message.content}
-                          {message.edited && (
-                            <span className="text-xs text-gray-500 ml-2">
+                          {message.edited &&
+                      <span className="text-xs text-gray-500 ml-2">
                               (editado)
                             </span>
-                          )}
+                      }
                         </div>
 
                         {/* Anexos */}
                         {message.attachments &&
-                          message.attachments.length > 0 && (
-                            <div className="space-y-2 mb-2">
-                              {message.attachments.map((attachment, index) => (
-                                <div
-                                  key={index}
-                                  className="border rounded p-2 bg-gray-50"
-                                >
+                    message.attachments.length > 0 &&
+                    <div className="space-y-2 mb-2">
+                              {message.attachments.map((attachment, index) =>
+                      <div
+                        key={index}
+                        className="border rounded p-2 bg-gray-50">
+
                                   <div className="flex items-center gap-2">
-                                    {attachment.type === "image" && (
-                                      <Image className="h-4 w-4" />
-                                    )}
-                                    {attachment.type === "video" && (
-                                      <Video className="h-4 w-4" />
-                                    )}
-                                    {attachment.type === "file" && (
-                                      <Paperclip className="h-4 w-4" />
-                                    )}
+                                    {attachment.type === "image" &&
+                          <Image className="h-4 w-4" />
+                          }
+                                    {attachment.type === "video" &&
+                          <Video className="h-4 w-4" />
+                          }
+                                    {attachment.type === "file" &&
+                          <Paperclip className="h-4 w-4" />
+                          }
                                     <span className="text-sm">
                                       {attachment.name}
                                     </span>
                                   </div>
                                 </div>
-                              ))}
+                      )}
                             </div>
-                          )}
+                    }
 
                         {/* Reações */}
-                        {message.reactions.length > 0 && (
-                          <div className="flex gap-1 mb-2">
-                            {message.reactions.map((reaction, index) => (
-                              <button
-                                key={index}
-                                onClick={() =>
-                                  addReaction(message.id, reaction.emoji)
-                                }
-                                className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-full text-sm"
-                              >
+                        {message.reactions.length > 0 &&
+                    <div className="flex gap-1 mb-2">
+                            {message.reactions.map((reaction, index) =>
+                      <WiredButton
+                        key={index}
+                        onClick={() =>
+                        addReaction(message.id, reaction.emoji)
+                        }
+                        className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-full text-sm">
+
                                 <span>{reaction.emoji}</span>
                                 <span>{reaction.count}</span>
-                              </button>
-                            ))}
+                              </WiredButton>
+                      )}
                           </div>
-                        )}
+                    }
 
                         {/* Ações da mensagem */}
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                          <button
-                            onClick={() => addReaction(message.id, "👍")}
-                            className="p-1 hover:bg-gray-100 rounded text-gray-500"
-                          >
+                          <WiredButton
+                        onClick={() => addReaction(message.id, "👍")}
+                        className="p-1 hover:bg-gray-100 rounded text-gray-500">
+
                             <ThumbsUp className="h-3 w-3" />
-                          </button>
-                          <button
-                            onClick={() => setReplyingTo(message)}
-                            className="p-1 hover:bg-gray-100 rounded text-gray-500"
-                          >
+                          </WiredButton>
+                          <WiredButton
+                        onClick={() => setReplyingTo(message)}
+                        className="p-1 hover:bg-gray-100 rounded text-gray-500">
+
                             <Reply className="h-3 w-3" />
-                          </button>
+                          </WiredButton>
                           {(user?.role === "owner" ||
-                            user?.role === "supervisor") && (
-                            <button
-                              onClick={() => pinMessage(message.id)}
-                              className="p-1 hover:bg-gray-100 rounded text-gray-500"
-                            >
+                      user?.role === "supervisor") &&
+                      <WiredButton
+                        onClick={() => pinMessage(message.id)}
+                        className="p-1 hover:bg-gray-100 rounded text-gray-500">
+
                               <Pin className="h-3 w-3" />
-                            </button>
-                          )}
-                          {message.senderId === user?.id && (
-                            <>
-                              <button
-                                onClick={() => setEditingMessage(message)}
-                                className="p-1 hover:bg-gray-100 rounded text-gray-500"
-                              >
+                            </WiredButton>
+                      }
+                          {message.senderId === user?.id &&
+                      <>
+                              <WiredButton
+                          onClick={() => setEditingMessage(message)}
+                          className="p-1 hover:bg-gray-100 rounded text-gray-500">
+
                                 <Edit3 className="h-3 w-3" />
-                              </button>
-                              <button
-                                className="p-1 hover:bg-gray-100 rounded text-gray-500"
-                                onClick={() => handleDeleteMessage(message.id)}
-                              >
+                              </WiredButton>
+                              <WiredButton
+                          className="p-1 hover:bg-gray-100 rounded text-gray-500"
+                          onClick={() => handleDeleteMessage(message.id)}>
+
                                 <Trash2 className="h-3 w-3" />
-                              </button>
+                              </WiredButton>
                             </>
-                          )}
+                      }
                         </div>
 
                         {/* Indicador de leitura para anúncios */}
-                        {message.type === "announcement" && message.readBy && (
-                          <div className="text-xs text-gray-500 mt-2">
+                        {message.type === "announcement" && message.readBy &&
+                    <div className="text-xs text-gray-500 mt-2">
                             Lido por {message.readBy.length} pessoa(s)
                           </div>
-                        )}
+                    }
                       </div>
                     </div>
                   </div>
-                ))}
+              )}
                 <div ref={messagesEndRef} />
               </div>
 
               {/* Reply indicator */}
-              {replyingTo && (
-                <div className="px-4 py-2 bg-blue-50 border-t border-blue-200">
+              {replyingTo &&
+            <div className="px-4 py-2 bg-blue-50 border-t border-blue-200">
                   <div className="flex justify-between items-center">
                     <div className="text-sm">
                       <span className="text-blue-600">
@@ -649,110 +649,110 @@ export default function CanalComunicacao() {
                         {replyingTo.content}
                       </p>
                     </div>
-                    <button
-                      onClick={() => setReplyingTo(null)}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
+                    <WiredButton
+                  onClick={() => setReplyingTo(null)}
+                  className="text-blue-600 hover:text-blue-800">
+
                       ✕
-                    </button>
+                    </WiredButton>
                   </div>
                 </div>
-              )}
+            }
 
               {/* Message Input */}
               <div className="p-4 border-t">
                 <div className="flex gap-3">
                   <input
-                    type="file"
-                    ref={fileInputRef}
-                    className="hidden"
-                    multiple
-                    accept="image/*,video/*,.pdf,.doc,.docx"
-                  />
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  multiple
+                  accept="image/*,video/*,.pdf,.doc,.docx" />
 
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="p-2 hover:bg-gray-100 rounded text-gray-500"
-                  >
+
+                  <WiredButton
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-2 hover:bg-gray-100 rounded text-gray-500">
+
                     <Paperclip className="h-5 w-5" />
-                  </button>
+                  </WiredButton>
 
                   <div className="flex-1 relative">
                     <input
-                      type="text"
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-                      placeholder={`Mensagem para #${activeChannel.name}...`}
-                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                    />
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+                    placeholder={`Mensagem para #${activeChannel.name}...`}
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+
                   </div>
 
-                  <button
-                    onClick={() => {
-                      /* Abrir picker de emoji */
-                    }}
-                    className="p-2 hover:bg-gray-100 rounded text-gray-500"
-                  >
-                    <Smile className="h-5 w-5" />
-                  </button>
+                  <WiredButton
+                  onClick={() => {
 
-                  <button
-                    onClick={sendMessage}
-                    disabled={!newMessage.trim()}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
+                    /* Abrir picker de emoji */}}
+                  className="p-2 hover:bg-gray-100 rounded text-gray-500">
+
+                    <Smile className="h-5 w-5" />
+                  </WiredButton>
+
+                  <WiredButton
+                  onClick={sendMessage}
+                  disabled={!newMessage.trim()}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed">
+
                     <Send className="h-4 w-4" />
-                  </button>
+                  </WiredButton>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="bg-white rounded-lg shadow-sm border h-[700px] flex items-center justify-center">
+            </div> :
+
+          <div className="bg-white rounded-lg shadow-sm border h-[700px] flex items-center justify-center">
               <div className="text-center text-gray-500">
                 <MessageSquare className="h-16 w-16 mx-auto mb-4" />
                 <h3 className="text-lg font-medium mb-2">Selecione um canal</h3>
                 <p>Escolha um canal para começar a conversar</p>
               </div>
             </div>
-          )}
+          }
         </div>
       </div>
 
       {/* Painel de Notificações */}
-      {showNotifications && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      {showNotifications &&
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-lg w-full max-h-[80vh] overflow-auto">
             <div className="p-4 border-b">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold">Notificações</h3>
-                <button
-                  onClick={() => setShowNotifications(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
+                <WiredButton
+                onClick={() => setShowNotifications(false)}
+                className="text-gray-500 hover:text-gray-700">
+
                   ✕
-                </button>
+                </WiredButton>
               </div>
             </div>
 
             <div className="divide-y">
-              {notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`p-4 hover:bg-gray-50 ${!notification.isRead ? "bg-blue-50" : ""}`}
-                >
+              {notifications.map((notification) =>
+            <div
+              key={notification.id}
+              className={`p-4 hover:bg-gray-50 ${!notification.isRead ? "bg-blue-50" : ""}`}>
+
                   <div className="flex gap-3">
                     <div
-                      className={`w-2 h-2 rounded-full mt-2 ${
-                        notification.priority === "urgent"
-                          ? "bg-red-500"
-                          : notification.priority === "high"
-                            ? "bg-orange-500"
-                            : notification.priority === "medium"
-                              ? "bg-yellow-500"
-                              : "bg-blue-500"
-                      }`}
-                    ></div>
+                  className={`w-2 h-2 rounded-full mt-2 ${
+                  notification.priority === "urgent" ?
+                  "bg-red-500" :
+                  notification.priority === "high" ?
+                  "bg-orange-500" :
+                  notification.priority === "medium" ?
+                  "bg-yellow-500" :
+                  "bg-blue-500"}`
+                  }>
+                </div>
 
                     <div className="flex-1">
                       <h4 className="font-medium">{notification.title}</h4>
@@ -765,11 +765,11 @@ export default function CanalComunicacao() {
                     </div>
                   </div>
                 </div>
-              ))}
+            )}
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }

@@ -1,4 +1,4 @@
-/**
+import WiredButton from "@/components/ui/WiredButton"; /**
  * Action Button Helper - Defensive Utilities
  * Provides safe action button utilities with proper user state checks
  */
@@ -12,7 +12,7 @@ export interface ActionButtonProps {
   onClick: () => void;
   disabled?: boolean;
   className?: string;
-  requiredPermission?: { module: Module; action: Action };
+  requiredPermission?: {module: Module;action: Action;};
   allowedRoles?: string[];
   fallbackDisabled?: boolean; // If true, shows disabled button instead of hiding
   title?: string; // Tooltip text
@@ -30,26 +30,26 @@ export const SafeActionButton: React.FC<ActionButtonProps> = ({
   requiredPermission,
   allowedRoles,
   fallbackDisabled = false,
-  title,
+  title
 }) => {
   const {
     user,
     isAuthenticated,
-    hasPermission: checkPermission,
+    hasPermission: checkPermission
   } = usePermissions();
 
   // If no user is authenticated, hide or disable button
   if (!user || !isAuthenticated) {
     if (fallbackDisabled) {
       return (
-        <button
+        <WiredButton
           disabled={true}
           className={`${className} opacity-50 cursor-not-allowed`}
-          title="Autenticação necessária"
-        >
+          title="Autenticação necessária" data-action="wire.auto">
+
           {children}
-        </button>
-      );
+        </WiredButton>);
+
     }
     return null;
   }
@@ -58,20 +58,20 @@ export const SafeActionButton: React.FC<ActionButtonProps> = ({
   if (requiredPermission) {
     const hasRequiredPermission = checkPermission(
       requiredPermission.module,
-      requiredPermission.action,
+      requiredPermission.action
     );
 
     if (!hasRequiredPermission) {
       if (fallbackDisabled) {
         return (
-          <button
+          <WiredButton
             disabled={true}
             className={`${className} opacity-50 cursor-not-allowed`}
-            title="Permissão insuficiente"
-          >
+            title="Permissão insuficiente" data-action="wire.auto">
+
             {children}
-          </button>
-        );
+          </WiredButton>);
+
       }
       return null;
     }
@@ -84,14 +84,14 @@ export const SafeActionButton: React.FC<ActionButtonProps> = ({
     if (!hasAllowedRole) {
       if (fallbackDisabled) {
         return (
-          <button
+          <WiredButton
             disabled={true}
             className={`${className} opacity-50 cursor-not-allowed`}
-            title="Perfil não autorizado"
-          >
+            title="Perfil não autorizado" data-action="wire.auto">
+
             {children}
-          </button>
-        );
+          </WiredButton>);
+
       }
       return null;
     }
@@ -110,15 +110,15 @@ export const SafeActionButton: React.FC<ActionButtonProps> = ({
   };
 
   return (
-    <button
+    <WiredButton
       onClick={handleClick}
       disabled={disabled}
       className={className}
-      title={title}
-    >
+      title={title}>
+
       {children}
-    </button>
-  );
+    </WiredButton>);
+
 };
 
 /**
@@ -129,12 +129,12 @@ export const useSafeActions = () => {
   const { user, isAuthenticated, hasPermission } = usePermissions();
 
   const createSafeAction = (
-    action: () => void,
-    requirements?: {
-      requiredPermission?: { module: Module; action: Action };
-      allowedRoles?: string[];
-    },
-  ) => {
+  action: () => void,
+  requirements?: {
+    requiredPermission?: {module: Module;action: Action;};
+    allowedRoles?: string[];
+  }) =>
+  {
     return () => {
       // Check authentication
       if (!user || !isAuthenticated) {
@@ -146,7 +146,7 @@ export const useSafeActions = () => {
       if (requirements?.requiredPermission) {
         const hasRequiredPermission = hasPermission(
           requirements.requiredPermission.module,
-          requirements.requiredPermission.action,
+          requirements.requiredPermission.action
         );
 
         if (!hasRequiredPermission) {
@@ -175,7 +175,7 @@ export const useSafeActions = () => {
   };
 
   const isActionAllowed = (requirements?: {
-    requiredPermission?: { module: Module; action: Action };
+    requiredPermission?: {module: Module;action: Action;};
     allowedRoles?: string[];
   }): boolean => {
     // Check authentication
@@ -187,7 +187,7 @@ export const useSafeActions = () => {
     if (requirements?.requiredPermission) {
       const hasRequiredPermission = hasPermission(
         requirements.requiredPermission.module,
-        requirements.requiredPermission.action,
+        requirements.requiredPermission.action
       );
 
       if (!hasRequiredPermission) {
@@ -212,16 +212,16 @@ export const useSafeActions = () => {
     isActionAllowed,
     user: user || null,
     isAuthenticated,
-    userRole: user?.role || null,
+    userRole: user?.role || null
   };
 };
 
 /**
  * Safe wrapper for any action that requires user authentication
  */
-export const withUserCheck = <T extends any[]>(
-  action: (...args: T) => void,
-) => {
+export const withUserCheck = <T extends any[],>(
+action: (...args: T) => void) =>
+{
   return (...args: T) => {
     const { user, isAuthenticated } = useAuth();
 

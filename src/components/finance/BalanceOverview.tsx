@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -9,8 +9,8 @@ import {
   Calendar,
   BarChart3,
   PieChart,
-  RefreshCw,
-} from "lucide-react";
+  RefreshCw } from
+"lucide-react";
 import { formatCurrency } from "@/lib/stripe";
 import { useNotifications } from "@/hooks/useNotifications";
 
@@ -75,16 +75,16 @@ export default function BalanceOverview() {
           <RefreshCw className="w-5 h-5 animate-spin" />
           Loading balance data...
         </div>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
     <div className="space-y-6">
       {/* Balance Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {balance && (
-          <>
+        {balance &&
+        <>
             {/* Available Balance */}
             <div className="bg-white rounded-lg border border-gray-200 p-6">
               <div className="flex items-center justify-between">
@@ -146,25 +146,25 @@ export default function BalanceOverview() {
                 <span className="text-gray-500">
                   Last updated: {balance.lastUpdated}
                 </span>
-                <button
-                  onClick={handleRefresh}
-                  disabled={refreshing}
-                  className="flex items-center gap-1 text-blue-600 hover:text-blue-700"
-                >
+                <WiredButton
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="flex items-center gap-1 text-blue-600 hover:text-blue-700">
+
                   <RefreshCw
-                    className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
-                  />
+                  className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+
                   Refresh
-                </button>
+                </WiredButton>
               </div>
             </div>
           </>
-        )}
+        }
       </div>
 
       {/* Analytics Section */}
-      {analytics && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {analytics &&
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Revenue Analytics */}
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
@@ -179,9 +179,9 @@ export default function BalanceOverview() {
                 <span className="text-gray-600">Total Revenue</span>
                 <span className="font-semibold">
                   {formatCurrency(
-                    analytics.totalRevenue,
-                    balance?.currency || "usd",
-                  )}
+                  analytics.totalRevenue,
+                  balance?.currency || "usd"
+                )}
                 </span>
               </div>
 
@@ -189,9 +189,9 @@ export default function BalanceOverview() {
                 <span className="text-gray-600">This Month</span>
                 <span className="font-semibold">
                   {formatCurrency(
-                    analytics.monthlyRevenue,
-                    balance?.currency || "usd",
-                  )}
+                  analytics.monthlyRevenue,
+                  balance?.currency || "usd"
+                )}
                 </span>
               </div>
 
@@ -199,9 +199,9 @@ export default function BalanceOverview() {
                 <span className="text-gray-600">Average Transaction</span>
                 <span className="font-semibold">
                   {formatCurrency(
-                    analytics.averageTransactionValue,
-                    balance?.currency || "usd",
-                  )}
+                  analytics.averageTransactionValue,
+                  balance?.currency || "usd"
+                )}
                 </span>
               </div>
 
@@ -232,18 +232,18 @@ export default function BalanceOverview() {
             </div>
 
             <div className="space-y-3">
-              {analytics.topPaymentMethods.map((method, index) => (
-                <div
-                  key={method.type}
-                  className="flex items-center justify-between"
-                >
+              {analytics.topPaymentMethods.map((method, index) =>
+            <div
+              key={method.type}
+              className="flex items-center justify-between">
+
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-3 h-3 rounded-full"
-                      style={{
-                        backgroundColor: `hsl(${index * 60}, 70%, 50%)`,
-                      }}
-                    />
+                  className="w-3 h-3 rounded-full"
+                  style={{
+                    backgroundColor: `hsl(${index * 60}, 70%, 50%)`
+                  }} />
+
                     <span className="text-gray-700 capitalize">
                       {method.type.replace("_", " ")}
                     </span>
@@ -251,20 +251,20 @@ export default function BalanceOverview() {
                   <div className="text-right">
                     <div className="font-semibold">
                       {formatCurrency(
-                        method.amount,
-                        balance?.currency || "usd",
-                      )}
+                    method.amount,
+                    balance?.currency || "usd"
+                  )}
                     </div>
                     <div className="text-sm text-gray-500">
                       {method.percentage.toFixed(1)}%
                     </div>
                   </div>
                 </div>
-              ))}
+            )}
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }

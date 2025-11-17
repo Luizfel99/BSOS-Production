@@ -1,19 +1,58 @@
 // prisma/schema.prisma
+// VS AI: DO NOT MODIFY ROLE STRINGS (cleaner, supervisor, manager, owner, client, admin).
+// IF YOU CHANGE TO PascalCase, the entire RBAC system breaks.
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL") // Neon: use sslmode=require
+}
+
+enum Role {
+  cleaner
+  supervisor
+  manager
+  owner
+  client
+  admin
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
+  id           String    @id @default(cuid())
   name         String
-  email        String   @unique
+  email        String    @unique
+  role         Role
   passwordHash String
-  role         String
-  active       Boolean  @default(true)
-  createdAt    DateTime @default(now())
+  avatar       String?   @db.Text
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  resetTokens       ResetToken[]
+  verificationCodes VerificationCode[]
+}
+
+model ResetToken {
+  token     String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model VerificationCode {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@index([expiresAt])
 }

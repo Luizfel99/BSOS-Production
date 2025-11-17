@@ -4,7 +4,7 @@
  * Now supports wrapping children content for desktop layout
  */
 
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState } from "react";
 import {
@@ -16,8 +16,8 @@ import {
   Settings,
   BarChart3,
   Bell,
-  DollarSign,
-} from "lucide-react";
+  DollarSign } from
+"lucide-react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -41,7 +41,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
   onItemClick,
   items,
   children,
-  user,
+  user
 }) => {
   const { isMobile, isTablet, isDesktop, screenWidth } = useMediaQuery();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -61,7 +61,7 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
       toast("Função em desenvolvimento 🧩", {
         icon: "🚧",
         duration: 3000,
-        position: "top-right",
+        position: "top-right"
       });
     }
 
@@ -78,17 +78,17 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
         {/* Mobile Top Bar - Optimized for 360px */}
         <nav className="bg-white border-b border-gray-200 px-3 py-2 flex items-center justify-between lg:hidden">
           <div className="flex items-center space-x-2 min-w-0 flex-1">
-            <button
+            <WiredButton
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 -ml-1 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 touch-target"
-              aria-label="Toggle menu"
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </button>
+              aria-label="Toggle menu">
+
+              {isMobileMenuOpen ?
+              <X className="h-5 w-5" /> :
+
+              <Menu className="h-5 w-5" />
+              }
+            </WiredButton>
             <h1 className="text-base font-semibold text-gray-900 truncate">
               B.S.O.S.
             </h1>
@@ -96,9 +96,9 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
 
           {/* Mobile Actions - Compact for small screens */}
           <div className="flex items-center space-x-1 flex-shrink-0">
-            <button className="p-2 text-gray-600 hover:text-gray-900 rounded-full touch-target">
+            <WiredButton className="p-2 text-gray-600 hover:text-gray-900 rounded-full touch-target" data-action="wire.auto">
               <Bell className="h-4 w-4" />
-            </button>
+            </WiredButton>
             <div className="w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center">
               <span className="text-white text-xs font-medium">
                 {user?.name?.charAt(0).toUpperCase() || "U"}
@@ -108,52 +108,52 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
         </nav>
 
         {/* Mobile Slide-out Menu - Full width on very small screens */}
-        {isMobileMenuOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
+        {isMobileMenuOpen &&
+        <div className="fixed inset-0 z-50 lg:hidden">
             {/* Backdrop - Closes menu when tapped outside */}
             <div
-              className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-              onClick={() => setIsMobileMenuOpen(false)}
-              onTouchEnd={() => setIsMobileMenuOpen(false)}
-              aria-label="Close menu"
-            />
+            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            onClick={() => setIsMobileMenuOpen(false)}
+            onTouchEnd={() => setIsMobileMenuOpen(false)}
+            aria-label="Close menu" />
+
 
             {/* Menu Panel - Responsive width */}
             <div
-              className={`fixed inset-y-0 left-0 bg-white shadow-xl transform transition-transform ${
-                screenWidth <= 360 ? "w-full" : "w-64"
-              }`}
-            >
+            className={`fixed inset-y-0 left-0 bg-white shadow-xl transform transition-transform ${
+            screenWidth <= 360 ? "w-full" : "w-64"}`
+            }>
+
               <div className="flex items-center justify-between p-3 border-b border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 touch-target"
-                >
+                <WiredButton
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 touch-target">
+
                   <X className="h-5 w-5" />
-                </button>
+                </WiredButton>
               </div>
 
               <nav className="px-3 py-4 space-y-1">
                 {navigationItems.map((item: NavigationItem) => {
-                  const IconComponent = item.icon;
-                  const isActive = activeItem === item.id;
+                const IconComponent = item.icon;
+                const isActive = activeItem === item.id;
 
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => handleItemClick(item.id)}
-                      className={`w-full flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors touch-target ${
-                        isActive
-                          ? "bg-blue-50 text-blue-700 border-l-4 border-blue-700"
-                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                      }`}
-                    >
+                return (
+                  <WiredButton
+                    key={item.id}
+                    onClick={() => handleItemClick(item.id)}
+                    className={`w-full flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors touch-target ${
+                    isActive ?
+                    "bg-blue-50 text-blue-700 border-l-4 border-blue-700" :
+                    "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}`
+                    }>
+
                       <IconComponent className="h-5 w-5 mr-3 flex-shrink-0" />
                       <span className="truncate">{item.label}</span>
-                    </button>
-                  );
-                })}
+                    </WiredButton>);
+
+              })}
               </nav>
 
               {/* Mobile User Info - Compact for small screens */}
@@ -178,12 +178,12 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
               </div>
             </div>
           </div>
-        )}
+        }
 
         {/* Mobile Content */}
         <div className="flex-1">{children}</div>
-      </div>
-    );
+      </div>);
+
   }
 
   // Tablet Navigation (768px - 1023px)
@@ -205,28 +205,28 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
                     const isActive = activeItem === item.id;
 
                     return (
-                      <button
+                      <WiredButton
                         key={item.id}
                         onClick={() => handleItemClick(item.id)}
                         className={`flex flex-col items-center px-4 py-2 text-xs font-medium rounded-lg transition-colors touch-target ${
-                          isActive
-                            ? "bg-blue-50 text-blue-700"
-                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                        }`}
-                      >
+                        isActive ?
+                        "bg-blue-50 text-blue-700" :
+                        "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}`
+                        }>
+
                         <IconComponent className="h-5 w-5 mb-1" />
                         <span>{item.label}</span>
-                      </button>
-                    );
+                      </WiredButton>);
+
                   })}
                 </div>
               </div>
 
               {/* Tablet Actions */}
               <div className="flex items-center space-x-4">
-                <button className="p-2 text-gray-600 hover:text-gray-900 rounded-full touch-target">
+                <WiredButton className="p-2 text-gray-600 hover:text-gray-900 rounded-full touch-target" data-action="wire.auto">
                   <Bell className="h-6 w-6" />
-                </button>
+                </WiredButton>
                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
                     {user?.name?.charAt(0).toUpperCase() || "U"}
@@ -239,8 +239,8 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
 
         {/* Tablet Content */}
         <div className="flex-1">{children}</div>
-      </div>
-    );
+      </div>);
+
   }
 
   // Desktop Navigation (1024px+) - Now supports children content
@@ -260,19 +260,19 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
             const isActive = activeItem === item.id;
 
             return (
-              <button
+              <WiredButton
                 key={item.id}
                 onClick={() => handleItemClick(item.id)}
                 className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-blue-50 text-blue-700 border-r-4 border-blue-700"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                }`}
-              >
+                isActive ?
+                "bg-blue-50 text-blue-700 border-r-4 border-blue-700" :
+                "text-gray-600 hover:bg-gray-50 hover:text-gray-900"}`
+                }>
+
                 <IconComponent className="h-5 w-5 mr-3 flex-shrink-0" />
                 <span>{item.label}</span>
-              </button>
-            );
+              </WiredButton>);
+
           })}
         </div>
 
@@ -300,8 +300,8 @@ export const ResponsiveNavigation: React.FC<ResponsiveNavigationProps> = ({
 
       {/* Main Content Area - Scrollable */}
       <div className="flex-1 flex flex-col overflow-hidden">{children}</div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default ResponsiveNavigation;

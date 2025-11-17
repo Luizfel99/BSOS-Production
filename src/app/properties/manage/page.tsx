@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,8 +15,8 @@ import {
   Home,
   User,
   Tag,
-  AlertCircle,
-} from "lucide-react";
+  AlertCircle } from
+"lucide-react";
 import { ProtectedComponent } from "@/components/ProtectedComponent";
 import {
   createProperty,
@@ -24,20 +24,20 @@ import {
   getProperty,
   type CreatePropertyData,
   type UpdatePropertyData,
-  type Property,
-} from "@/services/properties";
+  type Property } from
+"@/services/properties";
 
 // Form validation schema
 const propertySchema = z.object({
   name: z.string().min(1, "Property name is required"),
   address: z.string().min(1, "Address is required"),
   type: z.enum(["APARTMENT", "HOUSE", "STUDIO", "COMMERCIAL"], {
-    required_error: "Property type is required",
+    required_error: "Property type is required"
   }),
   platform: z.string().optional(),
   platformId: z.string().optional(),
   ownerId: z.string().optional(),
-  active: z.boolean().default(true),
+  active: z.boolean().default(true)
 });
 
 type PropertyFormData = z.infer<typeof propertySchema>;
@@ -57,7 +57,7 @@ export default function PropertyManagePage() {
     formState: { errors, isSubmitting },
     reset,
     setValue,
-    watch,
+    watch
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
     defaultValues: {
@@ -67,8 +67,8 @@ export default function PropertyManagePage() {
       platform: "",
       platformId: "",
       ownerId: "",
-      active: true,
-    },
+      active: true
+    }
   });
 
   // Load property data for editing
@@ -92,7 +92,7 @@ export default function PropertyManagePage() {
         platform: property.platform || "",
         platformId: property.platformId || "",
         ownerId: property.ownerId || "",
-        active: property.active,
+        active: property.active
       });
     } catch (error: any) {
       toast.error(error.message || "Failed to load property");
@@ -115,7 +115,7 @@ export default function PropertyManagePage() {
           platform: data.platform || undefined,
           platformId: data.platformId || undefined,
           ownerId: data.ownerId || undefined,
-          active: data.active,
+          active: data.active
         };
         await updateProperty(propertyId, updateData);
       } else {
@@ -127,7 +127,7 @@ export default function PropertyManagePage() {
           platform: data.platform || undefined,
           platformId: data.platformId || undefined,
           ownerId: data.ownerId || undefined,
-          active: data.active,
+          active: data.active
         };
         await createProperty(createData);
       }
@@ -136,7 +136,7 @@ export default function PropertyManagePage() {
     } catch (error: any) {
       toast.error(
         error.message ||
-          `Failed to ${isEditing ? "update" : "create"} property`,
+        `Failed to ${isEditing ? "update" : "create"} property`
       );
     } finally {
       setIsLoading(false);
@@ -150,8 +150,8 @@ export default function PropertyManagePage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading property...</p>
         </div>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
@@ -162,22 +162,22 @@ export default function PropertyManagePage() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
-            <button
+            className="mb-8">
+
+            <WiredButton
               onClick={() => router.back()}
-              className="flex items-center text-gray-600 hover:text-gray-800 mb-4 transition-colors"
-            >
+              className="flex items-center text-gray-600 hover:text-gray-800 mb-4 transition-colors">
+
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Properties
-            </button>
+            </WiredButton>
             <h1 className="text-3xl font-bold text-gray-900">
               {isEditing ? "Edit Property" : "Add New Property"}
             </h1>
             <p className="text-gray-600 mt-2">
-              {isEditing
-                ? "Update property information and settings"
-                : "Create a new property for cleaning management"}
+              {isEditing ?
+              "Update property information and settings" :
+              "Create a new property for cleaning management"}
             </p>
           </motion.div>
 
@@ -186,8 +186,8 @@ export default function PropertyManagePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-lg shadow-sm border border-gray-200"
-          >
+            className="bg-white rounded-lg shadow-sm border border-gray-200">
+
             <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
               {/* Property Name */}
               <div>
@@ -199,14 +199,14 @@ export default function PropertyManagePage() {
                   type="text"
                   {...register("name")}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                  placeholder="Enter property name"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                  placeholder="Enter property name" />
+
+                {errors.name &&
+                <p className="mt-1 text-sm text-red-600 flex items-center">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     {errors.name.message}
                   </p>
-                )}
+                }
               </div>
 
               {/* Address */}
@@ -219,14 +219,14 @@ export default function PropertyManagePage() {
                   {...register("address")}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                  placeholder="Enter full address"
-                />
-                {errors.address && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                  placeholder="Enter full address" />
+
+                {errors.address &&
+                <p className="mt-1 text-sm text-red-600 flex items-center">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     {errors.address.message}
                   </p>
-                )}
+                }
               </div>
 
               {/* Property Type */}
@@ -237,18 +237,18 @@ export default function PropertyManagePage() {
                 </label>
                 <select
                   {...register("type")}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                >
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+
                   <option value="APARTMENT">Apartment</option>
                   <option value="HOUSE">House</option>
                   <option value="STUDIO">Studio</option>
                 </select>
-                {errors.type && (
-                  <p className="mt-1 text-sm text-red-600 flex items-center">
+                {errors.type &&
+                <p className="mt-1 text-sm text-red-600 flex items-center">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     {errors.type.message}
                   </p>
-                )}
+                }
               </div>
 
               {/* Platform Information */}
@@ -262,8 +262,8 @@ export default function PropertyManagePage() {
                     type="text"
                     {...register("platform")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    placeholder="e.g., Airbnb, Booking.com"
-                  />
+                    placeholder="e.g., Airbnb, Booking.com" />
+
                 </div>
 
                 <div>
@@ -275,8 +275,8 @@ export default function PropertyManagePage() {
                     type="text"
                     {...register("platformId")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    placeholder="Platform listing ID"
-                  />
+                    placeholder="Platform listing ID" />
+
                 </div>
               </div>
 
@@ -290,8 +290,8 @@ export default function PropertyManagePage() {
                   type="text"
                   {...register("ownerId")}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                  placeholder="Leave empty to assign to current user"
-                />
+                  placeholder="Leave empty to assign to current user" />
+
               </div>
 
               {/* Active Status */}
@@ -299,8 +299,8 @@ export default function PropertyManagePage() {
                 <input
                   type="checkbox"
                   {...register("active")}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+
                 <label className="ml-2 text-sm font-medium text-gray-700">
                   Property is active
                 </label>
@@ -308,30 +308,30 @@ export default function PropertyManagePage() {
 
               {/* Submit Button */}
               <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-                <button
+                <WiredButton
                   type="button"
                   onClick={() => router.back()}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-                >
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+
                   Cancel
-                </button>
-                <button
+                </WiredButton>
+                <WiredButton
                   type="submit"
                   disabled={isSubmitting || isLoading}
-                  className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {isSubmitting || isLoading ? (
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  ) : (
-                    <Save className="h-4 w-4 mr-2" />
-                  )}
+                  className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" data-action="wire.auto">
+
+                  {isSubmitting || isLoading ?
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div> :
+
+                  <Save className="h-4 w-4 mr-2" />
+                  }
                   {isEditing ? "Update Property" : "Create Property"}
-                </button>
+                </WiredButton>
               </div>
             </form>
           </motion.div>
         </div>
       </div>
-    </ProtectedComponent>
-  );
+    </ProtectedComponent>);
+
 }

@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -41,7 +41,7 @@ export default function BSOSCore() {
     handleConnectIntegration,
     handleConfigureIntegration,
     handleSaveIntegrationSettings,
-    handleCreateTask,
+    handleCreateTask
   } = useBSOSActions();
 
   // Local UI state (not shared globally)
@@ -51,19 +51,19 @@ export default function BSOSCore() {
 
   // Filtrar tarefas baseado no tipo de usuário
   const userTasks =
-    user?.role === "cleaner"
-      ? tasks.filter((task) => task.assignedTo === user.name)
-      : tasks;
+  user?.role === "cleaner" ?
+  tasks.filter((task) => task.assignedTo === user.name) :
+  tasks;
 
   // Spinner Component
-  const LoadingSpinner = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  const LoadingSpinner = () =>
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 flex flex-col items-center space-y-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         <p className="text-gray-600 font-medium">Processing...</p>
       </div>
-    </div>
-  );
+    </div>;
+
 
   // Helper functions
   const getStatusColor = (status: string) => {
@@ -125,12 +125,12 @@ export default function BSOSCore() {
   };
 
   const tabs = [
-    { id: "dashboard", name: "Dashboard", icon: "" },
-    { id: "agenda", name: "Synchronized Agenda", icon: "" },
-    { id: "checklists", name: "Dynamic Checklists", icon: "" },
-    { id: "photos", name: "Before/After Photos", icon: "" },
-    { id: "reports", name: "Reports", icon: "" },
-  ];
+  { id: "dashboard", name: "Dashboard", icon: "" },
+  { id: "agenda", name: "Synchronized Agenda", icon: "" },
+  { id: "checklists", name: "Dynamic Checklists", icon: "" },
+  { id: "photos", name: "Before/After Photos", icon: "" },
+  { id: "reports", name: "Reports", icon: "" }];
+
 
   return (
     <div className="space-y-6">
@@ -168,51 +168,51 @@ export default function BSOSCore() {
       {/* Navigation Tabs */}
       <div className="border-b border-gray-200">
         <nav className="flex space-x-8">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === tab.id
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-              }`}
-            >
+          {tabs.map((tab) =>
+          <WiredButton
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+            activeTab === tab.id ?
+            "border-blue-500 text-blue-600" :
+            "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"}`
+            }>
+
               {tab.name}
-            </button>
-          ))}
+            </WiredButton>
+          )}
         </nav>
       </div>
 
       {/* Tab Content */}
       <div className="bg-white rounded-lg shadow">
         {/* Dashboard Tab */}
-        {activeTab === "dashboard" && (
-          <div className="p-6">
+        {activeTab === "dashboard" &&
+        <div className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900">
                 Active Tasks Dashboard
               </h2>
-              <button
-                onClick={handleCreateTask}
-                disabled={loadingStates.globalLoading}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  loadingStates.globalLoading
-                    ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"
-                }`}
-              >
+              <WiredButton
+              onClick={handleCreateTask}
+              disabled={loadingStates.globalLoading}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              loadingStates.globalLoading ?
+              "bg-gray-400 text-gray-600 cursor-not-allowed" :
+              "bg-blue-600 hover:bg-blue-700 text-white"}`
+              }>
+
                 {loadingStates.globalLoading ? "Aguarde..." : "Create New Task"}
-              </button>
+              </WiredButton>
             </div>
 
             {/* Tasks Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {userTasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
-                >
+              {userTasks.map((task) =>
+            <div
+              key={task.id}
+              className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 mb-1">
@@ -223,16 +223,16 @@ export default function BSOSCore() {
                           {task.type}
                         </span>
                         <span
-                          className={`font-medium ${getPriorityColor(task.priority)}`}
-                        >
+                      className={`font-medium ${getPriorityColor(task.priority)}`}>
+
                           {task.priority}
                         </span>
                         {getIntegrationLogo(task.integrationSource)}
                       </div>
                     </div>
                     <span
-                      className={`px-2 py-1 rounded-full border text-xs font-medium ${getStatusColor(task.status)}`}
-                    >
+                  className={`px-2 py-1 rounded-full border text-xs font-medium ${getStatusColor(task.status)}`}>
+
                       {getStatusText(task.status)}
                     </span>
                   </div>
@@ -264,89 +264,89 @@ export default function BSOSCore() {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                        style={{
-                          width: `${(task.checklistCompleted / task.checklistTotal) * 100}%`,
-                        }}
-                      ></div>
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style={{
+                      width: `${task.checklistCompleted / task.checklistTotal * 100}%`
+                    }}>
+                  </div>
                     </div>
                   </div>
 
                   <div className="flex flex-col space-y-2">
-                    <button
-                      onClick={() => {
-                        setSelectedTask(task);
-                        setShowChecklist(true);
-                      }}
-                      disabled={loadingStates.globalLoading}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        loadingStates.globalLoading
-                          ? "bg-gray-400 cursor-not-allowed text-gray-600"
-                          : "bg-blue-600 hover:bg-blue-700 text-white"
-                      }`}
-                    >
-                      Open Checklist
-                    </button>
+                    <WiredButton
+                  onClick={() => {
+                    setSelectedTask(task);
+                    setShowChecklist(true);
+                  }}
+                  disabled={loadingStates.globalLoading}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  loadingStates.globalLoading ?
+                  "bg-gray-400 cursor-not-allowed text-gray-600" :
+                  "bg-blue-600 hover:bg-blue-700 text-white"}`
+                  }>
 
-                    {task.status === "assigned" && (
-                      <button
-                        onClick={() => updateTaskStatus(task.id, "in-progress")}
-                        disabled={
-                          updatingTaskId === task.id ||
-                          loadingStates.globalLoading
-                        }
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                          updatingTaskId === task.id ||
-                          loadingStates.globalLoading
-                            ? "bg-gray-400 cursor-not-allowed text-white"
-                            : "bg-green-600 hover:bg-green-700 text-white"
-                        }`}
-                      >
-                        {updatingTaskId === task.id ? (
-                          <div className="flex items-center">
+                      Open Checklist
+                    </WiredButton>
+
+                    {task.status === "assigned" &&
+                <WiredButton
+                  onClick={() => updateTaskStatus(task.id, "in-progress")}
+                  disabled={
+                  updatingTaskId === task.id ||
+                  loadingStates.globalLoading
+                  }
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  updatingTaskId === task.id ||
+                  loadingStates.globalLoading ?
+                  "bg-gray-400 cursor-not-allowed text-white" :
+                  "bg-green-600 hover:bg-green-700 text-white"}`
+                  }>
+
+                        {updatingTaskId === task.id ?
+                  <div className="flex items-center">
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                             Starting...
-                          </div>
-                        ) : (
-                          "Start Task"
-                        )}
-                      </button>
-                    )}
+                          </div> :
 
-                    {task.status === "in-progress" && (
-                      <button
-                        onClick={() => updateTaskStatus(task.id, "review")}
-                        disabled={
-                          updatingTaskId === task.id ||
-                          loadingStates.globalLoading
-                        }
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                          updatingTaskId === task.id ||
-                          loadingStates.globalLoading
-                            ? "bg-gray-400 cursor-not-allowed text-white"
-                            : "bg-orange-600 hover:bg-orange-700 text-white"
-                        }`}
-                      >
-                        {updatingTaskId === task.id ? (
-                          <div className="flex items-center">
+                  "Start Task"
+                  }
+                      </WiredButton>
+                }
+
+                    {task.status === "in-progress" &&
+                <WiredButton
+                  onClick={() => updateTaskStatus(task.id, "review")}
+                  disabled={
+                  updatingTaskId === task.id ||
+                  loadingStates.globalLoading
+                  }
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  updatingTaskId === task.id ||
+                  loadingStates.globalLoading ?
+                  "bg-gray-400 cursor-not-allowed text-white" :
+                  "bg-orange-600 hover:bg-orange-700 text-white"}`
+                  }>
+
+                        {updatingTaskId === task.id ?
+                  <div className="flex items-center">
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                             Submitting...
-                          </div>
-                        ) : (
-                          "Submit for Review"
-                        )}
-                      </button>
-                    )}
+                          </div> :
+
+                  "Submit for Review"
+                  }
+                      </WiredButton>
+                }
                   </div>
                 </div>
-              ))}
+            )}
             </div>
           </div>
-        )}
+        }
 
         {/* Other Tabs */}
-        {activeTab === "agenda" && (
-          <div className="text-center py-12">
+        {activeTab === "agenda" &&
+        <div className="text-center py-12">
             <div className="text-6xl mb-4">📅</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Agenda Sincronizada
@@ -354,24 +354,24 @@ export default function BSOSCore() {
             <p className="text-gray-600 mb-4">
               Integração com Airbnb, Hostaway, Turno, Taskbird
             </p>
-            <button
-              onClick={() => setIntegrationsModalOpen(true)}
-              disabled={loadingStates.globalLoading}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                loadingStates.globalLoading
-                  ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
-              }`}
-            >
-              {loadingStates.globalLoading
-                ? "Aguarde..."
-                : "Configurar Integrações"}
-            </button>
-          </div>
-        )}
+            <WiredButton
+            onClick={() => setIntegrationsModalOpen(true)}
+            disabled={loadingStates.globalLoading}
+            className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            loadingStates.globalLoading ?
+            "bg-gray-400 text-gray-600 cursor-not-allowed" :
+            "bg-blue-600 hover:bg-blue-700 text-white"}`
+            }>
 
-        {activeTab === "checklists" && (
-          <div className="text-center py-12">
+              {loadingStates.globalLoading ?
+            "Aguarde..." :
+            "Configurar Integrações"}
+            </WiredButton>
+          </div>
+        }
+
+        {activeTab === "checklists" &&
+        <div className="text-center py-12">
             <div className="text-6xl mb-4">✅</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Checklists Dinâmicos
@@ -379,22 +379,22 @@ export default function BSOSCore() {
             <p className="text-gray-600 mb-4">
               Normal, Deep, Move-out, Inspection
             </p>
-            <button
-              onClick={() => handleChecklistTypeSelection("normal")}
-              disabled={loadingStates.globalLoading}
-              className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                loadingStates.globalLoading
-                  ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                  : "bg-green-600 hover:bg-green-700 text-white"
-              }`}
-            >
-              {loadingStates.globalLoading ? "Aguarde..." : "Ver Checklists"}
-            </button>
-          </div>
-        )}
+            <WiredButton
+            onClick={() => handleChecklistTypeSelection("normal")}
+            disabled={loadingStates.globalLoading}
+            className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            loadingStates.globalLoading ?
+            "bg-gray-400 text-gray-600 cursor-not-allowed" :
+            "bg-green-600 hover:bg-green-700 text-white"}`
+            }>
 
-        {activeTab === "photos" && (
-          <div className="text-center py-12">
+              {loadingStates.globalLoading ? "Aguarde..." : "Ver Checklists"}
+            </WiredButton>
+          </div>
+        }
+
+        {activeTab === "photos" &&
+        <div className="text-center py-12">
             <div className="text-6xl mb-4">📸</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Upload Obrigatório de Fotos
@@ -402,22 +402,22 @@ export default function BSOSCore() {
             <p className="text-gray-600 mb-4">
               Before/After para todas as limpezas
             </p>
-            <button
-              onClick={handlePhotoSection}
-              disabled={loadingStates.globalLoading}
-              className={`px-6 py-3 rounded-lg font-medium ${
-                loadingStates.globalLoading
-                  ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                  : "bg-green-600 hover:bg-green-700 text-white"
-              }`}
-            >
-              {loadingStates.globalLoading ? "Aguarde..." : "Fazer Upload"}
-            </button>
-          </div>
-        )}
+            <WiredButton
+            onClick={handlePhotoSection}
+            disabled={loadingStates.globalLoading}
+            className={`px-6 py-3 rounded-lg font-medium ${
+            loadingStates.globalLoading ?
+            "bg-gray-400 text-gray-600 cursor-not-allowed" :
+            "bg-green-600 hover:bg-green-700 text-white"}`
+            }>
 
-        {activeTab === "reports" && (
-          <div className="text-center py-12">
+              {loadingStates.globalLoading ? "Aguarde..." : "Fazer Upload"}
+            </WiredButton>
+          </div>
+        }
+
+        {activeTab === "reports" &&
+        <div className="text-center py-12">
             <div className="text-6xl mb-4">📋</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               Relatórios de Campo
@@ -425,20 +425,20 @@ export default function BSOSCore() {
             <p className="text-gray-600 mb-4">
               Notas, observações e reportes de danos
             </p>
-            <button
-              onClick={handleReportsSection}
-              disabled={loadingStates.globalLoading}
-              className={`px-6 py-3 rounded-lg font-medium ${
-                loadingStates.globalLoading
-                  ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                  : "bg-purple-600 hover:bg-purple-700 text-white"
-              }`}
-            >
+            <WiredButton
+            onClick={handleReportsSection}
+            disabled={loadingStates.globalLoading}
+            className={`px-6 py-3 rounded-lg font-medium ${
+            loadingStates.globalLoading ?
+            "bg-gray-400 text-gray-600 cursor-not-allowed" :
+            "bg-purple-600 hover:bg-purple-700 text-white"}`
+            }>
+
               {loadingStates.globalLoading ? "Aguarde..." : "Ver Relatórios"}
-            </button>
+            </WiredButton>
           </div>
-        )}
+        }
       </div>
-    </div>
-  );
+    </div>);
+
 }

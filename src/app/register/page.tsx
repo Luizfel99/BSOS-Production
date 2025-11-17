@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState } from "react";
 import axios from "axios";
@@ -10,7 +10,7 @@ export default function RegisterPage() {
     name: "",
     email: "",
     password: "",
-    role: "cleaner",
+    role: "cleaner"
   });
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ export default function RegisterPage() {
         name: "",
         email: "",
         password: "",
-        role: "cleaner",
+        role: "cleaner"
       });
 
       // Opcional: redirecionar após 2 segundos
@@ -48,8 +48,8 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full space-y-4"
-      >
+        className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full space-y-4">
+
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Criar Usuário</h1>
           <p className="text-gray-500 mt-2">Somente administradores</p>
@@ -64,8 +64,8 @@ export default function RegisterPage() {
             className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="João Silva"
             value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
+            onChange={(e) => setForm({ ...form, name: e.target.value })} />
+
         </div>
 
         <div>
@@ -78,8 +78,8 @@ export default function RegisterPage() {
             className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="joao@exemplo.com"
             value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-          />
+            onChange={(e) => setForm({ ...form, email: e.target.value })} />
+
         </div>
 
         <div>
@@ -93,8 +93,8 @@ export default function RegisterPage() {
             className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Mínimo 6 caracteres"
             value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-          />
+            onChange={(e) => setForm({ ...form, password: e.target.value })} />
+
         </div>
 
         <div>
@@ -104,8 +104,8 @@ export default function RegisterPage() {
           <select
             className="border p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             value={form.role}
-            onChange={(e) => setForm({ ...form, role: e.target.value })}
-          >
+            onChange={(e) => setForm({ ...form, role: e.target.value })}>
+
             <option value="admin">Administrador</option>
             <option value="owner">Proprietário</option>
             <option value="manager">Gerente</option>
@@ -115,36 +115,36 @@ export default function RegisterPage() {
           </select>
         </div>
 
-        <button
+        <WiredButton
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white p-3 rounded-lg w-full font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? "Criando..." : "Criar Usuário"}
-        </button>
+          className="bg-blue-600 text-white p-3 rounded-lg w-full font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed" data-action="wire.auto">
 
-        {msg && (
-          <div
-            className={`p-3 rounded-lg text-center text-sm ${
-              msg.includes("✅")
-                ? "bg-green-50 text-green-700 border border-green-200"
-                : "bg-red-50 text-red-700 border border-red-200"
-            }`}
-          >
+          {loading ? "Criando..." : "Criar Usuário"}
+        </WiredButton>
+
+        {msg &&
+        <div
+          className={`p-3 rounded-lg text-center text-sm ${
+          msg.includes("✅") ?
+          "bg-green-50 text-green-700 border border-green-200" :
+          "bg-red-50 text-red-700 border border-red-200"}`
+          }>
+
             {msg}
           </div>
-        )}
+        }
 
         <div className="text-center pt-4">
-          <button
+          <WiredButton
             type="button"
             onClick={() => router.push("/login")}
-            className="text-blue-600 hover:underline text-sm"
-          >
+            className="text-blue-600 hover:underline text-sm">
+
             ← Voltar para login
-          </button>
+          </WiredButton>
         </div>
       </form>
-    </div>
-  );
+    </div>);
+
 }

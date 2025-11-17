@@ -3,7 +3,7 @@
  * Provides comprehensive route-level RBAC implementation
  */
 
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -25,122 +25,122 @@ interface RouteProtectionConfig {
 
 // Define protected routes and their access requirements
 export const PROTECTED_ROUTES: RouteProtectionConfig[] = [
-  // Dashboard routes
-  {
-    path: "/dashboard",
-    allowedRoles: [
-      "cleaner",
-      "supervisor",
-      "manager",
-      "owner",
-      "client",
-      "admin",
-    ],
-  },
-  {
-    path: "/dashboard/admin",
-    allowedRoles: ["admin"],
-    requiredPermission: { module: "dashboard", action: "access" },
-  },
+// Dashboard routes
+{
+  path: "/dashboard",
+  allowedRoles: [
+  "cleaner",
+  "supervisor",
+  "manager",
+  "owner",
+  "client",
+  "admin"]
 
-  // Task management routes
-  {
-    path: "/tasks",
-    allowedRoles: ["cleaner", "supervisor", "manager", "owner"],
-    requiredPermission: { module: "tasks", action: "view" },
-  },
-  {
-    path: "/tasks/create",
-    allowedRoles: ["supervisor", "manager", "owner"],
-    requiredPermission: { module: "tasks", action: "create" },
-  },
-  {
-    path: "/tasks/manage",
-    allowedRoles: ["supervisor", "manager", "owner"],
-    requiredPermission: { module: "tasks", action: "update" },
-  },
+},
+{
+  path: "/dashboard/admin",
+  allowedRoles: ["admin"],
+  requiredPermission: { module: "dashboard", action: "access" }
+},
 
-  // Team management routes
-  {
-    path: "/team",
-    allowedRoles: ["supervisor", "manager", "owner"],
-    requiredPermission: { module: "employees", action: "view" },
-  },
-  {
-    path: "/team/manage",
-    allowedRoles: ["manager", "owner"],
-    requiredPermission: { module: "employees", action: "manage_users" },
-  },
+// Task management routes
+{
+  path: "/tasks",
+  allowedRoles: ["cleaner", "supervisor", "manager", "owner"],
+  requiredPermission: { module: "tasks", action: "view" }
+},
+{
+  path: "/tasks/create",
+  allowedRoles: ["supervisor", "manager", "owner"],
+  requiredPermission: { module: "tasks", action: "create" }
+},
+{
+  path: "/tasks/manage",
+  allowedRoles: ["supervisor", "manager", "owner"],
+  requiredPermission: { module: "tasks", action: "update" }
+},
 
-  // Property management routes
-  {
-    path: "/properties",
-    allowedRoles: ["manager", "owner", "client"],
-    requiredPermission: { module: "properties", action: "view" },
-  },
-  {
-    path: "/properties/create",
-    allowedRoles: ["manager", "owner"],
-    requiredPermission: { module: "properties", action: "create" },
-  },
+// Team management routes
+{
+  path: "/team",
+  allowedRoles: ["supervisor", "manager", "owner"],
+  requiredPermission: { module: "employees", action: "view" }
+},
+{
+  path: "/team/manage",
+  allowedRoles: ["manager", "owner"],
+  requiredPermission: { module: "employees", action: "manage_users" }
+},
 
-  // Reporting routes
-  {
-    path: "/reports",
-    allowedRoles: ["supervisor", "manager", "owner", "client"],
-    requiredPermission: { module: "reports", action: "view" },
-  },
-  {
-    path: "/reports/export",
-    allowedRoles: ["manager", "owner"],
-    requiredPermission: { module: "reports", action: "export" },
-  },
+// Property management routes
+{
+  path: "/properties",
+  allowedRoles: ["manager", "owner", "client"],
+  requiredPermission: { module: "properties", action: "view" }
+},
+{
+  path: "/properties/create",
+  allowedRoles: ["manager", "owner"],
+  requiredPermission: { module: "properties", action: "create" }
+},
 
-  // Analytics routes
-  {
-    path: "/analytics",
-    allowedRoles: ["supervisor", "manager", "owner"],
-    requiredPermission: { module: "analytics", action: "access_analytics" },
-  },
+// Reporting routes
+{
+  path: "/reports",
+  allowedRoles: ["supervisor", "manager", "owner", "client"],
+  requiredPermission: { module: "reports", action: "view" }
+},
+{
+  path: "/reports/export",
+  allowedRoles: ["manager", "owner"],
+  requiredPermission: { module: "reports", action: "export" }
+},
 
-  // Finance routes
-  {
-    path: "/finance",
-    allowedRoles: ["manager", "owner"],
-    requiredPermission: { module: "finance", action: "view_finance" },
-  },
-  {
-    path: "/finance/payments",
-    allowedRoles: ["manager", "owner"],
-    requiredPermission: { module: "payments", action: "approve_payment" },
-  },
+// Analytics routes
+{
+  path: "/analytics",
+  allowedRoles: ["supervisor", "manager", "owner"],
+  requiredPermission: { module: "analytics", action: "access_analytics" }
+},
 
-  // Settings and administration
-  {
-    path: "/settings",
-    allowedRoles: ["owner"],
-    requiredPermission: { module: "settings", action: "configure" },
-  },
-  {
-    path: "/admin",
-    allowedRoles: ["owner", "admin"],
-    requiredPermission: { module: "users", action: "manage_users" },
-  },
+// Finance routes
+{
+  path: "/finance",
+  allowedRoles: ["manager", "owner"],
+  requiredPermission: { module: "finance", action: "view_finance" }
+},
+{
+  path: "/finance/payments",
+  allowedRoles: ["manager", "owner"],
+  requiredPermission: { module: "payments", action: "approve_payment" }
+},
 
-  // Integration routes
-  {
-    path: "/integrations",
-    allowedRoles: ["manager", "owner"],
-    requiredPermission: { module: "integrations", action: "view" },
-  },
+// Settings and administration
+{
+  path: "/settings",
+  allowedRoles: ["owner"],
+  requiredPermission: { module: "settings", action: "configure" }
+},
+{
+  path: "/admin",
+  allowedRoles: ["owner", "admin"],
+  requiredPermission: { module: "users", action: "manage_users" }
+},
 
-  // Client portal routes
-  {
-    path: "/client",
-    allowedRoles: ["client", "owner"],
-    feature: "client-portal",
-  },
-];
+// Integration routes
+{
+  path: "/integrations",
+  allowedRoles: ["manager", "owner"],
+  requiredPermission: { module: "integrations", action: "view" }
+},
+
+// Client portal routes
+{
+  path: "/client",
+  allowedRoles: ["client", "owner"],
+  feature: "client-portal"
+}];
+
 
 interface AccessDeniedPageProps {
   userRole?: string;
@@ -153,7 +153,7 @@ const AccessDeniedPage: React.FC<AccessDeniedPageProps> = ({
   userRole,
   requiredRoles,
   currentPath,
-  reason = "Você não tem permissão para acessar esta página",
+  reason = "Você não tem permissão para acessar esta página"
 }) => {
   const router = useRouter();
 
@@ -187,50 +187,50 @@ const AccessDeniedPage: React.FC<AccessDeniedPageProps> = ({
           {/* Details */}
           <div className="bg-gray-50 rounded-lg p-4 mb-6 text-sm">
             <div className="space-y-2">
-              {userRole && (
-                <div className="flex justify-between">
+              {userRole &&
+              <div className="flex justify-between">
                   <span className="text-gray-500">Seu perfil:</span>
                   <span className="font-medium text-gray-900 capitalize">
                     {userRole}
                   </span>
                 </div>
-              )}
-              {requiredRoles && requiredRoles.length > 0 && (
-                <div className="flex justify-between">
+              }
+              {requiredRoles && requiredRoles.length > 0 &&
+              <div className="flex justify-between">
                   <span className="text-gray-500">Perfis permitidos:</span>
                   <span className="font-medium text-gray-900 capitalize">
                     {requiredRoles.join(", ")}
                   </span>
                 </div>
-              )}
-              {currentPath && (
-                <div className="flex justify-between">
+              }
+              {currentPath &&
+              <div className="flex justify-between">
                   <span className="text-gray-500">Página solicitada:</span>
                   <span className="font-medium text-gray-900">
                     {currentPath}
                   </span>
                 </div>
-              )}
+              }
             </div>
           </div>
 
           {/* Actions */}
           <div className="space-y-3">
-            <button
+            <WiredButton
               onClick={handleGoHome}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
-            >
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+
               <Home className="h-4 w-4 mr-2" />
               Ir para Dashboard
-            </button>
+            </WiredButton>
 
-            <button
+            <WiredButton
               onClick={handleGoBack}
-              className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors flex items-center justify-center"
-            >
+              className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors flex items-center justify-center">
+
               <ArrowLeft className="h-4 w-4 mr-2" />
               Voltar
-            </button>
+            </WiredButton>
           </div>
 
           {/* Help */}
@@ -248,8 +248,8 @@ const AccessDeniedPage: React.FC<AccessDeniedPageProps> = ({
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 // Route Guard Hook
@@ -285,7 +285,7 @@ export const useRouteGuard = () => {
         console.log(
           "[BSOS-Auth] Unauthenticated access attempt to",
           pathname,
-          "-> redirect /login",
+          "-> redirect /login"
         );
         setTimeout(() => {
           router.replace("/login");
@@ -297,7 +297,7 @@ export const useRouteGuard = () => {
       console.debug("[RouteGuard] Checking access", {
         pathname,
         userRole: user?.role,
-        loading,
+        loading
       });
 
       // Find route configuration
@@ -306,9 +306,9 @@ export const useRouteGuard = () => {
         return (
           pathname === route.path ||
           pathname.startsWith(route.path + "/") ||
-          (route.path.includes("*") &&
-            new RegExp(route.path.replace("*", ".*")).test(pathname))
-        );
+          route.path.includes("*") &&
+          new RegExp(route.path.replace("*", ".*")).test(pathname));
+
       });
 
       // If no specific route config, allow access (public route)
@@ -326,14 +326,14 @@ export const useRouteGuard = () => {
       if (routeConfig.allowedRoles) {
         const userRoleLower = user?.role?.toLowerCase();
         const allowedRolesLower = routeConfig.allowedRoles.map((r) =>
-          r.toLowerCase(),
+        r.toLowerCase()
         );
         const roleMatch =
-          !!userRoleLower && allowedRolesLower.includes(userRoleLower);
+        !!userRoleLower && allowedRolesLower.includes(userRoleLower);
         console.debug("[RouteGuard] Role check", {
           userRoleLower,
           allowedRolesLower,
-          roleMatch,
+          roleMatch
         });
         if (!roleMatch) {
           access = false;
@@ -349,7 +349,7 @@ export const useRouteGuard = () => {
         console.debug("[RouteGuard] Permission check", {
           module,
           action,
-          permissionOk,
+          permissionOk
         });
         if (!permissionOk) {
           access = false;
@@ -359,25 +359,25 @@ export const useRouteGuard = () => {
 
       // Check feature-based access
       if (access && routeConfig.feature) {
+
+
         // This would integrate with the feature access system
         // For now, we'll assume feature access is handled by role
-      }
-
-      if (access) {
+      }if (access) {
         setHasAccess(true);
         setAccessDeniedInfo(null);
       } else {
         setHasAccess(false);
         setAccessDeniedInfo({
           reason: deniedReason,
-          requiredRoles,
+          requiredRoles
         });
 
         // If redirect is specified, use push to allow back navigation
         if (routeConfig.redirectTo) {
           console.log(
             "[BSOS-Auth] Access denied, redirecting to",
-            routeConfig.redirectTo,
+            routeConfig.redirectTo
           );
           router.push(routeConfig.redirectTo);
           return;
@@ -394,13 +394,13 @@ export const useRouteGuard = () => {
     isChecking,
     hasAccess,
     accessDeniedInfo,
-    userRole: user?.role,
+    userRole: user?.role
   };
 };
 
 // Route Guard Component
-export const RouteGuard: React.FC<{ children: React.ReactNode }> = ({
-  children,
+export const RouteGuard: React.FC<{children: React.ReactNode;}> = ({
+  children
 }) => {
   const { isChecking, hasAccess, accessDeniedInfo, userRole } = useRouteGuard();
   const pathname = usePathname();
@@ -417,9 +417,9 @@ export const RouteGuard: React.FC<{ children: React.ReactNode }> = ({
         userRole={userRole}
         requiredRoles={accessDeniedInfo.requiredRoles}
         currentPath={pathname}
-        reason={accessDeniedInfo.reason}
-      />
-    );
+        reason={accessDeniedInfo.reason} />);
+
+
   }
 
   // Render children if access is granted

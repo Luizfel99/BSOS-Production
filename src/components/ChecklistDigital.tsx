@@ -3,7 +3,7 @@
  * Sistema completo de checklists customizados com validação por fotos
  */
 
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -17,8 +17,8 @@ import {
   User,
   AlertCircle,
   CheckCircle2,
-  Star,
-} from "lucide-react";
+  Star } from
+"lucide-react";
 
 interface ChecklistItem {
   id: string;
@@ -67,18 +67,18 @@ interface ActiveChecklist {
   assignedTo: {
     leaderId: string;
     leaderName: string;
-    members: Array<{ id: string; name: string }>;
+    members: Array<{id: string;name: string;}>;
   };
   startedAt?: string;
   completedAt?: string;
   totalTimeSpent: number;
   status:
-    | "pending"
-    | "in_progress"
-    | "completed"
-    | "review"
-    | "approved"
-    | "rejected";
+  "pending" |
+  "in_progress" |
+  "completed" |
+  "review" |
+  "approved" |
+  "rejected";
   supervisorNotes?: string;
   qualityScore?: number;
   clientRating?: number;
@@ -94,12 +94,12 @@ interface ActiveChecklist {
 
 export default function ChecklistDigital() {
   const [activeChecklist, setActiveChecklist] =
-    useState<ActiveChecklist | null>(null);
+  useState<ActiveChecklist | null>(null);
   const [templates, setTemplates] = useState<ChecklistTemplate[]>([]);
   const [currentCategory, setCurrentCategory] = useState(0);
   const [isCapturing, setIsCapturing] = useState(false);
   const [captureMode, setCaptureMode] = useState<"before" | "after" | "issue">(
-    "before",
+    "before"
   );
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [timer, setTimer] = useState(0);
@@ -147,7 +147,7 @@ export default function ChecklistDigital() {
       if (data.checklist.status === "in_progress") {
         setIsTimerRunning(true);
         const elapsed =
-          Date.now() - new Date(data.checklist.startedAt).getTime();
+        Date.now() - new Date(data.checklist.startedAt).getTime();
         setTimer(Math.floor(elapsed / 1000));
       }
     } catch (error) {
@@ -162,20 +162,20 @@ export default function ChecklistDigital() {
       const response = await fetch(
         `/api/checklists/${activeChecklist.id}/start`,
         {
-          method: "POST",
-        },
+          method: "POST"
+        }
       );
 
       if (response.ok) {
         setIsTimerRunning(true);
         setActiveChecklist((prev) =>
-          prev
-            ? {
-                ...prev,
-                status: "in_progress",
-                startedAt: new Date().toISOString(),
-              }
-            : null,
+        prev ?
+        {
+          ...prev,
+          status: "in_progress",
+          startedAt: new Date().toISOString()
+        } :
+        null
         );
       }
     } catch (error) {
@@ -184,10 +184,10 @@ export default function ChecklistDigital() {
   };
 
   const completeItem = async (
-    categoryIndex: number,
-    itemIndex: number,
-    data: Partial<ChecklistItem>,
-  ) => {
+  categoryIndex: number,
+  itemIndex: number,
+  data: Partial<ChecklistItem>) =>
+  {
     if (!activeChecklist) return;
 
     try {
@@ -200,19 +200,19 @@ export default function ChecklistDigital() {
             ...data,
             completed: true,
             completedAt: new Date().toISOString(),
-            actualTime: timer,
-          }),
-        },
+            actualTime: timer
+          })
+        }
       );
 
       if (response.ok) {
         const updatedChecklist = { ...activeChecklist };
         const item =
-          updatedChecklist.template.categories[categoryIndex].items[itemIndex];
+        updatedChecklist.template.categories[categoryIndex].items[itemIndex];
         Object.assign(item, data, {
           completed: true,
           completedAt: new Date().toISOString(),
-          actualTime: timer,
+          actualTime: timer
         });
 
         setActiveChecklist(updatedChecklist);
@@ -223,13 +223,13 @@ export default function ChecklistDigital() {
   };
 
   const capturePhoto = async (
-    itemId: string,
-    type: "before" | "after" | "issue",
-  ) => {
+  itemId: string,
+  type: "before" | "after" | "issue") =>
+  {
     try {
       setIsCapturing(true);
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
+        video: { facingMode: "environment" }
       });
 
       if (videoRef.current) {
@@ -262,7 +262,7 @@ export default function ChecklistDigital() {
           }
         },
         "image/jpeg",
-        0.8,
+        0.8
       );
     }
 
@@ -285,10 +285,10 @@ export default function ChecklistDigital() {
   };
 
   const uploadPhoto = async (
-    itemId: string,
-    file: File | Blob,
-    type: "before" | "after" | "issue",
-  ) => {
+  itemId: string,
+  file: File | Blob,
+  type: "before" | "after" | "issue") =>
+  {
     const formData = new FormData();
     formData.append("photo", file);
     formData.append("type", type);
@@ -298,7 +298,7 @@ export default function ChecklistDigital() {
     try {
       const response = await fetch("/api/checklists/photos/upload", {
         method: "POST",
-        body: formData,
+        body: formData
       });
 
       if (response.ok) {
@@ -322,22 +322,22 @@ export default function ChecklistDigital() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             totalTime: timer,
-            completedAt: new Date().toISOString(),
-          }),
-        },
+            completedAt: new Date().toISOString()
+          })
+        }
       );
 
       if (response.ok) {
         setIsTimerRunning(false);
         setActiveChecklist((prev) =>
-          prev
-            ? {
-                ...prev,
-                status: "review",
-                completedAt: new Date().toISOString(),
-                totalTimeSpent: timer,
-              }
-            : null,
+        prev ?
+        {
+          ...prev,
+          status: "review",
+          completedAt: new Date().toISOString(),
+          totalTimeSpent: timer
+        } :
+        null
         );
       }
     } catch (error) {
@@ -347,7 +347,7 @@ export default function ChecklistDigital() {
 
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
+    const minutes = Math.floor(seconds % 3600 / 60);
     const secs = seconds % 60;
     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
@@ -356,17 +356,17 @@ export default function ChecklistDigital() {
     if (!activeChecklist) return 0;
 
     const allItems = activeChecklist.template.categories.flatMap(
-      (cat) => cat.items,
+      (cat) => cat.items
     );
     const completedItems = allItems.filter((item) => item.completed);
-    return Math.round((completedItems.length / allItems.length) * 100);
+    return Math.round(completedItems.length / allItems.length * 100);
   };
 
   const getCurrentCategory = () => {
     if (
-      !activeChecklist ||
-      currentCategory >= activeChecklist.template.categories.length
-    ) {
+    !activeChecklist ||
+    currentCategory >= activeChecklist.template.categories.length)
+    {
       return null;
     }
     return activeChecklist.template.categories[currentCategory];
@@ -383,15 +383,15 @@ export default function ChecklistDigital() {
           <p className="text-gray-600 mb-6">
             Selecione um agendamento para iniciar o checklist
           </p>
-          <button
+          <WiredButton
             onClick={() => setShowAppointmentsModal(true)}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
-          >
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+
             Ver Agendamentos
-          </button>
+          </WiredButton>
         </div>
-      </div>
-    );
+      </div>);
+
   }
 
   const category = getCurrentCategory();
@@ -414,21 +414,21 @@ export default function ChecklistDigital() {
           <div className="text-right">
             <div
               className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
-                activeChecklist.status === "in_progress"
-                  ? "bg-yellow-100 text-yellow-800"
-                  : activeChecklist.status === "completed"
-                    ? "bg-green-100 text-green-800"
-                    : activeChecklist.status === "review"
-                      ? "bg-purple-100 text-purple-800"
-                      : "bg-gray-100 text-gray-800"
-              }`}
-            >
+              activeChecklist.status === "in_progress" ?
+              "bg-yellow-100 text-yellow-800" :
+              activeChecklist.status === "completed" ?
+              "bg-green-100 text-green-800" :
+              activeChecklist.status === "review" ?
+              "bg-purple-100 text-purple-800" :
+              "bg-gray-100 text-gray-800"}`
+              }>
+
               <Clock className="h-4 w-4" />
-              {activeChecklist.status === "in_progress"
-                ? formatTime(timer)
-                : activeChecklist.status === "pending"
-                  ? "Não iniciado"
-                  : "Finalizado"}
+              {activeChecklist.status === "in_progress" ?
+              formatTime(timer) :
+              activeChecklist.status === "pending" ?
+              "Não iniciado" :
+              "Finalizado"}
             </div>
           </div>
         </div>
@@ -444,8 +444,8 @@ export default function ChecklistDigital() {
           <div className="w-full bg-gray-200 rounded-full h-3">
             <div
               className="bg-green-600 h-3 rounded-full transition-all duration-300"
-              style={{ width: `${completionPercentage}%` }}
-            ></div>
+              style={{ width: `${completionPercentage}%` }}>
+            </div>
           </div>
         </div>
 
@@ -455,311 +455,311 @@ export default function ChecklistDigital() {
             <User className="h-4 w-4" />
             <span>Líder: {activeChecklist.assignedTo.leaderName}</span>
           </div>
-          {activeChecklist.assignedTo.members.length > 0 && (
-            <div>
+          {activeChecklist.assignedTo.members.length > 0 &&
+          <div>
               Equipe:{" "}
               {activeChecklist.assignedTo.members.map((m) => m.name).join(", ")}
             </div>
-          )}
+          }
         </div>
 
         {/* Action Buttons */}
         <div className="flex gap-3 mt-4">
-          {activeChecklist.status === "pending" && (
-            <button
-              onClick={startChecklist}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-            >
+          {activeChecklist.status === "pending" &&
+          <WiredButton
+            onClick={startChecklist}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+
               Iniciar Checklist
-            </button>
-          )}
+            </WiredButton>
+          }
 
           {activeChecklist.status === "in_progress" &&
-            completionPercentage === 100 && (
-              <button
-                onClick={submitForReview}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-              >
+          completionPercentage === 100 &&
+          <WiredButton
+            onClick={submitForReview}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+
                 Enviar para Revisão
-              </button>
-            )}
+              </WiredButton>
+          }
         </div>
       </div>
 
       {/* Category Navigation */}
-      {activeChecklist.status !== "pending" && (
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+      {activeChecklist.status !== "pending" &&
+      <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
           <div className="flex gap-2 overflow-x-auto">
             {activeChecklist.template.categories.map((cat, index) => {
-              const categoryItems = cat.items;
-              const completedInCategory = categoryItems.filter(
-                (item) => item.completed,
-              ).length;
-              const isActive = index === currentCategory;
+            const categoryItems = cat.items;
+            const completedInCategory = categoryItems.filter(
+              (item) => item.completed
+            ).length;
+            const isActive = index === currentCategory;
 
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setCurrentCategory(index)}
-                  className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-blue-600 text-white"
-                      : completedInCategory === categoryItems.length
-                        ? "bg-green-100 text-green-800"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
+            return (
+              <WiredButton
+                key={cat.id}
+                onClick={() => setCurrentCategory(index)}
+                className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                isActive ?
+                "bg-blue-600 text-white" :
+                completedInCategory === categoryItems.length ?
+                "bg-green-100 text-green-800" :
+                "bg-gray-100 text-gray-700 hover:bg-gray-200"}`
+                }>
+
                   <div className="flex items-center gap-2">
                     <span>{cat.name}</span>
                     <span className="text-xs">
                       {completedInCategory}/{categoryItems.length}
                     </span>
-                    {completedInCategory === categoryItems.length && (
-                      <CheckCircle2 className="h-4 w-4" />
-                    )}
+                    {completedInCategory === categoryItems.length &&
+                  <CheckCircle2 className="h-4 w-4" />
+                  }
                   </div>
-                </button>
-              );
-            })}
+                </WiredButton>);
+
+          })}
           </div>
         </div>
-      )}
+      }
 
       {/* Checklist Items */}
-      {category && (
-        <div className="space-y-4">
-          {category.items.map((item, itemIndex) => (
-            <div
-              key={item.id}
-              className={`bg-white rounded-lg shadow-sm border-l-4 p-6 ${
-                item.completed
-                  ? "border-l-green-500 bg-green-50"
-                  : item.isRequired
-                    ? "border-l-red-400"
-                    : "border-l-blue-400"
-              }`}
-            >
+      {category &&
+      <div className="space-y-4">
+          {category.items.map((item, itemIndex) =>
+        <div
+          key={item.id}
+          className={`bg-white rounded-lg shadow-sm border-l-4 p-6 ${
+          item.completed ?
+          "border-l-green-500 bg-green-50" :
+          item.isRequired ?
+          "border-l-red-400" :
+          "border-l-blue-400"}`
+          }>
+
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <h3 className="font-semibold text-lg">{item.task}</h3>
-                    {item.isRequired && (
-                      <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                    {item.isRequired &&
+                <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
                         Obrigatório
                       </span>
-                    )}
-                    {item.requiresPhoto && (
-                      <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                }
+                    {item.requiresPhoto &&
+                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
                         Foto Obrigatória
                       </span>
-                    )}
+                }
                   </div>
                   <div className="text-sm text-gray-600">
                     Tempo estimado: {item.estimatedTime} min
-                    {item.actualTime && (
-                      <span>
+                    {item.actualTime &&
+                <span>
                         {" "}
                         • Tempo real: {Math.floor(item.actualTime / 60)} min
                       </span>
-                    )}
+                }
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  {item.completed ? (
-                    <div className="flex items-center gap-2 text-green-600">
+                  {item.completed ?
+              <div className="flex items-center gap-2 text-green-600">
                       <CheckCircle2 className="h-6 w-6" />
                       <span className="text-sm">Concluído</span>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        completeItem(currentCategory, itemIndex, item)
-                      }
-                      disabled={item.requiresPhoto && item.photos.length === 0}
-                      className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
+                    </div> :
+
+              <WiredButton
+                onClick={() =>
+                completeItem(currentCategory, itemIndex, item)
+                }
+                disabled={item.requiresPhoto && item.photos.length === 0}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed">
+
                       Marcar como Concluído
-                    </button>
-                  )}
+                    </WiredButton>
+              }
                 </div>
               </div>
 
               {/* Photos Section */}
-              {item.requiresPhoto && (
-                <div className="mb-4">
+              {item.requiresPhoto &&
+          <div className="mb-4">
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="font-medium">
                       Fotos {item.isRequired && "*"}
                     </h4>
                     <div className="flex gap-2">
-                      <button
-                        onClick={() => {
-                          setSelectedItem(item.id);
-                          setCaptureMode("before");
-                          capturePhoto(item.id, "before");
-                        }}
-                        className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                      >
+                      <WiredButton
+                  onClick={() => {
+                    setSelectedItem(item.id);
+                    setCaptureMode("before");
+                    capturePhoto(item.id, "before");
+                  }}
+                  className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+
                         <Camera className="h-4 w-4" />
                         Antes
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedItem(item.id);
-                          setCaptureMode("after");
-                          capturePhoto(item.id, "after");
-                        }}
-                        className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
-                      >
+                      </WiredButton>
+                      <WiredButton
+                  onClick={() => {
+                    setSelectedItem(item.id);
+                    setCaptureMode("after");
+                    capturePhoto(item.id, "after");
+                  }}
+                  className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">
+
                         <Camera className="h-4 w-4" />
                         Depois
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedItem(item.id);
-                          setCaptureMode("issue");
-                          capturePhoto(item.id, "issue");
-                        }}
-                        className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-                      >
+                      </WiredButton>
+                      <WiredButton
+                  onClick={() => {
+                    setSelectedItem(item.id);
+                    setCaptureMode("issue");
+                    capturePhoto(item.id, "issue");
+                  }}
+                  className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700">
+
                         <Camera className="h-4 w-4" />
                         Problema
-                      </button>
+                      </WiredButton>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    {item.photos.map((photo) => (
-                      <div key={photo.id} className="relative group">
+                    {item.photos.map((photo) =>
+              <div key={photo.id} className="relative group">
                         <img
-                          src={photo.url}
-                          alt={`${photo.type} photo`}
-                          className="w-full h-24 object-cover rounded-lg"
-                        />
+                  src={photo.url}
+                  alt={`${photo.type} photo`}
+                  className="w-full h-24 object-cover rounded-lg" />
+
                         <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                          <button
-                            className="text-white"
-                            onClick={() => handleViewPhoto(photo.id)}
-                          >
+                          <WiredButton
+                    className="text-white"
+                    onClick={() => handleViewPhoto(photo.id)}>
+
                             <Eye className="h-5 w-5" />
-                          </button>
+                          </WiredButton>
                         </div>
                         <div
-                          className={`absolute top-1 right-1 px-1 py-0.5 text-xs rounded ${
-                            photo.type === "before"
-                              ? "bg-blue-600 text-white"
-                              : photo.type === "after"
-                                ? "bg-green-600 text-white"
-                                : "bg-red-600 text-white"
-                          }`}
-                        >
+                  className={`absolute top-1 right-1 px-1 py-0.5 text-xs rounded ${
+                  photo.type === "before" ?
+                  "bg-blue-600 text-white" :
+                  photo.type === "after" ?
+                  "bg-green-600 text-white" :
+                  "bg-red-600 text-white"}`
+                  }>
+
                           {photo.type}
                         </div>
                       </div>
-                    ))}
+              )}
                   </div>
 
-                  {item.requiresPhoto && item.photos.length === 0 && (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center text-gray-500">
+                  {item.requiresPhoto && item.photos.length === 0 &&
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center text-gray-500">
                       <Camera className="h-8 w-8 mx-auto mb-2 text-gray-400" />
                       <p>Fotos obrigatórias não adicionadas</p>
                     </div>
-                  )}
+            }
                 </div>
-              )}
+          }
 
               {/* Notes Section */}
-              {(item.requiresNote || item.note) && (
-                <div className="mb-4">
+              {(item.requiresNote || item.note) &&
+          <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Observações {item.requiresNote && "*"}
                   </label>
                   <textarea
-                    value={item.note || ""}
-                    onChange={(e) => {
-                      const updatedItem = { ...item, note: e.target.value };
-                      // Atualizar item localmente
-                    }}
-                    placeholder="Adicione suas observações sobre esta tarefa..."
-                    className="w-full p-3 border rounded-lg resize-none"
-                    rows={3}
-                  />
+              value={item.note || ""}
+              onChange={(e) => {
+                const updatedItem = { ...item, note: e.target.value };
+                // Atualizar item localmente
+              }}
+              placeholder="Adicione suas observações sobre esta tarefa..."
+              className="w-full p-3 border rounded-lg resize-none"
+              rows={3} />
+
                 </div>
-              )}
+          }
 
               {/* Quality Rating */}
-              {item.completed && (
-                <div className="flex items-center gap-2">
+              {item.completed &&
+          <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">Qualidade:</span>
                   <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className={`h-4 w-4 cursor-pointer ${
-                          star <= (item.qualityRating || 0)
-                            ? "text-yellow-400 fill-current"
-                            : "text-gray-300"
-                        }`}
-                        onClick={() => {
-                          // Atualizar rating
-                        }}
-                      />
-                    ))}
+                    {[1, 2, 3, 4, 5].map((star) =>
+              <Star
+                key={star}
+                className={`h-4 w-4 cursor-pointer ${
+                star <= (item.qualityRating || 0) ?
+                "text-yellow-400 fill-current" :
+                "text-gray-300"}`
+                }
+                onClick={() => {
+
+                  // Atualizar rating
+                }} />
+              )}
                   </div>
                   <span className="text-sm text-gray-600">
                     Concluído em{" "}
                     {item.completedAt &&
-                      new Date(item.completedAt).toLocaleTimeString()}
+              new Date(item.completedAt).toLocaleTimeString()}
                   </span>
                 </div>
-              )}
+          }
             </div>
-          ))}
+        )}
         </div>
-      )}
+      }
 
       {/* Camera Modal */}
-      {isCapturing && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+      {isCapturing &&
+      <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">Capturar Foto</h3>
-              <button
-                onClick={stopCamera}
-                className="text-gray-400 hover:text-gray-600"
-              >
+              <WiredButton
+              onClick={stopCamera}
+              className="text-gray-400 hover:text-gray-600">
+
                 <X className="h-6 w-6" />
-              </button>
+              </WiredButton>
             </div>
 
             <div className="relative mb-4">
               <video
-                ref={videoRef}
-                className="w-full rounded-lg"
-                autoPlay
-                playsInline
-              />
+              ref={videoRef}
+              className="w-full rounded-lg"
+              autoPlay
+              playsInline />
+
               <canvas ref={canvasRef} className="hidden" />
             </div>
 
             <div className="flex gap-3">
-              <button
-                onClick={takePhoto}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
-              >
+              <WiredButton
+              onClick={takePhoto}
+              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+
                 Capturar
-              </button>
-              <button
-                onClick={stopCamera}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-              >
+              </WiredButton>
+              <WiredButton
+              onClick={stopCamera}
+              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+
                 Cancelar
-              </button>
+              </WiredButton>
             </div>
           </div>
         </div>
-      )}
+      }
 
       {/* Hidden file input for fallback */}
       <input
@@ -773,53 +773,53 @@ export default function ChecklistDigital() {
           if (file && selectedItem) {
             uploadPhoto(selectedItem, file, captureMode);
           }
-        }}
-      />
+        }} />
+
 
       {/* Modal Ver Agendamentos */}
-      {showAppointmentsModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      {showAppointmentsModal &&
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">
                 Agendamentos Disponíveis
               </h3>
-              <button
-                onClick={() => setShowAppointmentsModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
+              <WiredButton
+              onClick={() => setShowAppointmentsModal(false)}
+              className="text-gray-400 hover:text-gray-600">
+
                 ✕
-              </button>
+              </WiredButton>
             </div>
             <div className="space-y-3">
               {/* Mock appointments for now */}
               {[
-                {
-                  id: 1,
-                  client: "Ana Silva",
-                  address: "Rua das Flores, 123",
-                  time: "09:00",
-                  type: "Airbnb",
-                },
-                {
-                  id: 2,
-                  client: "João Santos",
-                  address: "Av. Central, 456",
-                  time: "14:00",
-                  type: "Residencial",
-                },
-                {
-                  id: 3,
-                  client: "Maria Costa",
-                  address: "Rua Nova, 789",
-                  time: "16:30",
-                  type: "Comercial",
-                },
-              ].map((appointment) => (
-                <div
-                  key={appointment.id}
-                  className="border rounded-lg p-4 hover:bg-gray-50"
-                >
+            {
+              id: 1,
+              client: "Ana Silva",
+              address: "Rua das Flores, 123",
+              time: "09:00",
+              type: "Airbnb"
+            },
+            {
+              id: 2,
+              client: "João Santos",
+              address: "Av. Central, 456",
+              time: "14:00",
+              type: "Residencial"
+            },
+            {
+              id: 3,
+              client: "Maria Costa",
+              address: "Rua Nova, 789",
+              time: "16:30",
+              type: "Comercial"
+            }].
+            map((appointment) =>
+            <div
+              key={appointment.id}
+              className="border rounded-lg p-4 hover:bg-gray-50">
+
                   <div className="flex justify-between items-center">
                     <div>
                       <h4 className="font-medium">{appointment.client}</h4>
@@ -830,22 +830,22 @@ export default function ChecklistDigital() {
                         {appointment.time} - {appointment.type}
                       </p>
                     </div>
-                    <button
-                      onClick={() => {
-                        // Start checklist logic here
-                        setShowAppointmentsModal(false);
-                      }}
-                      className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                    >
+                    <WiredButton
+                  onClick={() => {
+                    // Start checklist logic here
+                    setShowAppointmentsModal(false);
+                  }}
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+
                       Iniciar Checklist
-                    </button>
+                    </WiredButton>
                   </div>
                 </div>
-              ))}
+            )}
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }

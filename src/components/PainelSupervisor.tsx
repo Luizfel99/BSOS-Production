@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState, useEffect } from "react";
 
@@ -49,8 +49,8 @@ export default function PainelSupervisor() {
   const [areasAuditoria, setAreasAuditoria] = useState<AuditoriaArea[]>([]);
   const [fotosRevisao, setFotosRevisao] = useState<FotoAuditoria[]>([]);
   const [historicoQualidade, setHistoricoQualidade] = useState<
-    HistoricoQualidade[]
-  >([]);
+    HistoricoQualidade[]>(
+    []);
 
   useEffect(() => {
     carregarDados();
@@ -73,77 +73,77 @@ export default function PainelSupervisor() {
   const iniciarAuditoria = (limpezaId: string) => {
     setAuditoriaAtiva(limpezaId);
     const areas: AuditoriaArea[] = [
-      {
-        id: "area1",
-        nome: "Sala de Estar",
-        itens: [
-          "Móveis limpos",
-          "Piso aspirado",
-          "Superfícies desenpoeiradas",
-          "Almofadas organizadas",
-        ],
-        pontuacao: 0,
-        observacoes: "",
-      },
-      {
-        id: "area2",
-        nome: "Cozinha",
-        itens: [
-          "Bancada limpa",
-          "Pia higienizada",
-          "Fogão limpo",
-          "Geladeira externa limpa",
-        ],
-        pontuacao: 0,
-        observacoes: "",
-      },
-      {
-        id: "area3",
-        nome: "Banheiro",
-        itens: [
-          "Vaso sanitário",
-          "Box do chuveiro",
-          "Pia e espelho",
-          "Piso e azulejos",
-        ],
-        pontuacao: 0,
-        observacoes: "",
-      },
-      {
-        id: "area4",
-        nome: "Quartos",
-        itens: [
-          "Cama arrumada",
-          "Piso limpo",
-          "Móveis organizados",
-          "Lixeiras vazias",
-        ],
-        pontuacao: 0,
-        observacoes: "",
-      },
-    ];
+    {
+      id: "area1",
+      nome: "Sala de Estar",
+      itens: [
+      "Móveis limpos",
+      "Piso aspirado",
+      "Superfícies desenpoeiradas",
+      "Almofadas organizadas"],
+
+      pontuacao: 0,
+      observacoes: ""
+    },
+    {
+      id: "area2",
+      nome: "Cozinha",
+      itens: [
+      "Bancada limpa",
+      "Pia higienizada",
+      "Fogão limpo",
+      "Geladeira externa limpa"],
+
+      pontuacao: 0,
+      observacoes: ""
+    },
+    {
+      id: "area3",
+      nome: "Banheiro",
+      itens: [
+      "Vaso sanitário",
+      "Box do chuveiro",
+      "Pia e espelho",
+      "Piso e azulejos"],
+
+      pontuacao: 0,
+      observacoes: ""
+    },
+    {
+      id: "area4",
+      nome: "Quartos",
+      itens: [
+      "Cama arrumada",
+      "Piso limpo",
+      "Móveis organizados",
+      "Lixeiras vazias"],
+
+      pontuacao: 0,
+      observacoes: ""
+    }];
+
     setAreasAuditoria(areas);
     setActiveView("auditoria");
   };
 
   const atualizarPontuacaoArea = (areaId: string, pontuacao: number) => {
     setAreasAuditoria((prev) =>
-      prev.map((area) => (area.id === areaId ? { ...area, pontuacao } : area)),
+    prev.map((area) => area.id === areaId ? { ...area, pontuacao } : area)
     );
   };
 
   const atualizarObservacaoArea = (areaId: string, observacoes: string) => {
     setAreasAuditoria((prev) =>
-      prev.map((area) =>
-        area.id === areaId ? { ...area, observacoes } : area,
-      ),
+    prev.map((area) =>
+    area.id === areaId ? { ...area, observacoes } : area
+    )
     );
   };
 
   const finalizarAuditoria = async () => {
     const pontuacaoMedia =
-      areasAuditoria.reduce((acc, area) => acc + area.pontuacao, 0) /
-      areasAuditoria.length;
+    areasAuditoria.reduce((acc, area) => acc + area.pontuacao, 0) /
+    areasAuditoria.length;
 
     try {
       // Gerar relatório PDF
@@ -154,8 +154,8 @@ export default function PainelSupervisor() {
           action: "finalizar_auditoria",
           auditoriaId: auditoriaAtiva,
           pontuacao: pontuacaoMedia,
-          areas: areasAuditoria,
-        }),
+          areas: areasAuditoria
+        })
       });
 
       const result = await response.json();
@@ -163,11 +163,11 @@ export default function PainelSupervisor() {
       if (result.success) {
         // Atualizar status da limpeza
         setLimpezasDia((prev) =>
-          prev.map((limpeza) =>
-            limpeza.id === auditoriaAtiva
-              ? { ...limpeza, status: "concluida" }
-              : limpeza,
-          ),
+        prev.map((limpeza) =>
+        limpeza.id === auditoriaAtiva ?
+        { ...limpeza, status: "concluida" } :
+        limpeza
+        )
         );
 
         setAuditoriaAtiva(null);
@@ -181,10 +181,10 @@ export default function PainelSupervisor() {
   };
 
   const gerarRelatorioPDF = async (
-    limpezaId: string,
-    pontuacao: number,
-    areas: AuditoriaArea[],
-  ) => {
+  limpezaId: string,
+  pontuacao: number,
+  areas: AuditoriaArea[]) =>
+  {
     try {
       const response = await fetch("/api/supervisor", {
         method: "POST",
@@ -193,8 +193,8 @@ export default function PainelSupervisor() {
           action: "gerar_relatorio_pdf",
           auditoriaId: limpezaId,
           pontuacao,
-          areas,
-        }),
+          areas
+        })
       });
 
       const result = await response.json();
@@ -209,10 +209,10 @@ export default function PainelSupervisor() {
   };
 
   const aprovarFoto = async (
-    fotoId: string,
-    aprovada: boolean,
-    observacoes: string = "",
-  ) => {
+  fotoId: string,
+  aprovada: boolean,
+  observacoes: string = "") =>
+  {
     try {
       const response = await fetch("/api/supervisor", {
         method: "POST",
@@ -221,17 +221,17 @@ export default function PainelSupervisor() {
           action: "aprovar_foto",
           fotoId,
           aprovada,
-          observacoes,
-        }),
+          observacoes
+        })
       });
 
       const result = await response.json();
 
       if (result.success) {
         setFotosRevisao((prev) =>
-          prev.map((foto) =>
-            foto.id === fotoId ? { ...foto, aprovada, observacoes } : foto,
-          ),
+        prev.map((foto) =>
+        foto.id === fotoId ? { ...foto, aprovada, observacoes } : foto
+        )
         );
       }
     } catch (error) {
@@ -244,7 +244,7 @@ export default function PainelSupervisor() {
       pendente: "text-gray-600 bg-gray-100",
       "em-andamento": "text-blue-700 bg-blue-100",
       auditoria: "text-orange-700 bg-orange-100",
-      concluida: "text-green-700 bg-green-100",
+      concluida: "text-green-700 bg-green-100"
     };
     return colors[status as keyof typeof colors] || "text-gray-600 bg-gray-100";
   };
@@ -253,7 +253,7 @@ export default function PainelSupervisor() {
     const colors = {
       baixa: "border-l-gray-400",
       media: "border-l-yellow-500",
-      alta: "border-l-red-500",
+      alta: "border-l-red-500"
     };
     return colors[prioridade as keyof typeof colors] || "border-l-gray-400";
   };
@@ -274,41 +274,41 @@ export default function PainelSupervisor() {
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex space-x-1">
             {[
-              { id: "limpezas", label: "Limpezas" },
-              { id: "fotos", label: "Galeria Antes/Depois" },
-              { id: "qualidade", label: "Histórico de Qualidade" },
-              { id: "auditoria", label: "Auditoria Ativa" },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveView(tab.id)}
-                className={`px-6 py-4 sm:px-4 sm:py-2 text-sm font-medium rounded-md transition-colors touch-target ${
-                  activeView === tab.id
-                    ? "bg-gray-900 text-white"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                }`}
-              >
+            { id: "limpezas", label: "Limpezas" },
+            { id: "fotos", label: "Galeria Antes/Depois" },
+            { id: "qualidade", label: "Histórico de Qualidade" },
+            { id: "auditoria", label: "Auditoria Ativa" }].
+            map((tab) =>
+            <WiredButton
+              key={tab.id}
+              onClick={() => setActiveView(tab.id)}
+              className={`px-6 py-4 sm:px-4 sm:py-2 text-sm font-medium rounded-md transition-colors touch-target ${
+              activeView === tab.id ?
+              "bg-gray-900 text-white" :
+              "text-gray-600 hover:text-gray-900 hover:bg-gray-100"}`
+              }>
+
                 {tab.label}
-              </button>
-            ))}
+              </WiredButton>
+            )}
           </div>
         </div>
 
         <div className="p-6">
           {/* Limpezas View */}
-          {activeView === "limpezas" && (
-            <div className="space-y-6">
+          {activeView === "limpezas" &&
+          <div className="space-y-6">
               {/* Limpezas do Dia */}
               <div>
                 <h3 className="text-lg font-medium text-gray-900 mb-4">
                   Limpezas de Hoje
                 </h3>
                 <div className="space-y-3">
-                  {limpezasDia.map((limpeza) => (
-                    <div
-                      key={limpeza.id}
-                      className={`bg-white border border-gray-200 rounded-lg p-4 border-l-4 ${getPrioridadeColor(limpeza.prioridade)}`}
-                    >
+                  {limpezasDia.map((limpeza) =>
+                <div
+                  key={limpeza.id}
+                  className={`bg-white border border-gray-200 rounded-lg p-4 border-l-4 ${getPrioridadeColor(limpeza.prioridade)}`}>
+
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
@@ -316,8 +316,8 @@ export default function PainelSupervisor() {
                               {limpeza.imovel}
                             </h4>
                             <span
-                              className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(limpeza.status)}`}
-                            >
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(limpeza.status)}`}>
+
                               {limpeza.status.replace("-", " ")}
                             </span>
                           </div>
@@ -331,18 +331,18 @@ export default function PainelSupervisor() {
                           </div>
                         </div>
                         <div className="ml-4 space-y-2">
-                          {limpeza.status === "concluida" && (
-                            <button
-                              onClick={() => iniciarAuditoria(limpeza.id)}
-                              className="px-3 py-1 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
-                            >
+                          {limpeza.status === "concluida" &&
+                      <WiredButton
+                        onClick={() => iniciarAuditoria(limpeza.id)}
+                        className="px-3 py-1 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors">
+
                               Iniciar Auditoria
-                            </button>
-                          )}
+                            </WiredButton>
+                      }
                         </div>
                       </div>
                     </div>
-                  ))}
+                )}
                 </div>
               </div>
 
@@ -363,48 +363,48 @@ export default function PainelSupervisor() {
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="text-2xl font-bold text-green-700">
                       {
-                        limpezasSemana.filter((l) => l.status === "concluida")
-                          .length
-                      }
+                    limpezasSemana.filter((l) => l.status === "concluida").
+                    length
+                    }
                     </div>
                     <div className="text-sm text-gray-600">Concluídas</div>
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="text-2xl font-bold text-blue-700">
                       {
-                        limpezasSemana.filter(
-                          (l) => l.status === "em-andamento",
-                        ).length
-                      }
+                    limpezasSemana.filter(
+                      (l) => l.status === "em-andamento"
+                    ).length
+                    }
                     </div>
                     <div className="text-sm text-gray-600">Em Andamento</div>
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="text-2xl font-bold text-orange-700">
                       {
-                        limpezasSemana.filter((l) => l.status === "auditoria")
-                          .length
-                      }
+                    limpezasSemana.filter((l) => l.status === "auditoria").
+                    length
+                    }
                     </div>
                     <div className="text-sm text-gray-600">Em Auditoria</div>
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          }
 
           {/* Galeria de Fotos */}
-          {activeView === "fotos" && (
-            <div className="space-y-6">
+          {activeView === "fotos" &&
+          <div className="space-y-6">
               <h3 className="text-lg font-medium text-gray-900">
                 Galeria Antes/Depois - Revisão
               </h3>
               <div className="space-y-6">
-                {fotosRevisao.map((foto) => (
-                  <div
-                    key={foto.id}
-                    className="bg-white border border-gray-200 rounded-lg p-6"
-                  >
+                {fotosRevisao.map((foto) =>
+              <div
+                key={foto.id}
+                className="bg-white border border-gray-200 rounded-lg p-6">
+
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <h4 className="font-medium text-gray-900">
@@ -438,55 +438,55 @@ export default function PainelSupervisor() {
                       </div>
                     </div>
 
-                    {foto.aprovada === null ? (
-                      <div className="space-y-3">
+                    {foto.aprovada === null ?
+                <div className="space-y-3">
                         <textarea
-                          placeholder="Observações..."
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                          rows={2}
-                        />
+                    placeholder="Observações..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                    rows={2} />
+
                         <div className="flex space-x-2">
-                          <button
-                            onClick={() => aprovarFoto(foto.id, true, "")}
-                            className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors"
-                          >
+                          <WiredButton
+                      onClick={() => aprovarFoto(foto.id, true, "")}
+                      className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors">
+
                             Aprovar
-                          </button>
-                          <button
-                            onClick={() => aprovarFoto(foto.id, false, "")}
-                            className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors"
-                          >
+                          </WiredButton>
+                          <WiredButton
+                      onClick={() => aprovarFoto(foto.id, false, "")}
+                      className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition-colors">
+
                             Rejeitar
-                          </button>
+                          </WiredButton>
                         </div>
-                      </div>
-                    ) : (
-                      <div
-                        className={`p-3 rounded-md ${foto.aprovada ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}
-                      >
+                      </div> :
+
+                <div
+                  className={`p-3 rounded-md ${foto.aprovada ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}>
+
                         <div
-                          className={`text-sm font-medium ${foto.aprovada ? "text-green-800" : "text-red-800"}`}
-                        >
+                    className={`text-sm font-medium ${foto.aprovada ? "text-green-800" : "text-red-800"}`}>
+
                           {foto.aprovada ? "Aprovado" : "Rejeitado"}
                         </div>
-                        {foto.observacoes && (
-                          <div
-                            className={`text-sm mt-1 ${foto.aprovada ? "text-green-700" : "text-red-700"}`}
-                          >
+                        {foto.observacoes &&
+                  <div
+                    className={`text-sm mt-1 ${foto.aprovada ? "text-green-700" : "text-red-700"}`}>
+
                             {foto.observacoes}
                           </div>
-                        )}
+                  }
                       </div>
-                    )}
+                }
                   </div>
-                ))}
+              )}
               </div>
             </div>
-          )}
+          }
 
           {/* Histórico de Qualidade */}
-          {activeView === "qualidade" && (
-            <div className="space-y-6">
+          {activeView === "qualidade" &&
+          <div className="space-y-6">
               <h3 className="text-lg font-medium text-gray-900">
                 Histórico de Qualidade
               </h3>
@@ -514,8 +514,8 @@ export default function PainelSupervisor() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {historicoQualidade.map((item, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
+                    {historicoQualidade.map((item, index) =>
+                  <tr key={index} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
                             <div className="text-sm font-medium text-gray-900">
@@ -532,18 +532,18 @@ export default function PainelSupervisor() {
                               {item.mediaQualidade.toFixed(1)}
                             </div>
                             <div className="ml-2 flex">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <div
-                                  key={star}
-                                  className={`w-4 h-4 ${
-                                    star <= item.mediaQualidade
-                                      ? "text-gray-900"
-                                      : "text-gray-300"
-                                  }`}
-                                >
+                              {[1, 2, 3, 4, 5].map((star) =>
+                          <div
+                            key={star}
+                            className={`w-4 h-4 ${
+                            star <= item.mediaQualidade ?
+                            "text-gray-900" :
+                            "text-gray-300"}`
+                            }>
+
                                   ★
                                 </div>
-                              ))}
+                          )}
                             </div>
                           </div>
                         </td>
@@ -555,34 +555,34 @@ export default function PainelSupervisor() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              item.tendencia === "subindo"
-                                ? "bg-green-100 text-green-800"
-                                : item.tendencia === "estavel"
-                                  ? "bg-gray-100 text-gray-800"
-                                  : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {item.tendencia === "subindo"
-                              ? "↗ Subindo"
-                              : item.tendencia === "estavel"
-                                ? "→ Estável"
-                                : "↘ Descendo"}
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        item.tendencia === "subindo" ?
+                        "bg-green-100 text-green-800" :
+                        item.tendencia === "estavel" ?
+                        "bg-gray-100 text-gray-800" :
+                        "bg-red-100 text-red-800"}`
+                        }>
+
+                            {item.tendencia === "subindo" ?
+                        "↗ Subindo" :
+                        item.tendencia === "estavel" ?
+                        "→ Estável" :
+                        "↘ Descendo"}
                           </span>
                         </td>
                       </tr>
-                    ))}
+                  )}
                   </tbody>
                 </table>
               </div>
 
               {/* Mobile Card View */}
               <div className="lg:hidden space-y-4">
-                {historicoQualidade.map((item, index) => (
-                  <div
-                    key={index}
-                    className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
-                  >
+                {historicoQualidade.map((item, index) =>
+              <div
+                key={index}
+                className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+
                     <div className="flex justify-between items-start mb-3">
                       <div>
                         <h4 className="text-sm font-medium text-gray-900">
@@ -593,19 +593,19 @@ export default function PainelSupervisor() {
                         </p>
                       </div>
                       <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          item.tendencia === "subindo"
-                            ? "bg-green-100 text-green-800"
-                            : item.tendencia === "estavel"
-                              ? "bg-gray-100 text-gray-800"
-                              : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {item.tendencia === "subindo"
-                          ? "↗ Subindo"
-                          : item.tendencia === "estavel"
-                            ? "→ Estável"
-                            : "↘ Descendo"}
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    item.tendencia === "subindo" ?
+                    "bg-green-100 text-green-800" :
+                    item.tendencia === "estavel" ?
+                    "bg-gray-100 text-gray-800" :
+                    "bg-red-100 text-red-800"}`
+                    }>
+
+                        {item.tendencia === "subindo" ?
+                    "↗ Subindo" :
+                    item.tendencia === "estavel" ?
+                    "→ Estável" :
+                    "↘ Descendo"}
                       </span>
                     </div>
 
@@ -617,18 +617,18 @@ export default function PainelSupervisor() {
                             {item.mediaQualidade.toFixed(1)}
                           </span>
                           <div className="flex">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <div
-                                key={star}
-                                className={`w-3 h-3 ${
-                                  star <= item.mediaQualidade
-                                    ? "text-gray-900"
-                                    : "text-gray-300"
-                                }`}
-                              >
+                            {[1, 2, 3, 4, 5].map((star) =>
+                        <div
+                          key={star}
+                          className={`w-3 h-3 ${
+                          star <= item.mediaQualidade ?
+                          "text-gray-900" :
+                          "text-gray-300"}`
+                          }>
+
                                 ★
                               </div>
-                            ))}
+                        )}
                           </div>
                         </div>
                       </div>
@@ -647,14 +647,14 @@ export default function PainelSupervisor() {
                       </span>
                     </div>
                   </div>
-                ))}
+              )}
               </div>
             </div>
-          )}
+          }
 
           {/* Auditoria Ativa */}
-          {activeView === "auditoria" && auditoriaAtiva && (
-            <div className="space-y-6">
+          {activeView === "auditoria" && auditoriaAtiva &&
+          <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-medium text-gray-900">
                   Auditoria em Andamento
@@ -665,25 +665,25 @@ export default function PainelSupervisor() {
               </div>
 
               <div className="space-y-6">
-                {areasAuditoria.map((area) => (
-                  <div
-                    key={area.id}
-                    className="bg-white border border-gray-200 rounded-lg p-6"
-                  >
+                {areasAuditoria.map((area) =>
+              <div
+                key={area.id}
+                className="bg-white border border-gray-200 rounded-lg p-6">
+
                     <h4 className="text-lg font-medium text-gray-900 mb-4">
                       {area.nome}
                     </h4>
 
                     <div className="space-y-3 mb-4">
-                      {area.itens.map((item, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center text-sm text-gray-700"
-                        >
+                      {area.itens.map((item, index) =>
+                  <div
+                    key={index}
+                    className="flex items-center text-sm text-gray-700">
+
                           <div className="w-2 h-2 bg-gray-300 rounded-full mr-3"></div>
                           {item}
                         </div>
-                      ))}
+                  )}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -692,15 +692,15 @@ export default function PainelSupervisor() {
                           Pontuação (1-5)
                         </label>
                         <select
-                          value={area.pontuacao}
-                          onChange={(e) =>
-                            atualizarPontuacaoArea(
-                              area.id,
-                              Number(e.target.value),
-                            )
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                        >
+                      value={area.pontuacao}
+                      onChange={(e) =>
+                      atualizarPontuacaoArea(
+                        area.id,
+                        Number(e.target.value)
+                      )
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+
                           <option value={0}>Selecionar</option>
                           <option value={1}>1 - Muito Ruim</option>
                           <option value={2}>2 - Ruim</option>
@@ -714,54 +714,54 @@ export default function PainelSupervisor() {
                           Observações
                         </label>
                         <textarea
-                          value={area.observacoes}
-                          onChange={(e) =>
-                            atualizarObservacaoArea(area.id, e.target.value)
-                          }
-                          placeholder="Observações sobre esta área..."
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                          rows={3}
-                        />
+                      value={area.observacoes}
+                      onChange={(e) =>
+                      atualizarObservacaoArea(area.id, e.target.value)
+                      }
+                      placeholder="Observações sobre esta área..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                      rows={3} />
+
                       </div>
                     </div>
                   </div>
-                ))}
+              )}
               </div>
 
               <div className="flex items-center justify-between pt-6 border-t border-gray-200">
                 <div className="text-sm text-gray-600">
                   Pontuação Média:{" "}
-                  {areasAuditoria.length > 0
-                    ? (
-                        areasAuditoria.reduce(
-                          (acc, area) => acc + area.pontuacao,
-                          0,
-                        ) / areasAuditoria.length
-                      ).toFixed(1)
-                    : "0.0"}
+                  {areasAuditoria.length > 0 ?
+                (
+                areasAuditoria.reduce(
+                  (acc, area) => acc + area.pontuacao,
+                  0
+                ) / areasAuditoria.length).
+                toFixed(1) :
+                "0.0"}
                 </div>
                 <div className="space-x-3">
-                  <button
-                    onClick={() => setActiveView("limpezas")}
-                    className="px-4 py-2 text-sm border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
+                  <WiredButton
+                  onClick={() => setActiveView("limpezas")}
+                  className="px-4 py-2 text-sm border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+
                     Cancelar
-                  </button>
-                  <button
-                    onClick={finalizarAuditoria}
-                    disabled={areasAuditoria.some(
-                      (area) => area.pontuacao === 0,
-                    )}
-                    className="px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-                  >
+                  </WiredButton>
+                  <WiredButton
+                  onClick={finalizarAuditoria}
+                  disabled={areasAuditoria.some(
+                    (area) => area.pontuacao === 0
+                  )}
+                  className="px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
+
                     Finalizar Auditoria
-                  </button>
+                  </WiredButton>
                 </div>
               </div>
             </div>
-          )}
+          }
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }

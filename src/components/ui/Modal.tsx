@@ -1,4 +1,4 @@
-/**
+import WiredButton from "@/components/ui/WiredButton"; /**
  * BSOS Modal Component
  *
  * A flexible modal dialog component with backdrop, focus management,
@@ -38,40 +38,40 @@ const modalSizes = {
   md: "max-w-lg",
   lg: "max-w-2xl",
   xl: "max-w-4xl",
-  full: "max-w-full mx-4",
+  full: "max-w-full mx-4"
 };
 
-const CloseIcon = () => (
-  <svg
-    className="w-6 h-6"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
+const CloseIcon = () =>
+<svg
+  className="w-6 h-6"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24">
+
     <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M6 18L18 6M6 6l12 12"
-    />
-  </svg>
-);
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M6 18L18 6M6 6l12 12" />
+
+  </svg>;
+
 
 export const Modal = forwardRef<HTMLDivElement, ModalProps>(
   (
-    {
-      isOpen,
-      onClose,
-      title,
-      size = "md",
-      showCloseButton = true,
-      closeOnBackdropClick = true,
-      closeOnEscape = true,
-      children,
-      className,
-    },
-    ref,
-  ) => {
+  {
+    isOpen,
+    onClose,
+    title,
+    size = "md",
+    showCloseButton = true,
+    closeOnBackdropClick = true,
+    closeOnEscape = true,
+    children,
+    className
+  },
+  ref) =>
+  {
     const modalRef = useRef<HTMLDivElement>(null);
     const previousActiveElement = useRef<Element | null>(null);
 
@@ -102,7 +102,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         if (modalElement) {
           // Focus the first focusable element or the modal itself
           const focusableElements = modalElement.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
           );
           if (focusableElements.length > 0) {
             (focusableElements[0] as HTMLElement).focus();
@@ -140,76 +140,76 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
       return null;
     }
 
-    const modalContent = (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center"
-        style={{ zIndex: 1050 }}
-      >
+    const modalContent =
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ zIndex: 1050 }}>
+
         {/* Backdrop */}
         <div
-          className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
-          onClick={handleBackdropClick}
-          aria-hidden="true"
-        />
+        className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
+        onClick={handleBackdropClick}
+        aria-hidden="true" />
+
 
         {/* Modal */}
         <div
-          ref={modalRef}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={title ? "modal-title" : undefined}
-          tabIndex={-1}
-          className={cn(
-            // Base styles
-            "relative bg-white rounded-lg shadow-xl w-full mx-4",
-            "transform transition-all duration-300 ease-out",
-            "max-h-[90vh] overflow-hidden flex flex-col",
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? "modal-title" : undefined}
+        tabIndex={-1}
+        className={cn(
+          // Base styles
+          "relative bg-white rounded-lg shadow-xl w-full mx-4",
+          "transform transition-all duration-300 ease-out",
+          "max-h-[90vh] overflow-hidden flex flex-col",
 
-            // Size styles
-            modalSizes[size],
+          // Size styles
+          modalSizes[size],
 
-            // Animation styles
-            "animate-fade-in",
+          // Animation styles
+          "animate-fade-in",
 
-            // Custom className
-            className,
-          )}
-        >
+          // Custom className
+          className
+        )}>
+
           {/* Header */}
-          {(title || showCloseButton) && (
-            <div className="flex items-center justify-between p-6 border-b border-slate-200">
-              {title && (
-                <h2
-                  id="modal-title"
-                  className="text-lg font-semibold text-slate-900"
-                >
+          {(title || showCloseButton) &&
+        <div className="flex items-center justify-between p-6 border-b border-slate-200">
+              {title &&
+          <h2
+            id="modal-title"
+            className="text-lg font-semibold text-slate-900">
+
                   {title}
                 </h2>
-              )}
-              {showCloseButton && (
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="p-1 text-slate-400 hover:text-slate-600 transition-colors duration-200 rounded-md hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  aria-label="Close modal"
-                >
+          }
+              {showCloseButton &&
+          <WiredButton
+            type="button"
+            onClick={onClose}
+            className="p-1 text-slate-400 hover:text-slate-600 transition-colors duration-200 rounded-md hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            aria-label="Close modal">
+
                   <CloseIcon />
-                </button>
-              )}
+                </WiredButton>
+          }
             </div>
-          )}
+        }
 
           {/* Body */}
           <div className="flex-1 overflow-y-auto">{children}</div>
         </div>
-      </div>
-    );
+      </div>;
+
 
     // Render modal in portal
-    return typeof document !== "undefined"
-      ? createPortal(modalContent, document.body)
-      : null;
-  },
+    return typeof document !== "undefined" ?
+    createPortal(modalContent, document.body) :
+    null;
+  }
 );
 
 Modal.displayName = "Modal";
@@ -220,12 +220,12 @@ export const ModalHeader = forwardRef<HTMLDivElement, ModalHeaderProps>(
       <div
         ref={ref}
         className={cn("p-6 border-b border-slate-200", className)}
-        {...props}
-      >
+        {...props}>
+
         {children}
-      </div>
-    );
-  },
+      </div>);
+
+  }
 );
 
 ModalHeader.displayName = "ModalHeader";
@@ -235,9 +235,9 @@ export const ModalBody = forwardRef<HTMLDivElement, ModalBodyProps>(
     return (
       <div ref={ref} className={cn("p-6", className)} {...props}>
         {children}
-      </div>
-    );
-  },
+      </div>);
+
+  }
 );
 
 ModalBody.displayName = "ModalBody";
@@ -249,14 +249,14 @@ export const ModalFooter = forwardRef<HTMLDivElement, ModalFooterProps>(
         ref={ref}
         className={cn(
           "flex items-center justify-end space-x-3 p-6 border-t border-slate-200 bg-slate-50",
-          className,
+          className
         )}
-        {...props}
-      >
+        {...props}>
+
         {children}
-      </div>
-    );
-  },
+      </div>);
+
+  }
 );
 
 ModalFooter.displayName = "ModalFooter";

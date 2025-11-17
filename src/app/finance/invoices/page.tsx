@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -62,7 +62,7 @@ export default function InvoicesPage() {
       draft: "Rascunho",
       sent: "Enviada",
       paid: "Paga",
-      overdue: "Vencida",
+      overdue: "Vencida"
     };
     return labels[status as keyof typeof labels] || status;
   };
@@ -75,8 +75,8 @@ export default function InvoicesPage() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
+            className="mb-8">
+
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center">
@@ -91,34 +91,34 @@ export default function InvoicesPage() {
                   </div>
                 </div>
 
-                <button className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 flex items-center gap-2 transition-colors">
+                <WiredButton className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 flex items-center gap-2 transition-colors" data-action="wire.auto">
                   <Plus className="h-4 w-4" />
                   Nova Fatura
-                </button>
+                </WiredButton>
               </div>
             </div>
           </motion.div>
 
           {/* Loading State */}
-          {loading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="bg-white rounded-lg shadow-sm border p-8 text-center"
-            >
+          {loading &&
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-white rounded-lg shadow-sm border p-8 text-center">
+
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
               <p className="text-gray-600">Carregando faturas...</p>
             </motion.div>
-          )}
+          }
 
           {/* Empty State */}
-          {!loading && invoices.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white rounded-lg shadow-sm border p-12 text-center"
-            >
+          {!loading && invoices.length === 0 &&
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-lg shadow-sm border p-12 text-center">
+
               <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
                 Nenhuma fatura disponível
@@ -126,21 +126,21 @@ export default function InvoicesPage() {
               <p className="text-gray-600 mb-6">
                 No invoices yet. Comece criando sua primeira fatura.
               </p>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-6 py-3 flex items-center gap-2 mx-auto transition-colors">
+              <WiredButton className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-6 py-3 flex items-center gap-2 mx-auto transition-colors" data-action="wire.auto">
                 <Plus className="h-5 w-5" />
                 Criar Primera Fatura
-              </button>
+              </WiredButton>
             </motion.div>
-          )}
+          }
 
           {/* Invoices List */}
-          {!loading && invoices.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white rounded-lg shadow-sm border overflow-hidden"
-            >
+          {!loading && invoices.length > 0 &&
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-lg shadow-sm border overflow-hidden">
+
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -166,8 +166,8 @@ export default function InvoicesPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {invoices.map((invoice) => (
-                      <tr key={invoice.id} className="hover:bg-gray-50">
+                    {invoices.map((invoice) =>
+                  <tr key={invoice.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">
                             #{invoice.id.slice(-6)}
@@ -187,46 +187,46 @@ export default function InvoicesPage() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           R${" "}
                           {invoice.amount.toLocaleString("pt-BR", {
-                            minimumFractionDigits: 2,
-                          })}
+                        minimumFractionDigits: 2
+                      })}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(invoice.status)}`}
-                          >
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(invoice.status)}`}>
+
                             {getStatusLabel(invoice.status)}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {new Date(invoice.dueDate).toLocaleDateString(
-                            "pt-BR",
-                          )}
+                        "pt-BR"
+                      )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end gap-2">
-                            <button className="text-blue-600 hover:text-blue-900">
+                            <WiredButton className="text-blue-600 hover:text-blue-900" data-action="wire.auto">
                               <Eye className="h-4 w-4" />
-                            </button>
-                            <button className="text-gray-600 hover:text-gray-900">
+                            </WiredButton>
+                            <WiredButton className="text-gray-600 hover:text-gray-900" data-action="wire.auto">
                               <Download className="h-4 w-4" />
-                            </button>
+                            </WiredButton>
                           </div>
                         </td>
                       </tr>
-                    ))}
+                  )}
                   </tbody>
                 </table>
               </div>
             </motion.div>
-          )}
+          }
 
           {/* Development Notice */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4"
-          >
+            className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+
             <div className="flex items-start">
               <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
               <div>
@@ -243,6 +243,6 @@ export default function InvoicesPage() {
           </motion.div>
         </div>
       </div>
-    </ProtectedComponent>
-  );
+    </ProtectedComponent>);
+
 }

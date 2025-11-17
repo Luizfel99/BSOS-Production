@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import { useState, useEffect } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -27,162 +27,162 @@ interface SyncLog {
 export default function IntegracaoAPIs() {
   const { success, error, warning, info } = useNotifications();
   const [connections, setConnections] = useState<ApiConnection[]>([
-    {
-      id: "airbnb-1",
-      name: "Airbnb - Conta Principal",
-      platform: "airbnb",
-      status: "connected",
-      lastSync: "2024-01-20 14:30",
-      config: {
-        propertyCount: 8,
-        autoSync: true,
-        syncInterval: 15,
-        notifications: true,
-      },
-    },
-    {
-      id: "hostaway-1",
-      name: "Hostaway - PMS",
-      platform: "hostaway",
-      status: "connected",
-      lastSync: "2024-01-20 14:25",
-      config: {
-        propertyCount: 12,
-        autoSync: true,
-        syncInterval: 10,
-        notifications: true,
-      },
-    },
-    {
-      id: "taskbird-1",
-      name: "Taskbird - Gestão de Tarefas",
-      platform: "taskbird",
-      status: "disconnected",
-      lastSync: "Nunca",
-      config: {
-        autoCreateTasks: true,
-        assignCleaner: true,
-        notifications: false,
-      },
-    },
-    {
-      id: "turno-1",
-      name: "Turno - Agenda Funcionários",
-      platform: "turno",
-      status: "error",
-      lastSync: "2024-01-20 10:15",
-      config: {
-        autoSchedule: false,
-        syncShifts: true,
-        notifications: true,
-      },
-    },
-  ]);
+  {
+    id: "airbnb-1",
+    name: "Airbnb - Conta Principal",
+    platform: "airbnb",
+    status: "connected",
+    lastSync: "2024-01-20 14:30",
+    config: {
+      propertyCount: 8,
+      autoSync: true,
+      syncInterval: 15,
+      notifications: true
+    }
+  },
+  {
+    id: "hostaway-1",
+    name: "Hostaway - PMS",
+    platform: "hostaway",
+    status: "connected",
+    lastSync: "2024-01-20 14:25",
+    config: {
+      propertyCount: 12,
+      autoSync: true,
+      syncInterval: 10,
+      notifications: true
+    }
+  },
+  {
+    id: "taskbird-1",
+    name: "Taskbird - Gestão de Tarefas",
+    platform: "taskbird",
+    status: "disconnected",
+    lastSync: "Nunca",
+    config: {
+      autoCreateTasks: true,
+      assignCleaner: true,
+      notifications: false
+    }
+  },
+  {
+    id: "turno-1",
+    name: "Turno - Agenda Funcionários",
+    platform: "turno",
+    status: "error",
+    lastSync: "2024-01-20 10:15",
+    config: {
+      autoSchedule: false,
+      syncShifts: true,
+      notifications: true
+    }
+  }]
+  );
 
   const [syncLogs, setSyncLogs] = useState<SyncLog[]>([
-    {
-      id: 1,
-      platform: "Airbnb",
-      action: "Nova reserva importada",
-      status: "success",
-      timestamp: "14:30",
-      details: "Checkout John Smith - Apto Centro às 11:00",
-    },
-    {
-      id: 2,
-      platform: "Hostaway",
-      action: "Status atualizado",
-      status: "success",
-      timestamp: "14:25",
-      details: "Casa Ipanema - Status: Pronto para checkin",
-    },
-    {
-      id: 3,
-      platform: "Turno",
-      action: "Erro de sincronização",
-      status: "error",
-      timestamp: "10:15",
-      details: "Token de acesso expirado",
-    },
-    {
-      id: 4,
-      platform: "Taskbird",
-      action: "Tarefa criada automaticamente",
-      status: "warning",
-      timestamp: "09:45",
-      details: "Limpeza Studio Copacabana - Cleaner não atribuído",
-    },
-  ]);
+  {
+    id: 1,
+    platform: "Airbnb",
+    action: "Nova reserva importada",
+    status: "success",
+    timestamp: "14:30",
+    details: "Checkout John Smith - Apto Centro às 11:00"
+  },
+  {
+    id: 2,
+    platform: "Hostaway",
+    action: "Status atualizado",
+    status: "success",
+    timestamp: "14:25",
+    details: "Casa Ipanema - Status: Pronto para checkin"
+  },
+  {
+    id: 3,
+    platform: "Turno",
+    action: "Erro de sincronização",
+    status: "error",
+    timestamp: "10:15",
+    details: "Token de acesso expirado"
+  },
+  {
+    id: 4,
+    platform: "Taskbird",
+    action: "Tarefa criada automaticamente",
+    status: "warning",
+    timestamp: "09:45",
+    details: "Limpeza Studio Copacabana - Cleaner não atribuído"
+  }]
+  );
 
   const [showApiForm, setShowApiForm] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState("");
   const [newConnection, setNewConnection] = useState<Partial<ApiConnection>>(
-    {},
+    {}
   );
 
   const platforms = [
-    {
-      id: "airbnb",
-      name: "Airbnb",
-      description: "Importar reservas, checkout/checkin automático",
-      icon: "ABB",
-      authType: "OAuth 2.0",
-      features: [
-        "Importação de reservas",
-        "Status automático",
-        "Calendário sincronizado",
-      ],
-    },
-    {
-      id: "hostaway",
-      name: "Hostaway",
-      description: "Sistema de gestão de propriedades completo",
-      icon: "HST",
-      authType: "API Key",
-      features: [
-        "Gestão de propriedades",
-        "Reservas",
-        "Check-in/out",
-        "Relatórios",
-      ],
-    },
-    {
-      id: "taskbird",
-      name: "Taskbird",
-      description: "Criação automática de tarefas de limpeza",
-      icon: "TSK",
-      authType: "API Key",
-      features: [
-        "Criação de tarefas",
-        "Atribuição automática",
-        "Status tracking",
-      ],
-    },
-    {
-      id: "turno",
-      name: "Turno",
-      description: "Gestão de agenda e turnos dos funcionários",
-      icon: "⏰",
-      authType: "API Key",
-      features: ["Agenda funcionários", "Turnos", "Disponibilidade", "Folgas"],
-    },
-    {
-      id: "booking",
-      name: "Booking.com",
-      description: "Integração com reservas do Booking",
-      icon: "🌐",
-      authType: "XML API",
-      features: ["Importação reservas", "Status sync", "Avaliações"],
-    },
-    {
-      id: "vrbo",
-      name: "VRBO/Expedia",
-      description: "Gestão de propriedades VRBO",
-      icon: "🏖️",
-      authType: "API Key",
-      features: ["Reservas", "Calendário", "Pricing", "Availability"],
-    },
-  ];
+  {
+    id: "airbnb",
+    name: "Airbnb",
+    description: "Importar reservas, checkout/checkin automático",
+    icon: "ABB",
+    authType: "OAuth 2.0",
+    features: [
+    "Importação de reservas",
+    "Status automático",
+    "Calendário sincronizado"]
+
+  },
+  {
+    id: "hostaway",
+    name: "Hostaway",
+    description: "Sistema de gestão de propriedades completo",
+    icon: "HST",
+    authType: "API Key",
+    features: [
+    "Gestão de propriedades",
+    "Reservas",
+    "Check-in/out",
+    "Relatórios"]
+
+  },
+  {
+    id: "taskbird",
+    name: "Taskbird",
+    description: "Criação automática de tarefas de limpeza",
+    icon: "TSK",
+    authType: "API Key",
+    features: [
+    "Criação de tarefas",
+    "Atribuição automática",
+    "Status tracking"]
+
+  },
+  {
+    id: "turno",
+    name: "Turno",
+    description: "Gestão de agenda e turnos dos funcionários",
+    icon: "⏰",
+    authType: "API Key",
+    features: ["Agenda funcionários", "Turnos", "Disponibilidade", "Folgas"]
+  },
+  {
+    id: "booking",
+    name: "Booking.com",
+    description: "Integração com reservas do Booking",
+    icon: "🌐",
+    authType: "XML API",
+    features: ["Importação reservas", "Status sync", "Avaliações"]
+  },
+  {
+    id: "vrbo",
+    name: "VRBO/Expedia",
+    description: "Gestão de propriedades VRBO",
+    icon: "🏖️",
+    authType: "API Key",
+    features: ["Reservas", "Calendário", "Pricing", "Availability"]
+  }];
+
 
   const handleConnect = (platformId: string) => {
     setSelectedPlatform(platformId);
@@ -203,9 +203,9 @@ export default function IntegracaoAPIs() {
             credentials: {
               apiKey: newConnection.apiKey,
               webhookUrl: newConnection.webhookUrl,
-              authToken: newConnection.authToken,
-            },
-          }),
+              authToken: newConnection.authToken
+            }
+          })
         });
 
         if (!testResponse.ok) {
@@ -222,9 +222,9 @@ export default function IntegracaoAPIs() {
             credentials: {
               apiKey: newConnection.apiKey,
               webhookUrl: newConnection.webhookUrl,
-              authToken: newConnection.authToken,
-            },
-          }),
+              authToken: newConnection.authToken
+            }
+          })
         });
 
         if (!configResponse.ok) {
@@ -240,7 +240,7 @@ export default function IntegracaoAPIs() {
           apiKey: newConnection.apiKey,
           webhookUrl: newConnection.webhookUrl,
           authToken: newConnection.authToken,
-          config: {},
+          config: {}
         };
 
         setConnections([...connections, connection]);
@@ -257,7 +257,7 @@ export default function IntegracaoAPIs() {
           action: "Conexão estabelecida",
           status: "success",
           timestamp: new Date().toLocaleTimeString("pt-BR"),
-          details: `Integração configurada com sucesso. Webhook: ${newConnection.webhookUrl || "N/A"}`,
+          details: `Integração configurada com sucesso. Webhook: ${newConnection.webhookUrl || "N/A"}`
         };
         setSyncLogs([newLog, ...syncLogs]);
       } catch (err) {
@@ -265,7 +265,7 @@ export default function IntegracaoAPIs() {
 
         // Show error notification
         const errorMessage =
-          err instanceof Error ? err.message : "Erro ao conectar integração";
+        err instanceof Error ? err.message : "Erro ao conectar integração";
         error(`Falha ao conectar ${newConnection.name}: ${errorMessage}`);
 
         // Log de erro
@@ -275,7 +275,7 @@ export default function IntegracaoAPIs() {
           action: "Erro de conexão",
           status: "error",
           timestamp: new Date().toLocaleTimeString("pt-BR"),
-          details: `Falha ao estabelecer conexão: ${err}`,
+          details: `Falha ao estabelecer conexão: ${err}`
         };
         setSyncLogs([errorLog, ...syncLogs]);
       }
@@ -285,8 +285,8 @@ export default function IntegracaoAPIs() {
   const handleSync = async (connectionId: string) => {
     setConnections(
       connections.map((conn) =>
-        conn.id === connectionId ? { ...conn, status: "syncing" } : conn,
-      ),
+      conn.id === connectionId ? { ...conn, status: "syncing" } : conn
+      )
     );
 
     try {
@@ -296,8 +296,8 @@ export default function IntegracaoAPIs() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "sync",
-          connectionId,
-        }),
+          connectionId
+        })
       });
 
       if (!response.ok) {
@@ -308,15 +308,15 @@ export default function IntegracaoAPIs() {
 
       // Atualizar status para conectado
       setConnections((prevConnections) =>
-        prevConnections.map((conn) =>
-          conn.id === connectionId
-            ? {
-                ...conn,
-                status: "connected",
-                lastSync: new Date().toLocaleString("pt-BR"),
-              }
-            : conn,
-        ),
+      prevConnections.map((conn) =>
+      conn.id === connectionId ?
+      {
+        ...conn,
+        status: "connected",
+        lastSync: new Date().toLocaleString("pt-BR")
+      } :
+      conn
+      )
       );
 
       const connection = connections.find((c) => c.id === connectionId);
@@ -330,23 +330,23 @@ export default function IntegracaoAPIs() {
           action: "Sincronização manual",
           status: "success",
           timestamp: new Date().toLocaleTimeString("pt-BR"),
-          details: `${syncResult.properties?.length || 0} propriedades e ${syncResult.reservations?.length || 0} reservas sincronizadas`,
+          details: `${syncResult.properties?.length || 0} propriedades e ${syncResult.reservations?.length || 0} reservas sincronizadas`
         };
         setSyncLogs([newLog, ...syncLogs]);
       }
     } catch (err) {
       // Marcar como erro
       setConnections((prevConnections) =>
-        prevConnections.map((conn) =>
-          conn.id === connectionId ? { ...conn, status: "error" } : conn,
-        ),
+      prevConnections.map((conn) =>
+      conn.id === connectionId ? { ...conn, status: "error" } : conn
+      )
       );
 
       const connection = connections.find((c) => c.id === connectionId);
       if (connection) {
         // Show error notification
         const errorMessage =
-          err instanceof Error ? err.message : "Erro na sincronização";
+        err instanceof Error ? err.message : "Erro na sincronização";
         error(`Falha na sincronização de ${connection.name}: ${errorMessage}`);
 
         const errorLog: SyncLog = {
@@ -355,7 +355,7 @@ export default function IntegracaoAPIs() {
           action: "Erro de sincronização",
           status: "error",
           timestamp: new Date().toLocaleTimeString("pt-BR"),
-          details: `Falha na sincronização: ${err}`,
+          details: `Falha na sincronização: ${err}`
         };
         setSyncLogs([errorLog, ...syncLogs]);
       }
@@ -366,8 +366,8 @@ export default function IntegracaoAPIs() {
     const connection = connections.find((c) => c.id === connectionId);
     setConnections(
       connections.map((conn) =>
-        conn.id === connectionId ? { ...conn, status: "disconnected" } : conn,
-      ),
+      conn.id === connectionId ? { ...conn, status: "disconnected" } : conn
+      )
     );
 
     // Show disconnect notification
@@ -430,7 +430,7 @@ export default function IntegracaoAPIs() {
           <p className="text-2xl font-bold text-blue-600">
             {connections.reduce(
               (total, conn) => total + (conn.config.propertyCount || 0),
-              0,
+              0
             )}
           </p>
         </div>
@@ -457,16 +457,16 @@ export default function IntegracaoAPIs() {
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {connections.map((connection) => (
-              <div
-                key={connection.id}
-                className="border border-gray-200 rounded-lg p-4"
-              >
+            {connections.map((connection) =>
+            <div
+              key={connection.id}
+              className="border border-gray-200 rounded-lg p-4">
+
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">
-                      {platforms.find((p) => p.id === connection.platform)
-                        ?.icon || "🔗"}
+                      {platforms.find((p) => p.id === connection.platform)?.
+                    icon || "🔗"}
                     </span>
                     <div>
                       <h4 className="font-semibold text-gray-900">
@@ -478,52 +478,52 @@ export default function IntegracaoAPIs() {
                     </div>
                   </div>
                   <span
-                    className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(connection.status)}`}
-                  >
-                    {connection.status === "connected"
-                      ? "Conectado"
-                      : connection.status === "syncing"
-                        ? "Sincronizando..."
-                        : connection.status === "error"
-                          ? "Erro"
-                          : "Desconectado"}
+                  className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(connection.status)}`}>
+
+                    {connection.status === "connected" ?
+                  "Conectado" :
+                  connection.status === "syncing" ?
+                  "Sincronizando..." :
+                  connection.status === "error" ?
+                  "Erro" :
+                  "Desconectado"}
                   </span>
                 </div>
 
-                {connection.config.propertyCount && (
-                  <p className="text-sm text-gray-600 mb-3">
+                {connection.config.propertyCount &&
+              <p className="text-sm text-gray-600 mb-3">
                     {connection.config.propertyCount} propriedades sincronizadas
                   </p>
-                )}
+              }
 
                 <div className="flex gap-2">
                   {(connection.status === "connected" ||
-                    connection.status === "syncing") && (
-                    <button
-                      onClick={() => handleSync(connection.id)}
-                      className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-                      disabled={connection.status === "syncing"}
-                    >
-                      {connection.status === "syncing"
-                        ? "Sincronizando..."
-                        : "Sincronizar"}
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleDisconnect(connection.id)}
-                    className="text-red-600 hover:text-red-700 text-sm font-medium"
-                  >
+                connection.status === "syncing") &&
+                <WiredButton
+                  onClick={() => handleSync(connection.id)}
+                  className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                  disabled={connection.status === "syncing"}>
+
+                      {connection.status === "syncing" ?
+                  "Sincronizando..." :
+                  "Sincronizar"}
+                    </WiredButton>
+                }
+                  <WiredButton
+                  onClick={() => handleDisconnect(connection.id)}
+                  className="text-red-600 hover:text-red-700 text-sm font-medium">
+
                     Desconectar
-                  </button>
-                  <button
-                    className="text-gray-600 hover:text-gray-700 text-sm font-medium"
-                    onClick={() => handleConfigure(connection.id)}
-                  >
+                  </WiredButton>
+                  <WiredButton
+                  className="text-gray-600 hover:text-gray-700 text-sm font-medium"
+                  onClick={() => handleConfigure(connection.id)}>
+
                     Configurar
-                  </button>
+                  </WiredButton>
                 </div>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
@@ -542,13 +542,13 @@ export default function IntegracaoAPIs() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {platforms.map((platform) => {
               const isConnected = connections.some(
-                (c) => c.platform === platform.id && c.status === "connected",
+                (c) => c.platform === platform.id && c.status === "connected"
               );
               return (
                 <div
                   key={platform.id}
-                  className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors"
-                >
+                  className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-colors">
+
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-2xl">{platform.icon}</span>
                     <div>
@@ -570,28 +570,28 @@ export default function IntegracaoAPIs() {
                       Recursos:
                     </h5>
                     <ul className="text-xs text-gray-600 space-y-1">
-                      {platform.features.map((feature, index) => (
-                        <li key={index} className="flex items-center gap-1">
+                      {platform.features.map((feature, index) =>
+                      <li key={index} className="flex items-center gap-1">
                           <span className="text-green-500">✓</span>
                           {feature}
                         </li>
-                      ))}
+                      )}
                     </ul>
                   </div>
 
-                  <button
+                  <WiredButton
                     onClick={() => handleConnect(platform.id)}
                     disabled={isConnected}
                     className={`w-full py-2 px-4 rounded text-sm font-medium ${
-                      isConnected
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-blue-600 text-white hover:bg-blue-700"
-                    }`}
-                  >
+                    isConnected ?
+                    "bg-gray-100 text-gray-400 cursor-not-allowed" :
+                    "bg-blue-600 text-white hover:bg-blue-700"}`
+                    }>
+
                     {isConnected ? "Já Conectado" : "Conectar"}
-                  </button>
-                </div>
-              );
+                  </WiredButton>
+                </div>);
+
             })}
           </div>
         </div>
@@ -609,19 +609,19 @@ export default function IntegracaoAPIs() {
         </div>
         <div className="p-6">
           <div className="space-y-4">
-            {syncLogs.map((log) => (
-              <div
-                key={log.id}
-                className="flex items-start gap-4 py-3 border-b border-gray-100 last:border-b-0"
-              >
+            {syncLogs.map((log) =>
+            <div
+              key={log.id}
+              className="flex items-start gap-4 py-3 border-b border-gray-100 last:border-b-0">
+
                 <span
-                  className={`text-sm font-medium ${getLogStatusColor(log.status)}`}
-                >
-                  {log.status === "success"
-                    ? "✓"
-                    : log.status === "error"
-                      ? "✗"
-                      : "⚠"}
+                className={`text-sm font-medium ${getLogStatusColor(log.status)}`}>
+
+                  {log.status === "success" ?
+                "✓" :
+                log.status === "error" ?
+                "✗" :
+                "⚠"}
                 </span>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
@@ -636,14 +636,14 @@ export default function IntegracaoAPIs() {
                   <p className="text-xs text-gray-500">{log.details}</p>
                 </div>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
 
       {/* Modal de Configuração de API */}
-      {showApiForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      {showApiForm &&
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Conectar com{" "}
@@ -656,14 +656,14 @@ export default function IntegracaoAPIs() {
                   Nome da Conexão
                 </label>
                 <input
-                  type="text"
-                  value={newConnection.name || ""}
-                  onChange={(e) =>
-                    setNewConnection({ ...newConnection, name: e.target.value })
-                  }
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="Ex: Airbnb - Conta Principal"
-                />
+                type="text"
+                value={newConnection.name || ""}
+                onChange={(e) =>
+                setNewConnection({ ...newConnection, name: e.target.value })
+                }
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+                placeholder="Ex: Airbnb - Conta Principal" />
+
               </div>
 
               <div>
@@ -671,17 +671,17 @@ export default function IntegracaoAPIs() {
                   API Key / Token
                 </label>
                 <input
-                  type="password"
-                  value={newConnection.apiKey || ""}
-                  onChange={(e) =>
-                    setNewConnection({
-                      ...newConnection,
-                      apiKey: e.target.value,
-                    })
-                  }
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
-                  placeholder="Cole sua API key aqui"
-                />
+                type="password"
+                value={newConnection.apiKey || ""}
+                onChange={(e) =>
+                setNewConnection({
+                  ...newConnection,
+                  apiKey: e.target.value
+                })
+                }
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+                placeholder="Cole sua API key aqui" />
+
               </div>
 
               <div>
@@ -690,23 +690,23 @@ export default function IntegracaoAPIs() {
                 </label>
                 <div className="relative">
                   <input
-                    type="url"
-                    value={`${window.location.origin}/api/webhooks?platform=${selectedPlatform}`}
-                    readOnly
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50 text-gray-600"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        `${window.location.origin}/api/webhooks?platform=${selectedPlatform}`,
-                      );
-                      alert("URL copiada para a área de transferência!");
-                    }}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-700 text-sm"
-                  >
+                  type="url"
+                  value={`${window.location.origin}/api/webhooks?platform=${selectedPlatform}`}
+                  readOnly
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50 text-gray-600" />
+
+                  <WiredButton
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `${window.location.origin}/api/webhooks?platform=${selectedPlatform}`
+                    );
+                    alert("URL copiada para a área de transferência!");
+                  }}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-700 text-sm">
+
                     Copiar
-                  </button>
+                  </WiredButton>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
                   Use esta URL para configurar webhooks na plataforma{" "}
@@ -716,25 +716,25 @@ export default function IntegracaoAPIs() {
             </div>
 
             <div className="flex gap-3 mt-6">
-              <button
-                onClick={handleSaveConnection}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-              >
+              <WiredButton
+              onClick={handleSaveConnection}
+              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+
                 Conectar
-              </button>
-              <button
-                onClick={() => {
-                  setShowApiForm(false);
-                  setNewConnection({});
-                }}
-                className="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600"
-              >
+              </WiredButton>
+              <WiredButton
+              onClick={() => {
+                setShowApiForm(false);
+                setNewConnection({});
+              }}
+              className="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+
                 Cancelar
-              </button>
+              </WiredButton>
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }

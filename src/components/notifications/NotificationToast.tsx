@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React from "react";
 import { motion } from "framer-motion";
@@ -28,7 +28,7 @@ const getTypeConfig = (type: string) => {
         borderColor: "border-green-200",
         iconColor: "text-green-500",
         titleColor: "text-green-800",
-        messageColor: "text-green-700",
+        messageColor: "text-green-700"
       };
     case "warning":
       return {
@@ -37,7 +37,7 @@ const getTypeConfig = (type: string) => {
         borderColor: "border-yellow-200",
         iconColor: "text-yellow-500",
         titleColor: "text-yellow-800",
-        messageColor: "text-yellow-700",
+        messageColor: "text-yellow-700"
       };
     case "error":
       return {
@@ -46,7 +46,7 @@ const getTypeConfig = (type: string) => {
         borderColor: "border-red-200",
         iconColor: "text-red-500",
         titleColor: "text-red-800",
-        messageColor: "text-red-700",
+        messageColor: "text-red-700"
       };
     case "info":
     default:
@@ -56,7 +56,7 @@ const getTypeConfig = (type: string) => {
         borderColor: "border-blue-200",
         iconColor: "text-blue-500",
         titleColor: "text-blue-800",
-        messageColor: "text-blue-700",
+        messageColor: "text-blue-700"
       };
   }
 };
@@ -68,7 +68,7 @@ export function NotificationToast({
   type,
   duration = 5000,
   onClose,
-  actions,
+  actions
 }: NotificationToastProps) {
   const config = getTypeConfig(type);
   const IconComponent = config.icon;
@@ -91,8 +91,8 @@ export function NotificationToast({
       className={`
         max-w-md w-full ${config.bgColor} ${config.borderColor} border rounded-lg shadow-lg pointer-events-auto
         ring-1 ring-black ring-opacity-5 overflow-hidden
-      `}
-    >
+      `}>
+
       <div className="p-4">
         <div className="flex items-start">
           <div className="flex-shrink-0">
@@ -105,111 +105,111 @@ export function NotificationToast({
             </p>
             <p className={`mt-1 text-sm ${config.messageColor}`}>{message}</p>
 
-            {actions && actions.length > 0 && (
-              <div className="mt-3 flex space-x-2">
-                {actions.map((action, index) => (
-                  <button
-                    key={index}
-                    onClick={action.onClick}
-                    className={`
+            {actions && actions.length > 0 &&
+            <div className="mt-3 flex space-x-2">
+                {actions.map((action, index) =>
+              <WiredButton
+                key={index}
+                onClick={action.onClick}
+                className={`
                       text-sm font-medium px-3 py-2 rounded-md transition-colors
                       ${action.className || "bg-white hover:bg-gray-50 text-gray-700 border border-gray-300"}
-                    `}
-                  >
+                    `}>
+
                     {action.label}
-                  </button>
-                ))}
+                  </WiredButton>
+              )}
               </div>
-            )}
+            }
           </div>
 
           <div className="ml-4 flex-shrink-0 flex">
-            <button
+            <WiredButton
               onClick={onClose}
               className={`
                 rounded-md inline-flex ${config.messageColor} hover:${config.titleColor} 
                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-              `}
-            >
+              `}>
+
               <span className="sr-only">Close</span>
               <X className="w-5 h-5" />
-            </button>
+            </WiredButton>
           </div>
         </div>
       </div>
-    </motion.div>
-  );
+    </motion.div>);
+
 }
 
 // Utility functions for creating toast notifications
 export const showNotificationToast = {
   success: (
-    title: string,
-    message: string,
-    actions?: NotificationToastProps["actions"],
-  ) => {
-    toast.custom((t) => (
-      <NotificationToast
-        id={t.id}
-        title={title}
-        message={message}
-        type="success"
-        onClose={() => toast.dismiss(t.id)}
-        actions={actions}
-      />
-    ));
+  title: string,
+  message: string,
+  actions?: NotificationToastProps["actions"]) =>
+  {
+    toast.custom((t) =>
+    <NotificationToast
+      id={t.id}
+      title={title}
+      message={message}
+      type="success"
+      onClose={() => toast.dismiss(t.id)}
+      actions={actions} />
+
+    );
   },
 
   error: (
-    title: string,
-    message: string,
-    actions?: NotificationToastProps["actions"],
-  ) => {
-    toast.custom((t) => (
-      <NotificationToast
-        id={t.id}
-        title={title}
-        message={message}
-        type="error"
-        onClose={() => toast.dismiss(t.id)}
-        actions={actions}
-      />
-    ));
+  title: string,
+  message: string,
+  actions?: NotificationToastProps["actions"]) =>
+  {
+    toast.custom((t) =>
+    <NotificationToast
+      id={t.id}
+      title={title}
+      message={message}
+      type="error"
+      onClose={() => toast.dismiss(t.id)}
+      actions={actions} />
+
+    );
   },
 
   warning: (
-    title: string,
-    message: string,
-    actions?: NotificationToastProps["actions"],
-  ) => {
-    toast.custom((t) => (
-      <NotificationToast
-        id={t.id}
-        title={title}
-        message={message}
-        type="warning"
-        onClose={() => toast.dismiss(t.id)}
-        actions={actions}
-      />
-    ));
+  title: string,
+  message: string,
+  actions?: NotificationToastProps["actions"]) =>
+  {
+    toast.custom((t) =>
+    <NotificationToast
+      id={t.id}
+      title={title}
+      message={message}
+      type="warning"
+      onClose={() => toast.dismiss(t.id)}
+      actions={actions} />
+
+    );
   },
 
   info: (
-    title: string,
-    message: string,
-    actions?: NotificationToastProps["actions"],
-  ) => {
-    toast.custom((t) => (
-      <NotificationToast
-        id={t.id}
-        title={title}
-        message={message}
-        type="info"
-        onClose={() => toast.dismiss(t.id)}
-        actions={actions}
-      />
-    ));
-  },
+  title: string,
+  message: string,
+  actions?: NotificationToastProps["actions"]) =>
+  {
+    toast.custom((t) =>
+    <NotificationToast
+      id={t.id}
+      title={title}
+      message={message}
+      type="info"
+      onClose={() => toast.dismiss(t.id)}
+      actions={actions} />
+
+    );
+  }
 };
 
 export default NotificationToast;

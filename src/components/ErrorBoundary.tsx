@@ -1,4 +1,4 @@
-"use client";
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
 import React from "react";
 
@@ -9,13 +9,13 @@ interface ErrorBoundaryState {
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
-  fallback?: React.ComponentType<{ error?: Error; retry: () => void }>;
+  fallback?: React.ComponentType<{error?: Error;retry: () => void;}>;
 }
 
 class ErrorBoundary extends React.Component<
   ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+  ErrorBoundaryState>
+{
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -33,12 +33,12 @@ class ErrorBoundary extends React.Component<
       (window as any).Sentry.captureException(error, {
         contexts: {
           react: {
-            componentStack: errorInfo.componentStack,
-          },
+            componentStack: errorInfo.componentStack
+          }
         },
         tags: {
-          errorBoundary: true,
-        },
+          errorBoundary: true
+        }
       });
     }
 
@@ -68,11 +68,11 @@ class ErrorBoundary extends React.Component<
 
 function DefaultErrorFallback({
   error,
-  retry,
-}: {
-  error?: Error;
-  retry: () => void;
-}) {
+  retry
+
+
+
+}: {error?: Error;retry: () => void;}) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">
@@ -84,18 +84,18 @@ function DefaultErrorFallback({
           {error?.message || "Ocorreu um erro inesperado no sistema BSOS."}
         </p>
         <div className="space-y-3">
-          <button
+          <WiredButton
             onClick={retry}
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
-          >
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+
             Try Again
-          </button>
-          <button
+          </WiredButton>
+          <WiredButton
             onClick={() => window.location.reload()}
-            className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
-          >
+            className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+
             Reload Page
-          </button>
+          </WiredButton>
         </div>
         <div className="mt-6 text-sm text-gray-500">
           <p>Se o problema persistir:</p>
@@ -111,8 +111,8 @@ function DefaultErrorFallback({
           </ul>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 export default ErrorBoundary;
