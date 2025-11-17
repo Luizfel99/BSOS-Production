@@ -1,0 +1,43 @@
+{
+  "app": {
+    "name": "Bright & Shine OS"
+  },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to your admin dashboard",
+    "email": "Email",
+    "password": "Password",
+    "signin": "Sign in",
+    "forgot": "Forgot password?",
+    "orDemo": "Or use a demo profile",
+    "demo": {
+      "admin": "Admin demo",
+      "manager": "Manager demo",
+      "supervisor": "Supervisor demo",
+      "cleaner": "Cleaner demo",
+      "client": "Client demo"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Quick access by role",
+    "cards": {
+      "tasks": "Tasks",
+      "team": "Team",
+      "properties": "Properties",
+      "notifications": "Notifications",
+      "finance": "Finance"
+    },
+    "charts": {
+      "tasksByStatus": "Tasks by status"
+    },
+    "shortcuts": "Shortcuts",
+    "open": {
+      "settings": "Settings",
+      "profile": "Profile",
+      "seed": "Re-Seed",
+      "health": "Health",
+      "dbHealth": "DB Health"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "app": {
+    "name": "Bright & Shine OS"
+  },
+  "login": {
+    "title": "Bem-vindo de volta",
+    "subtitle": "Acesse seu painel administrativo",
+    "email": "E-mail",
+    "password": "Senha",
+    "signin": "Entrar",
+    "forgot": "Esqueci a senha",
+    "orDemo": "Ou use um perfil de demonstração",
+    "demo": {
+      "admin": "Demo Administrador",
+      "manager": "Demo Gerente",
+      "supervisor": "Demo Supervisor",
+      "cleaner": "Demo Limpeza",
+      "client": "Demo Cliente"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Acesso rápido por perfil",
+    "cards": {
+      "tasks": "Tarefas",
+      "team": "Equipe",
+      "properties": "Propriedades",
+      "notifications": "Notificações",
+      "finance": "Finanças"
+    },
+    "charts": {
+      "tasksByStatus": "Tarefas por status"
+    },
+    "shortcuts": "Atalhos",
+    "open": {
+      "settings": "Configurações",
+      "profile": "Perfil",
+      "seed": "Repopular",
+      "health": "Saúde do app",
+      "dbHealth": "Saúde do BD"
+    }
+  }
+}
