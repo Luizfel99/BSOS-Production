@@ -17,16 +17,7 @@ export default function AuthProviderWrapper({
   children,
 }: AuthProviderWrapperProps) {
   return (
-    <ClientOnly
-      fallback={
-        <AuthLoadingScreen
-          message="Carregando sistema de autenticação"
-          subMessage="Inicializando componentes de segurança..."
-          showProgress={true}
-          minDisplayTime={500}
-        />
-      }
-    >
+    <ClientOnly fallback={<AuthLoadingScreen />}>
       <AuthProvider>{children}</AuthProvider>
     </ClientOnly>
   );

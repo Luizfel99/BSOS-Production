@@ -22,5 +22,5 @@ export default function HomePage(): JSX.Element {
 
   if (loading) return <AuthLoadingScreen />;
   if (!user) return <LoginScreen />;
-  return null;
+  return <></>;
 }

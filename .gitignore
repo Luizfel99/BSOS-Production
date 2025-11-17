@@ -5,3 +5,12 @@ dist
 .env.local
 *.log
 *.pack
+.turbo
+**/backups*/
+**/backup*/
+**/.history/
+**/*.backup.*
+**/*.backup2.*
+**/*.bak*
+backups_before_login_update/
+.env*
