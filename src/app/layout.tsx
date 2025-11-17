@@ -10,6 +10,7 @@ import { Analytics } from "@vercel/analytics/react";
 import DebugOverlay from "@/components/DebugOverlay";
 import GlobalActionBus from "@/components/GlobalActionBus";
 import AppHeader from "@/components/AppHeader";
+import DemoBar from "@/components/DemoBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,6 +41,7 @@ export default function RootLayout({
             <AuthProviderWrapper>
               <BSOSProvider>
                 <div className="min-h-screen bg-gray-50">
+                  <DemoBar />
                   <AppHeader />
                   {children}
                   <DebugOverlay />

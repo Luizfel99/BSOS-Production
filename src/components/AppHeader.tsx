@@ -47,6 +47,7 @@ export default function AppHeader() {
             <NavLink href="/team" label="Team" />
             <NavLink href="/properties" label="Properties" />
             <NavLink href="/notifications" label="Notifications" />
+            <NavLink href="/profile" label="Profile" />
           </nav>
         </div>
 
