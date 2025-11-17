@@ -36,6 +36,7 @@ model User {
   tasks             Task[]             @relation("TaskAssignee")
   createdTasks      Task[]             @relation("TaskCreator")
   teamMember        TeamMember?
+  preferences       UserPreference?
 }
 
 model ResetToken {
@@ -109,4 +110,13 @@ model Task {
   @@index([status])
   @@index([assigneeId])
   @@index([propertyId])
+}
+
+model UserPreference {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  prefs     Json
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

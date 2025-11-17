@@ -15,6 +15,8 @@
     "build": "prisma generate && next build",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
+    "prisma:gen": "prisma generate",
+    "ci": "npm run prisma:gen && npm run type-check && npm run build && npm run test:run",
     "setup-production": "node scripts/setup-production.js",
     "db:migrate": "node scripts/migrate.js",
     "db:schema": "psql $DATABASE_URL -f scripts/database-schema.sql",

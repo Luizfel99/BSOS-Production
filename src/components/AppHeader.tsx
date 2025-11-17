@@ -48,6 +48,7 @@ export default function AppHeader() {
             <NavLink href="/properties" label="Properties" />
             <NavLink href="/notifications" label="Notifications" />
             <NavLink href="/profile" label="Profile" />
+            <NavLink href="/settings" label="Settings" />
           </nav>
         </div>
 

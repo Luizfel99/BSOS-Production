@@ -1,20 +1,14 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/prisma";
 
+/**
+ * GET /api/health
+ * 
+ * App-level health check with version info
+ */
 export async function GET() {
-  try {
-    const now = await db.$queryRawUnsafe<{ now: Date }[]>(
-      "select now() as now"
-    );
-    return NextResponse.json({
-      ok: true,
-      db: "neon",
-      now: now?.[0]?.now ?? null,
-    });
-  } catch (e: any) {
-    return NextResponse.json(
-      { ok: false, error: String(e?.message ?? e) },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json({
+    ok: true,
+    version: process.env.VERCEL_GIT_COMMIT_SHA || "dev",
+    timestamp: new Date().toISOString(),
+  });
 }
