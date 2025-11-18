@@ -9,16 +9,29 @@ import { db } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const { role = "admin", locale = "en" } = await req.json().catch(() => ({}));
-    const roles = ["admin","manager","supervisor","cleaner","client","owner"];
-    if (!roles.includes(role)) return NextResponse.json({ error: "invalid_role" }, { status: 400 });
+    const { role = "admin", locale = "en" } = await req
+      .json()
+      .catch(() => ({}));
+    const roles = [
+      "admin",
+      "manager",
+      "supervisor",
+      "cleaner",
+      "client",
+      "owner",
+    ];
+    if (!roles.includes(role))
+      return NextResponse.json({ error: "invalid_role" }, { status: 400 });
 
     // Busca usuário demo do banco
     const email = `${role}@demo.bsos`;
     const dbUser = await db.user.findUnique({ where: { email } });
-    
+
     if (!dbUser) {
-      return NextResponse.json({ error: "demo_user_not_found", message: "Run seed script first" }, { status: 404 });
+      return NextResponse.json(
+        { error: "demo_user_not_found", message: "Run seed script first" },
+        { status: 404 }
+      );
     }
 
     const user = {

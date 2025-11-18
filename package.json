@@ -7,8 +7,12 @@
     "seed": "node --import=dotenv/config ./prisma/seed.mjs"
   },
   "scripts": {
+    "port:kill": "node -e \"const {execSync}=require('node:child_process');try{execSync('lsof -ti:3020 | xargs -r kill -9',{stdio:'ignore'})}catch{}\"",
+    "clean": "rm -rf .next .turbo || true",
     "predev": "bash scripts/kill-ports.sh",
     "dev": "node scripts/dev-with-fallback.mjs",
+    "dev:turbo": "node --max-old-space-size=4096 scripts/dev-with-fallback.mjs --turbo",
+    "restart": "npm run port:kill && npm run clean && npm run dev",
     "who-owns-port": "node scripts/who-owns-port.mjs",
     "prestart": "sh -c 'rm -rf .next || true'",
     "start": "next start -p ${PORT:-3020}",
