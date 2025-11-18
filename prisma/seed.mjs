@@ -16,11 +16,11 @@ const STREETS = ["Ocean Ave", "Sunset Blvd", "Palm St", "Bay Rd", "Collins Ave"]
 const DEMO = {
   pwd: process.env.NEXT_PUBLIC_DEMO_PWD || "demo123",
   users: [
-    { name: "Admin Demo", email: process.env.NEXT_PUBLIC_DEMO_EMAIL_ADMIN || "admin@demo.local", role: "admin" },
-    { name: "Manager Demo", email: process.env.NEXT_PUBLIC_DEMO_EMAIL_MANAGER || "manager@demo.local", role: "manager" },
-    { name: "Supervisor Demo", email: process.env.NEXT_PUBLIC_DEMO_EMAIL_SUPERVISOR || "supervisor@demo.local", role: "supervisor" },
-    { name: "Cleaner Demo", email: process.env.NEXT_PUBLIC_DEMO_EMAIL_CLEANER || "cleaner@demo.local", role: "cleaner" },
-    { name: "Client Demo", email: process.env.NEXT_PUBLIC_DEMO_EMAIL_CLIENT || "client@demo.local", role: "client" },
+    { name: "Alice Admin", email: "admin@demo.bsos", role: "admin" },
+    { name: "Manny Manager", email: "manager@demo.bsos", role: "manager" },
+    { name: "Sophie Superv", email: "supervisor@demo.bsos", role: "supervisor" },
+    { name: "Cleo Cleaner", email: "cleaner@demo.bsos", role: "cleaner" },
+    { name: "Carl Client", email: "client@demo.bsos", role: "client" },
   ],
 };
 

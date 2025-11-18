@@ -41,20 +41,22 @@ export default function LoginScreen(): JSX.Element {
   }
 
   async function loginDemo(role: typeof DEMOS[number]["role"]) {
-    // why: emails são configuráveis via env; fallback padrão
-    const envKey = `NEXT_PUBLIC_DEMO_EMAIL_${role.toUpperCase()}`;
-    const fallback =
-      role === "admin" ? "admin@demo.local" :
-      role === "manager" ? "manager@demo.local" :
-      role === "supervisor" ? "supervisor@demo.local" :
-      role === "cleaner" ? "cleaner@demo.local" : "client@demo.local";
-    const demoEmail = (process as any)?.env?.[envKey] || fallback;
     setBusy(true);
     try {
-      await login(demoEmail, (process as any)?.env?.NEXT_PUBLIC_DEMO_PWD || "demo123");
-      router.push("/dashboard");
-    } catch {
-      alert("Demo user unavailable. Run seed.");
+      const res = await fetch("/api/auth/dev-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ role }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "dev-login failed");
+      }
+      router.replace("/dashboard");
+      router.refresh(); // Force refresh to pick up auth state
+    } catch (e: any) {
+      alert(e.message || "Unable to login demo. Check server logs.");
     } finally {
       setBusy(false);
     }
