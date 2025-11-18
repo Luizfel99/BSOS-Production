@@ -27,6 +27,7 @@ model User {
   role         Role
   passwordHash String
   avatar       String?  @db.Text
+  locale       String?  // "en" | "pt" | "es"
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -63,6 +64,7 @@ model VerificationCode {
 
 model Property {
   id        String   @id @default(cuid())
+  code      String?  @unique // Optional unique code like "PR1000"
   name      String
   address   String
   city      String

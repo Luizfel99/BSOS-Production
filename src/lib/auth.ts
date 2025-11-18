@@ -30,6 +30,21 @@ export function verifyJwt(token: string): JwtPayload {
 }
 
 /**
+ * Gets authenticated user from request, returns null if not authenticated
+ *
+ * Why: Non-throwing version for optional authentication checks
+ */
+export function getUserFromRequest(req: Request): JwtPayload | null {
+  const token = readTokenFromHeaders(req);
+  if (!token) return null;
+  try {
+    return verifyJwt(token);
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Requires authenticated user from request, throws on unauthorized
  *
  * Why: Reusable auth guard for protected API routes

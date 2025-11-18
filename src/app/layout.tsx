@@ -11,6 +11,7 @@ import DebugOverlay from "@/components/DebugOverlay";
 import GlobalActionBus from "@/components/GlobalActionBus";
 import AppHeader from "@/components/AppHeader";
 import DemoBar from "@/components/DemoBar";
+import LocaleSwitcher from "@/components/LocaleSwitcher";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +42,9 @@ export default function RootLayout({
             <AuthProviderWrapper>
               <BSOSProvider>
                 <div className="min-h-screen bg-gray-50">
+                  <div className="fixed right-3 top-3 z-50">
+                    <LocaleSwitcher />
+                  </div>
                   <DemoBar />
                   <AppHeader />
                   {children}
