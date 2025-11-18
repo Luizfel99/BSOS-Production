@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 /**
  * Creates demo users if they don't exist
- * 
+ *
  * Why: Exported helper for reuse in tests and seed scripts
  */
 export async function ensureDemoUsers() {
@@ -24,7 +24,8 @@ export async function ensureDemoUsers() {
     {
       name: "Supervisor Demo",
       email:
-        process.env.NEXT_PUBLIC_DEMO_EMAIL_SUPERVISOR || "supervisor@demo.local",
+        process.env.NEXT_PUBLIC_DEMO_EMAIL_SUPERVISOR ||
+        "supervisor@demo.local",
       role: "supervisor",
     },
     {

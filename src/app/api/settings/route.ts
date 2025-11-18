@@ -5,7 +5,7 @@ import { SettingsSchema, DEFAULT_SETTINGS } from "@/lib/validation/settings";
 
 /**
  * GET /api/settings
- * 
+ *
  * Returns user preferences merged with defaults
  */
 export async function GET(req: Request) {
@@ -30,13 +30,13 @@ export async function GET(req: Request) {
       ...(pref?.prefs?.notifications || {}),
     },
   };
-  
+
   return NextResponse.json({ ok: true, settings: merged });
 }
 
 /**
  * PATCH /api/settings
- * 
+ *
  * Validates and saves user preferences (upsert)
  */
 export async function PATCH(req: Request) {
@@ -57,12 +57,12 @@ export async function PATCH(req: Request) {
   }
 
   const incoming = parsed.data;
-  
+
   // Defensive merge with existing preferences
   const existing = await db.userPreference
     .findUnique({ where: { userId: jwtUser.id } })
     .catch(() => null as any);
-    
+
   const nextPrefs = {
     ...DEFAULT_SETTINGS,
     ...(existing?.prefs || {}),

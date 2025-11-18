@@ -3,7 +3,10 @@ import { ProfileUpdateSchema } from "@/lib/validation/profile";
 
 describe("ProfileUpdateSchema", () => {
   it("accepts valid payload", () => {
-    const parsed = ProfileUpdateSchema.safeParse({ name: "John Doe", locale: "en" });
+    const parsed = ProfileUpdateSchema.safeParse({
+      name: "John Doe",
+      locale: "en",
+    });
     expect(parsed.success).toBe(true);
   });
 

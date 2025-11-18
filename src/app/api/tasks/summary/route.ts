@@ -10,7 +10,7 @@ export async function GET() {
     // Tenta agrupar por status; se Task não existir, responde zeros
     const rows = await (db as any).task?.groupBy({
       by: ["status"],
-      _count: { _all: true }
+      _count: { _all: true },
     });
     if (!rows) return NextResponse.json({ todo: 0, in_progress: 0, done: 0 });
     const map: Record<string, number> = {};
@@ -18,7 +18,7 @@ export async function GET() {
     return NextResponse.json({
       todo: map["todo"] || 0,
       in_progress: map["in_progress"] || 0,
-      done: map["done"] || 0
+      done: map["done"] || 0,
     });
   } catch {
     return NextResponse.json({ todo: 0, in_progress: 0, done: 0 });

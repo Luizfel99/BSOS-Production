@@ -25,12 +25,12 @@ Implemented complete RBAC system with role-based permissions and persistent loca
 Role-based permission matrix already implemented:
 
 | Role       | Tasks CRUD | Team CRUD | Properties CRUD |
-|------------|-----------|-----------|-----------------|
-| admin      | Full      | Full      | Full            |
-| manager    | CRU       | RU        | RU              |
-| supervisor | RU        | -         | R               |
-| cleaner    | RU        | -         | R               |
-| client     | R         | -         | R               |
+| ---------- | ---------- | --------- | --------------- |
+| admin      | Full       | Full      | Full            |
+| manager    | CRU        | RU        | RU              |
+| supervisor | RU         | -         | R               |
+| cleaner    | RU         | -         | R               |
+| client     | R          | -         | R               |
 
 **Function:** `can(user, resource, action)` returns boolean
 
@@ -42,6 +42,7 @@ Role-based permission matrix already implemented:
 - ✅ Existing `requireUser(req)` - throws on unauthorized
 
 Both support:
+
 - Cookie: `auth_token`
 - Header: `Authorization: Bearer <token>`
 
@@ -50,15 +51,18 @@ Both support:
 All APIs already implemented with RBAC checks:
 
 **Tasks:**
+
 - `GET/POST /api/tasks` - List/create with RBAC
 - `GET/PATCH/DELETE /api/tasks/[id]` - Single task operations
 - Special rule: cleaners can only update status on their own tasks
 
 **Team:**
+
 - `GET/POST /api/team` - List/create with RBAC
 - `GET/PATCH/DELETE /api/team/[id]` - Single member operations
 
 **Properties:**
+
 - `GET/POST /api/properties` - List/create with RBAC
 - `GET/PATCH/DELETE /api/properties/[id]` - Single property operations
 
@@ -99,6 +103,7 @@ All APIs already implemented with RBAC checks:
 **File:** `src/components/I18nProvider.tsx`
 
 Already reads locale from:
+
 1. `user.locale` (from database)
 2. `localStorage.getItem("bsos_locale")`
 3. `navigator.language`
@@ -177,11 +182,13 @@ export async function POST(req: Request) {
 ### 2. Locale Switching
 
 **UI:**
+
 - Use the dropdown in top-right corner
 - Select language
 - Page reloads with new locale
 
 **Programmatic:**
+
 ```typescript
 await fetch("/api/settings/locale", {
   method: "POST",
@@ -194,6 +201,7 @@ await fetch("/api/settings/locale", {
 ### 3. Testing RBAC
 
 Login as different demo users to test permissions:
+
 - Admin: full access to all resources
 - Manager: can't delete, limited team access
 - Supervisor/Cleaner: read-only properties, limited tasks
@@ -249,6 +257,7 @@ npx prisma db push --accept-data-loss
 ## Production Considerations
 
 1. **Migration Strategy**: Currently using `db push` for dev. For production, create proper migration:
+
    ```bash
    npx prisma migrate dev --name add_locale_and_code
    ```
@@ -264,6 +273,7 @@ npx prisma db push --accept-data-loss
 ## Next Steps
 
 Suggested enhancements:
+
 - [ ] Add locale selector to user profile page
 - [ ] Add more granular permissions (e.g., "view own tasks only")
 - [ ] Add audit logging for sensitive operations
@@ -274,18 +284,21 @@ Suggested enhancements:
 ## Architecture Notes
 
 **RBAC Pattern:**
+
 - Resource-based permissions (tasks, team, properties)
 - Action-based (read, create, update, delete)
 - Role-based matrix (defined in can.ts)
 - Enforced at API level (not UI)
 
 **Locale Pattern:**
+
 - Server persists in user.locale (optional)
 - Client reads from user → localStorage → browser → fallback
 - I18nProvider handles message loading
 - LocaleSwitcher handles UI + persistence
 
 **Database Pattern:**
+
 - All models use String @id @default(cuid())
 - Soft deletes possible via active flags
 - Relations use onDelete: Cascade/SetNull appropriately

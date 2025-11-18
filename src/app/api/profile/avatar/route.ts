@@ -31,7 +31,10 @@ export async function POST(req: Request) {
     contentType: file.type || "application/octet-stream",
   });
 
-  await db.user.update({ where: { id: jwtUser.id }, data: { avatar: result.url } });
+  await db.user.update({
+    where: { id: jwtUser.id },
+    data: { avatar: result.url },
+  });
 
   return NextResponse.json({ ok: true, avatar: result.url });
 }

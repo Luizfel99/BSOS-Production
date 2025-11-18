@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import DashboardKpis from "@/components/DashboardKpis";
 import {
   ResponsiveContainer,
   BarChart,
@@ -69,6 +70,8 @@ export default function DashboardPage(): JSX.Element {
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
         <p className="text-gray-600">{t("subtitle")}</p>
       </div>
+
+      <DashboardKpis />
 
       <div className="grid lg:grid-cols-3 gap-6">
         <section className="lg:col-span-2">

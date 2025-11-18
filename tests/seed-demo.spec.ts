@@ -26,7 +26,7 @@ describe("ensureDemoUsers", () => {
     fakeDb.user.findUnique.mockResolvedValueOnce(null); // client - doesn't exist
 
     const res = await ensureDemoUsers();
-    
+
     // Should have attempted to create 4 users
     expect(res.filter((r) => r.created).length).toBe(4);
     expect(res.filter((r) => !r.created).length).toBe(1);
@@ -38,7 +38,7 @@ describe("ensureDemoUsers", () => {
     fakeDb.user.findUnique.mockResolvedValue({ id: "exists" });
 
     const res = await ensureDemoUsers();
-    
+
     expect(res.filter((r) => r.created).length).toBe(0);
     expect(res.length).toBe(5); // all 5 demo users
     expect(fakeDb.user.create).not.toHaveBeenCalled();

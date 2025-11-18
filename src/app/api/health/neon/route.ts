@@ -3,7 +3,7 @@ import { db } from "@/lib/prisma";
 
 /**
  * GET /api/health/neon
- * 
+ *
  * Health check endpoint that verifies database connectivity with SELECT 1
  */
 export async function GET() {

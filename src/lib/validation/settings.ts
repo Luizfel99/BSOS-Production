@@ -2,7 +2,7 @@ import { z } from "zod";
 
 /**
  * Zod schema for user settings validation
- * 
+ *
  * Why: Type-safe validation for user preferences (dark mode, language, notifications)
  */
 export const SettingsSchema = z.object({

@@ -12,6 +12,7 @@ import GlobalActionBus from "@/components/GlobalActionBus";
 import AppHeader from "@/components/AppHeader";
 import DemoBar from "@/components/DemoBar";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
+import { ToastProvider } from "@/components/ui/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,47 +39,49 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
         <ErrorBoundary>
-          <I18nProvider>
-            <AuthProviderWrapper>
-              <BSOSProvider>
-                <div className="min-h-screen bg-gray-50">
-                  <div className="fixed right-3 top-3 z-50">
-                    <LocaleSwitcher />
+          <ToastProvider>
+            <I18nProvider>
+              <AuthProviderWrapper>
+                <BSOSProvider>
+                  <div className="min-h-screen bg-gray-50">
+                    <div className="fixed right-3 top-3 z-50">
+                      <LocaleSwitcher />
+                    </div>
+                    <DemoBar />
+                    <AppHeader />
+                    {children}
+                    <DebugOverlay />
+                    <GlobalActionBus />
+                    <Toaster
+                      position="top-right"
+                      toastOptions={{
+                        duration: 4000,
+                        style: {
+                          background: "#363636",
+                          color: "#fff",
+                          maxWidth: "90vw",
+                        },
+                        success: {
+                          duration: 3000,
+                          iconTheme: {
+                            primary: "#4ade80",
+                            secondary: "#fff",
+                          },
+                        },
+                        error: {
+                          duration: 5000,
+                          iconTheme: {
+                            primary: "#ef4444",
+                            secondary: "#fff",
+                          },
+                        },
+                      }}
+                    />
                   </div>
-                  <DemoBar />
-                  <AppHeader />
-                  {children}
-                  <DebugOverlay />
-                  <GlobalActionBus />
-                  <Toaster
-                    position="top-right"
-                    toastOptions={{
-                      duration: 4000,
-                      style: {
-                        background: "#363636",
-                        color: "#fff",
-                        maxWidth: "90vw",
-                      },
-                      success: {
-                        duration: 3000,
-                        iconTheme: {
-                          primary: "#4ade80",
-                          secondary: "#fff",
-                        },
-                      },
-                      error: {
-                        duration: 5000,
-                        iconTheme: {
-                          primary: "#ef4444",
-                          secondary: "#fff",
-                        },
-                      },
-                    }}
-                  />
-                </div>
-              </BSOSProvider>
-            </AuthProviderWrapper>
-          </I18nProvider>
+                </BSOSProvider>
+              </AuthProviderWrapper>
+            </I18nProvider>
+          </ToastProvider>
         </ErrorBoundary>
         <Analytics />
       </body>

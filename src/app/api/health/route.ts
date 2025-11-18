@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 /**
  * GET /api/health
- * 
+ *
  * App-level health check with version info
  */
 export async function GET() {
