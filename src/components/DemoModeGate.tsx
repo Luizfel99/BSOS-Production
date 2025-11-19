@@ -6,7 +6,6 @@ import { useEffect } from "react";
  * Gate invisível para DEMO MODE:
  * - ?demo=1  → sessionStorage.setItem('demoMode','1')
  * - ?demo=0  → sessionStorage.removeItem('demoMode')
- * - NÃO renderiza nada, não mostra credenciais, sem "Re-Seed" na UI.
  */
 export default function DemoModeGate(): null {
   useEffect(() => {

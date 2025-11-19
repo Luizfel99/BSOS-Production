@@ -43,6 +43,8 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:ci": "playwright install --with-deps && playwright test",
+    "clean:demo": "node scripts/remove-demo-banners.mjs",
+    "test:e2e:nobanner": "playwright test tests/e2e/00-no-banner-login.spec.ts",
     "predeployment:test": "npm run type-check && npm run test:api",
     "repair": "node scripts/repair.mjs",
     "repair:build": "node scripts/repair.mjs && npm run build",
