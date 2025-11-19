@@ -1,5 +1,9 @@
 ﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
+  productionBrowserSourceMaps: false,
+  experimental: {
+    forceSwcTransforms: true,
+  },
   webpack: (config) => {
     config.watchOptions = {
       ...config.watchOptions,

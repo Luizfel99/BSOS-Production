@@ -7,6 +7,8 @@
     "seed": "node --import=dotenv/config ./prisma/seed.mjs"
   },
   "scripts": {
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && next build",
     "port:kill": "node -e \"const {execSync}=require('node:child_process');try{execSync('lsof -ti:3020 | xargs -r kill -9',{stdio:'ignore'})}catch{}\"",
     "clean": "rm -rf .next .turbo || true",
     "predev": "bash scripts/kill-ports.sh",
