@@ -14,3 +14,5 @@ dist
 **/*.bak*
 backups_before_login_update/
 .env*
+test-results/
+playwright-report/

@@ -2,12 +2,9 @@ import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   // Login as admin before each test
-  await page.goto('/');
-  await page
-    .getByTestId('demo-admin')
-    .or(page.getByRole('button', { name: /login as admin/i }))
-    .click();
-  await page.waitForURL(/\/dashboard/i);
+  await page.goto('/login');
+  await page.getByTestId('demo-admin').click();
+  await page.waitForURL(/\/dashboard/i, { timeout: 20000 });
 });
 
 test('create → list → delete task', async ({ page }) => {

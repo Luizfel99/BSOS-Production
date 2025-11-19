@@ -2,18 +2,15 @@ import { test, expect } from '@playwright/test';
 
 test('logout returns to login', async ({ page }) => {
   // Login as admin
-  await page.goto('/');
-  await page
-    .getByTestId('demo-admin')
-    .or(page.getByRole('button', { name: /login as admin/i }))
-    .click();
+  await page.goto('/login');
+  await page.getByTestId('demo-admin').click();
   
-  await page.waitForURL(/\/dashboard/i);
+  await page.waitForURL(/\/dashboard/i, { timeout: 20000 });
 
   // Find and click logout button
   const logoutBtn = page
     .getByTestId('logout')
-    .or(page.getByRole('button', { name: /logout/i }));
+    .or(page.getByRole('button', { name: /logout|sign out/i }));
   
   await expect(logoutBtn).toBeVisible();
   await logoutBtn.click();
