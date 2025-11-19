@@ -59,6 +59,7 @@ export default function AppHeader() {
                 {user.name} • {user.role}
               </span>
               <button
+                data-testid="logout"
                 onClick={() => void logout()}
                 className="rounded px-3 py-2 border hover:bg-gray-50"
                 aria-label="Sign out"

@@ -37,6 +37,7 @@ export default function LocaleSwitcher(): JSX.Element {
 
   return (
     <select
+      data-testid="lang-select"
       value={locale}
       onChange={(e) => changeLocale(e.target.value as any)}
       className="border rounded p-1 text-sm bg-white"

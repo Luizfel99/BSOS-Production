@@ -28,9 +28,9 @@ export default function DashboardKpis(): JSX.Element {
   }, []);
 
   const cards = [
-    { label: "Tasks", value: data.tasks, href: "/tasks" },
-    { label: "Team", value: data.team, href: "/team" },
-    { label: "Properties", value: data.properties, href: "/properties" },
+    { label: "Tasks", value: data.tasks, href: "/tasks", testId: "kpi-total-tasks" },
+    { label: "Team", value: data.team, href: "/team", testId: "kpi-total-team" },
+    { label: "Properties", value: data.properties, href: "/properties", testId: "kpi-total-properties" },
   ];
 
   return (
@@ -38,7 +38,7 @@ export default function DashboardKpis(): JSX.Element {
       {cards.map((c) => (
         <Link key={c.label} href={c.href} className="rounded-xl border p-4 hover:bg-gray-50 transition">
           <div className="text-xs uppercase tracking-wide text-gray-500">{c.label}</div>
-          <div className="text-2xl font-semibold">{loading ? "…" : c.value}</div>
+          <div data-testid={c.testId} className="text-2xl font-semibold">{loading ? "…" : c.value}</div>
           <div className="text-sm text-blue-600 mt-1">Open {c.label.toLowerCase()} →</div>
         </Link>
       ))}

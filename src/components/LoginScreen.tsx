@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/contexts/AuthContext";
 import { FiMail, FiLock } from "react-icons/fi";
+import LocaleSwitcher from "@/components/LocaleSwitcher";
 
 const DEMOS = [
   { role: "admin", emailEnv: "NEXT_PUBLIC_DEMO_EMAIL_ADMIN" },
@@ -120,22 +121,27 @@ export default function LoginScreen(): JSX.Element {
           <div className="space-y-2">
             <div className="text-sm text-gray-500">{t("orDemo")}</div>
             <div className="grid grid-cols-2 gap-2">
-              <button onClick={() => loginDemo("admin")} className="border rounded p-2 hover:bg-gray-50">
+              <button data-testid="demo-admin" onClick={() => loginDemo("admin")} className="border rounded p-2 hover:bg-gray-50">
                 {t("demo.admin")}
               </button>
-              <button onClick={() => loginDemo("manager")} className="border rounded p-2 hover:bg-gray-50">
+              <button data-testid="demo-manager" onClick={() => loginDemo("manager")} className="border rounded p-2 hover:bg-gray-50">
                 {t("demo.manager")}
               </button>
-              <button onClick={() => loginDemo("supervisor")} className="border rounded p-2 hover:bg-gray-50">
+              <button data-testid="demo-supervisor" onClick={() => loginDemo("supervisor")} className="border rounded p-2 hover:bg-gray-50">
                 {t("demo.supervisor")}
               </button>
-              <button onClick={() => loginDemo("cleaner")} className="border rounded p-2 hover:bg-gray-50">
+              <button data-testid="demo-cleaner" onClick={() => loginDemo("cleaner")} className="border rounded p-2 hover:bg-gray-50">
                 {t("demo.cleaner")}
               </button>
-              <button onClick={() => loginDemo("client")} className="border rounded p-2 hover:bg-gray-50 col-span-2">
+              <button data-testid="demo-client" onClick={() => loginDemo("client")} className="border rounded p-2 hover:bg-gray-50 col-span-2">
                 {t("demo.client")}
               </button>
             </div>
+          </div>
+
+          <div className="pt-2 flex items-center justify-between">
+            <label className="text-xs text-gray-500">Language</label>
+            <LocaleSwitcher />
           </div>
         </div>
       </section>
