@@ -8,9 +8,8 @@ import { Analytics } from "@vercel/analytics/react";
 import DebugOverlay from "@/components/DebugOverlay";
 import GlobalActionBus from "@/components/GlobalActionBus";
 import AppHeader from "@/components/AppHeader";
-import DemoBar from "@/components/DemoBar";
-import DemoInfoBanner from "@/components/DemoInfoBanner";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
+import DemoModeGate from "@/components/DemoModeGate";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,14 +35,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
-        <DemoInfoBanner />
+        {/* Invisível: só lê ?demo=1|0 e ajusta sessionStorage; sem UI */}
+        <DemoModeGate />
         <ClientProviders>
           <BSOSProvider>
             <div className="min-h-screen bg-gray-50">
               <div className="fixed right-3 top-3 z-50">
                 <LocaleSwitcher />
               </div>
-              <DemoBar />
               <AppHeader />
               {children}
               <DebugOverlay />
