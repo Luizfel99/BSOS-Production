@@ -9,6 +9,7 @@ import DebugOverlay from "@/components/DebugOverlay";
 import GlobalActionBus from "@/components/GlobalActionBus";
 import AppHeader from "@/components/AppHeader";
 import DemoBar from "@/components/DemoBar";
+import DemoInfoBanner from "@/components/DemoInfoBanner";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -35,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
+        <DemoInfoBanner />
         <ClientProviders>
           <BSOSProvider>
             <div className="min-h-screen bg-gray-50">
