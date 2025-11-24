@@ -4,67 +4,73 @@
  */
 
 // Formatação de datas
-export const formatDate = (date: string | Date, format: 'short' | 'long' | 'datetime' = 'short'): string => {
+export const formatDate = (
+  date: string | Date,
+  format: "short" | "long" | "datetime" = "short",
+): string => {
   const d = new Date(date);
-  
+
   if (isNaN(d.getTime())) {
-    return 'Data inválida';
+    return "Data inválida";
   }
 
   let options: Intl.DateTimeFormatOptions;
 
   switch (format) {
-    case 'short':
+    case "short":
       options = {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
       };
       break;
-    case 'long':
+    case "long":
       options = {
-        weekday: 'long',
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
       };
       break;
-    case 'datetime':
+    case "datetime":
       options = {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
       };
       break;
     default:
       options = {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
       };
   }
 
-  return d.toLocaleDateString('pt-BR', options);
+  return d.toLocaleDateString("pt-BR", options);
 };
 
 // Formatação de tempo
 export const formatTime = (date: string | Date): string => {
   const d = new Date(date);
-  
+
   if (isNaN(d.getTime())) {
-    return 'Hora inválida';
+    return "Hora inválida";
   }
 
-  return d.toLocaleTimeString('pt-BR', {
-    hour: '2-digit',
-    minute: '2-digit',
+  return d.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
 // Calcular diferença entre datas
-export const getDateDifference = (start: string | Date, end: string | Date): {
+export const getDateDifference = (
+  start: string | Date,
+  end: string | Date,
+): {
   days: number;
   hours: number;
   minutes: number;
@@ -72,9 +78,9 @@ export const getDateDifference = (start: string | Date, end: string | Date): {
 } => {
   const startDate = new Date(start);
   const endDate = new Date(end);
-  
+
   const diffMs = endDate.getTime() - startDate.getTime();
-  
+
   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -84,9 +90,12 @@ export const getDateDifference = (start: string | Date, end: string | Date): {
 };
 
 // Calcular duração em formato legível
-export const formatDuration = (start: string | Date, end: string | Date): string => {
+export const formatDuration = (
+  start: string | Date,
+  end: string | Date,
+): string => {
   const diff = getDateDifference(start, end);
-  
+
   if (diff.days > 0) {
     return `${diff.days}d ${diff.hours}h ${diff.minutes}m`;
   } else if (diff.hours > 0) {
@@ -100,7 +109,7 @@ export const formatDuration = (start: string | Date, end: string | Date): string
 export const isToday = (date: string | Date): boolean => {
   const d = new Date(date);
   const today = new Date();
-  
+
   return d.toDateString() === today.toDateString();
 };
 
@@ -109,7 +118,7 @@ export const isTomorrow = (date: string | Date): boolean => {
   const d = new Date(date);
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  
+
   return d.toDateString() === tomorrow.toDateString();
 };
 
@@ -118,7 +127,7 @@ export const isYesterday = (date: string | Date): boolean => {
   const d = new Date(date);
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  
+
   return d.toDateString() === yesterday.toDateString();
 };
 
@@ -127,20 +136,20 @@ export const formatRelativeTime = (date: string | Date): string => {
   const d = new Date(date);
   const now = new Date();
   const diffMs = now.getTime() - d.getTime();
-  
+
   const seconds = Math.floor(diffMs / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
   if (days > 0) {
-    return `há ${days} dia${days > 1 ? 's' : ''}`;
+    return `há ${days} dia${days > 1 ? "s" : ""}`;
   } else if (hours > 0) {
-    return `há ${hours} hora${hours > 1 ? 's' : ''}`;
+    return `há ${hours} hora${hours > 1 ? "s" : ""}`;
   } else if (minutes > 0) {
-    return `há ${minutes} minuto${minutes > 1 ? 's' : ''}`;
+    return `há ${minutes} minuto${minutes > 1 ? "s" : ""}`;
   } else {
-    return 'agora';
+    return "agora";
   }
 };
 

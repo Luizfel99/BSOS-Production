@@ -3,9 +3,9 @@
  * English as default, Portuguese (BR) and Spanish support
  */
 
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 
 // English translations
 const en = {
@@ -39,7 +39,7 @@ const en = {
       previous: "Previous",
       refresh: "Refresh",
       sync: "Sync",
-      configure: "Configure"
+      configure: "Configure",
     },
 
     // Authentication
@@ -67,7 +67,7 @@ const en = {
       tagline: "Where Cleaning Meets Intelligence",
       subtitle: "Intelligent Operating System for Cleaning Management",
       showDemoProfiles: "Show Demo Profiles",
-      hideDemoProfiles: "Hide Demo Profiles"
+      hideDemoProfiles: "Hide Demo Profiles",
     },
 
     // Roles
@@ -77,13 +77,13 @@ const en = {
       manager: "Manager",
       owner: "Owner",
       client: "Client",
-      cleaner: "Cleaner"
+      cleaner: "Cleaner",
     },
 
     // Language
     language: {
       changeLanguage: "Change Language",
-      selectLanguage: "Select Language"
+      selectLanguage: "Select Language",
     },
 
     // Navigation
@@ -114,7 +114,7 @@ const en = {
       communication: "Professional Communication",
       supervision: "Supervision Report",
       reports: "Reports",
-      settings: "Settings"
+      settings: "Settings",
     },
 
     // Dashboard
@@ -130,7 +130,7 @@ const en = {
       quickActions: "Quick Actions",
       recentActivity: "Recent Activity",
       upcomingCleanings: "Upcoming Cleanings",
-      performanceMetrics: "Performance Metrics"
+      performanceMetrics: "Performance Metrics",
     },
 
     // Administrative Panel
@@ -144,33 +144,36 @@ const en = {
       reports: "Reports",
       integrations: "Integrations",
       permissions: "Permissions",
-      
+
       // BSOS Module Structure
       bsos: {
         title: "BRIGHT & SHINE OPERATING SYSTEM",
         subtitle: "The intelligent cleaning & property management platform",
         core: {
           title: "BSOS Core - Operations",
-          subtitle: "Schedule, tasks, checklists for employees and supervisors"
+          subtitle: "Schedule, tasks, checklists for employees and supervisors",
         },
         manager: {
-          title: "BSOS Manager - Team Management", 
-          subtitle: "Team control, payments, performance for operations managers"
+          title: "BSOS Manager - Team Management",
+          subtitle:
+            "Team control, payments, performance for operations managers",
         },
         client: {
           title: "BSOS Client - Transparency Portal",
-          subtitle: "Transparency, photos, status, history for clients and property managers"
+          subtitle:
+            "Transparency, photos, status, history for clients and property managers",
         },
         finance: {
           title: "BSOS Finance - Financial Control",
-          subtitle: "Payments, invoices, reports for administration"
+          subtitle: "Payments, invoices, reports for administration",
         },
         analytics: {
           title: "BSOS Analytics - AI Insights",
-          subtitle: "Indicators, alerts and predictions for directors and company owners"
-        }
+          subtitle:
+            "Indicators, alerts and predictions for directors and company owners",
+        },
       },
-      
+
       stats: {
         totalProperties: "Total Properties",
         totalClients: "Total Clients",
@@ -184,7 +187,7 @@ const en = {
         unpaidInvoices: "Unpaid Invoices",
         monthlyGrowth: "vs previous month",
         averagePerformance: "average performance",
-        completionRate: "completion rate"
+        completionRate: "completion rate",
       },
 
       performance: {
@@ -192,7 +195,7 @@ const en = {
         avgCleaningTime: "Average Cleaning Time",
         clientSatisfaction: "Client Satisfaction",
         complaintRate: "Complaint Rate",
-        revisitRate: "Revisit Rate"
+        revisitRate: "Revisit Rate",
       },
 
       financialSummary: {
@@ -200,7 +203,7 @@ const en = {
         totalRevenue: "Total Revenue",
         totalExpenses: "Total Expenses",
         netProfit: "Net Profit",
-        pendingInvoices: "Pending Invoices"
+        pendingInvoices: "Pending Invoices",
       },
 
       quickActions: {
@@ -208,7 +211,7 @@ const en = {
         newProperty: "New Property",
         newEmployee: "New Employee",
         financialReport: "Financial Report",
-        newIntegration: "New Integration"
+        newIntegration: "New Integration",
       },
 
       adminProperties: {
@@ -226,7 +229,7 @@ const en = {
         last: "Last",
         next: "Next",
         details: "Details",
-        schedule: "Schedule"
+        schedule: "Schedule",
       },
 
       adminIntegrations: {
@@ -239,7 +242,7 @@ const en = {
         errors: "errors",
         synchronize: "Synchronize",
         requiresAttention: "Requires attention",
-        addNewIntegration: "Add New Integration"
+        addNewIntegration: "Add New Integration",
       },
 
       adminPermissions: {
@@ -267,8 +270,8 @@ const en = {
         fullAccess: "Full access",
         manageUsers: "Manage users",
         systemSettings: "System settings",
-        completeAudit: "Complete audit"
-      }
+        completeAudit: "Complete audit",
+      },
     },
 
     // Client Portal
@@ -280,7 +283,7 @@ const en = {
       inventory: "Inventory",
       payments: "Payments",
       evaluations: "Evaluations",
-      
+
       clientCleanings: {
         upcoming: "Upcoming Cleanings",
         history: "Cleaning History",
@@ -292,7 +295,7 @@ const en = {
         duration: "Duration",
         beforeAfter: "Before/After",
         reschedule: "Reschedule",
-        viewDetails: "View Details"
+        viewDetails: "View Details",
       },
 
       clientChat: {
@@ -303,7 +306,7 @@ const en = {
         offline: "Offline",
         typing: "typing...",
         support: "Support",
-        general: "General"
+        general: "General",
       },
 
       clientInventory: {
@@ -318,7 +321,7 @@ const en = {
         bedding: "Bedding",
         towels: "Towels",
         amenities: "Amenities",
-        supplies: "Supplies"
+        supplies: "Supplies",
       },
 
       clientPayments: {
@@ -331,7 +334,7 @@ const en = {
         paid: "Paid",
         overdue: "Overdue",
         downloadReceipt: "Download Receipt",
-        payNow: "Pay Now"
+        payNow: "Pay Now",
       },
 
       clientEvaluations: {
@@ -343,8 +346,8 @@ const en = {
         quality: "Quality",
         communication: "Communication",
         submitEvaluation: "Submit Evaluation",
-        thankYou: "Thank you for your feedback!"
-      }
+        thankYou: "Thank you for your feedback!",
+      },
     },
 
     // Notifications
@@ -359,7 +362,7 @@ const en = {
       created: "Successfully created",
       synchronized: "Successfully synchronized",
       emailSent: "Email sent successfully",
-      paymentProcessed: "Payment processed successfully"
+      paymentProcessed: "Payment processed successfully",
     },
 
     // Time and Date
@@ -378,9 +381,9 @@ const en = {
       months: "months",
       years: "years",
       ago: "ago",
-      in: "in"
-    }
-  }
+      in: "in",
+    },
+  },
 };
 
 // Portuguese (BR) translations
@@ -415,7 +418,7 @@ const ptBR = {
       previous: "Anterior",
       refresh: "Atualizar",
       sync: "Sincronizar",
-      configure: "Configurar"
+      configure: "Configurar",
     },
 
     // Authentication
@@ -443,7 +446,7 @@ const ptBR = {
       tagline: "Onde Limpeza Encontra Inteligência",
       subtitle: "Sistema Operacional Inteligente para Gestão de Limpeza",
       showDemoProfiles: "Mostrar Perfis Demo",
-      hideDemoProfiles: "Ocultar Perfis Demo"
+      hideDemoProfiles: "Ocultar Perfis Demo",
     },
 
     // Roles
@@ -453,7 +456,7 @@ const ptBR = {
       manager: "Gerente",
       owner: "Proprietário",
       client: "Cliente",
-      cleaner: "Funcionário"
+      cleaner: "Funcionário",
     },
 
     // Navigation
@@ -484,7 +487,7 @@ const ptBR = {
       communication: "Comunicação Profissional",
       supervision: "Relatório de Supervisão",
       reports: "Relatórios",
-      settings: "Configurações"
+      settings: "Configurações",
     },
 
     // Dashboard
@@ -500,7 +503,7 @@ const ptBR = {
       quickActions: "Ações Rápidas",
       recentActivity: "Atividade Recente",
       upcomingCleanings: "Próximas Limpezas",
-      performanceMetrics: "Métricas de Performance"
+      performanceMetrics: "Métricas de Performance",
     },
 
     // Administrative Panel
@@ -514,33 +517,38 @@ const ptBR = {
       reports: "Relatórios",
       integrations: "Integrações",
       permissions: "Permissões",
-      
+
       // Estrutura Modular BSOS
       bsos: {
         title: "BRIGHT & SHINE OPERATING SYSTEM",
-        subtitle: "A plataforma inteligente de gestão de limpeza e propriedades",
+        subtitle:
+          "A plataforma inteligente de gestão de limpeza e propriedades",
         core: {
           title: "BSOS Core - Operações",
-          subtitle: "Agenda, tarefas, checklists para funcionários e supervisores"
+          subtitle:
+            "Agenda, tarefas, checklists para funcionários e supervisores",
         },
         manager: {
-          title: "BSOS Manager - Gestão de Equipe", 
-          subtitle: "Controle de equipe, pagamentos, desempenho para gerentes de operações"
+          title: "BSOS Manager - Gestão de Equipe",
+          subtitle:
+            "Controle de equipe, pagamentos, desempenho para gerentes de operações",
         },
         client: {
           title: "BSOS Client - Portal de Transparência",
-          subtitle: "Transparência, fotos, status, histórico para clientes e property managers"
+          subtitle:
+            "Transparência, fotos, status, histórico para clientes e property managers",
         },
         finance: {
           title: "BSOS Finance - Controle Financeiro",
-          subtitle: "Pagamentos, faturas, relatórios para administração"
+          subtitle: "Pagamentos, faturas, relatórios para administração",
         },
         analytics: {
           title: "BSOS Analytics - Insights de IA",
-          subtitle: "Indicadores, alertas e previsões para diretores e donos da empresa"
-        }
+          subtitle:
+            "Indicadores, alertas e previsões para diretores e donos da empresa",
+        },
       },
-      
+
       stats: {
         totalProperties: "Total de Propriedades",
         totalClients: "Total de Clientes",
@@ -554,7 +562,7 @@ const ptBR = {
         unpaidInvoices: "Faturas Pendentes",
         monthlyGrowth: "vs mês anterior",
         averagePerformance: "performance média",
-        completionRate: "taxa de conclusão"
+        completionRate: "taxa de conclusão",
       },
 
       performance: {
@@ -562,7 +570,7 @@ const ptBR = {
         avgCleaningTime: "Tempo Médio de Limpeza",
         clientSatisfaction: "Satisfação do Cliente",
         complaintRate: "Taxa de Reclamações",
-        revisitRate: "Taxa de Revisitas"
+        revisitRate: "Taxa de Revisitas",
       },
 
       financialSummary: {
@@ -570,7 +578,7 @@ const ptBR = {
         totalRevenue: "Receita Total",
         totalExpenses: "Despesas Totais",
         netProfit: "Lucro Líquido",
-        pendingInvoices: "Faturas Pendentes"
+        pendingInvoices: "Faturas Pendentes",
       },
 
       quickActions: {
@@ -578,7 +586,7 @@ const ptBR = {
         newProperty: "Nova Propriedade",
         newEmployee: "Novo Funcionário",
         financialReport: "Relatório Financeiro",
-        newIntegration: "Nova Integração"
+        newIntegration: "Nova Integração",
       },
 
       adminProperties: {
@@ -596,7 +604,7 @@ const ptBR = {
         last: "Última",
         next: "Próxima",
         details: "Detalhes",
-        schedule: "Agendar"
+        schedule: "Agendar",
       },
 
       adminIntegrations: {
@@ -609,7 +617,7 @@ const ptBR = {
         errors: "erros",
         synchronize: "Sincronizar",
         requiresAttention: "Requer atenção",
-        addNewIntegration: "Adicionar Nova Integração"
+        addNewIntegration: "Adicionar Nova Integração",
       },
 
       adminPermissions: {
@@ -637,8 +645,8 @@ const ptBR = {
         fullAccess: "Acesso total",
         manageUsers: "Gerenciar usuários",
         systemSettings: "Configurações do sistema",
-        completeAudit: "Auditoria completa"
-      }
+        completeAudit: "Auditoria completa",
+      },
     },
 
     // Client Portal
@@ -650,7 +658,7 @@ const ptBR = {
       inventory: "Inventário",
       payments: "Pagamentos",
       evaluations: "Avaliações",
-      
+
       clientCleanings: {
         upcoming: "Próximas Limpezas",
         history: "Histórico de Limpezas",
@@ -662,7 +670,7 @@ const ptBR = {
         duration: "Duração",
         beforeAfter: "Antes/Depois",
         reschedule: "Reagendar",
-        viewDetails: "Ver Detalhes"
+        viewDetails: "Ver Detalhes",
       },
 
       clientChat: {
@@ -673,7 +681,7 @@ const ptBR = {
         offline: "Offline",
         typing: "digitando...",
         support: "Suporte",
-        general: "Geral"
+        general: "Geral",
       },
 
       clientInventory: {
@@ -688,7 +696,7 @@ const ptBR = {
         bedding: "Roupas de Cama",
         towels: "Toalhas",
         amenities: "Amenities",
-        supplies: "Suprimentos"
+        supplies: "Suprimentos",
       },
 
       clientPayments: {
@@ -701,7 +709,7 @@ const ptBR = {
         paid: "Pago",
         overdue: "Vencido",
         downloadReceipt: "Baixar Recibo",
-        payNow: "Pagar Agora"
+        payNow: "Pagar Agora",
       },
 
       clientEvaluations: {
@@ -713,8 +721,8 @@ const ptBR = {
         quality: "Qualidade",
         communication: "Comunicação",
         submitEvaluation: "Enviar Avaliação",
-        thankYou: "Obrigado pelo seu feedback!"
-      }
+        thankYou: "Obrigado pelo seu feedback!",
+      },
     },
 
     // Language Selector
@@ -723,7 +731,7 @@ const ptBR = {
       english: "Inglês",
       portuguese: "Português (BR)",
       spanish: "Espanhol",
-      changeLanguage: "Alterar Idioma"
+      changeLanguage: "Alterar Idioma",
     },
 
     // Notifications
@@ -738,7 +746,7 @@ const ptBR = {
       created: "Criado com sucesso",
       synchronized: "Sincronizado com sucesso",
       emailSent: "Email enviado com sucesso",
-      paymentProcessed: "Pagamento processado com sucesso"
+      paymentProcessed: "Pagamento processado com sucesso",
     },
 
     // Time and Date
@@ -757,9 +765,9 @@ const ptBR = {
       months: "meses",
       years: "anos",
       ago: "atrás",
-      in: "em"
-    }
-  }
+      in: "em",
+    },
+  },
 };
 
 // Spanish translations
@@ -794,7 +802,7 @@ const es = {
       previous: "Anterior",
       refresh: "Actualizar",
       sync: "Sincronizar",
-      configure: "Configurar"
+      configure: "Configurar",
     },
 
     // Authentication
@@ -820,7 +828,7 @@ const es = {
       tagline: "Donde la Limpieza Encuentra la Inteligencia",
       subtitle: "Sistema Operativo Inteligente para Gestión de Limpieza",
       showDemoProfiles: "Mostrar Perfiles Demo",
-      hideDemoProfiles: "Ocultar Perfiles Demo"
+      hideDemoProfiles: "Ocultar Perfiles Demo",
     },
 
     // Roles
@@ -830,7 +838,7 @@ const es = {
       manager: "Gerente",
       owner: "Propietario",
       client: "Cliente",
-      cleaner: "Empleado"
+      cleaner: "Empleado",
     },
 
     // Navigation
@@ -861,7 +869,7 @@ const es = {
       communication: "Comunicación Profesional",
       supervision: "Informe de Supervisión",
       reports: "Informes",
-      settings: "Configuraciones"
+      settings: "Configuraciones",
     },
 
     // Dashboard
@@ -877,7 +885,7 @@ const es = {
       quickActions: "Acciones Rápidas",
       recentActivity: "Actividad Reciente",
       upcomingCleanings: "Próximas Limpiezas",
-      performanceMetrics: "Métricas de Rendimiento"
+      performanceMetrics: "Métricas de Rendimiento",
     },
 
     // Administrative Panel
@@ -891,33 +899,37 @@ const es = {
       reports: "Informes",
       integrations: "Integraciones",
       permissions: "Permisos",
-      
+
       // Estructura Modular BSOS
       bsos: {
         title: "BRIGHT & SHINE OPERATING SYSTEM",
-        subtitle: "La plataforma inteligente de gestión de limpieza y propiedades",
+        subtitle:
+          "La plataforma inteligente de gestión de limpieza y propiedades",
         core: {
           title: "BSOS Core - Operaciones",
-          subtitle: "Agenda, tareas, checklists para empleados y supervisores"
+          subtitle: "Agenda, tareas, checklists para empleados y supervisores",
         },
         manager: {
-          title: "BSOS Manager - Gestión de Equipo", 
-          subtitle: "Control de equipo, pagos, rendimiento para gerentes de operaciones"
+          title: "BSOS Manager - Gestión de Equipo",
+          subtitle:
+            "Control de equipo, pagos, rendimiento para gerentes de operaciones",
         },
         client: {
           title: "BSOS Client - Portal de Transparencia",
-          subtitle: "Transparencia, fotos, estado, historial para clientes y property managers"
+          subtitle:
+            "Transparencia, fotos, estado, historial para clientes y property managers",
         },
         finance: {
           title: "BSOS Finance - Control Financiero",
-          subtitle: "Pagos, facturas, informes para administración"
+          subtitle: "Pagos, facturas, informes para administración",
         },
         analytics: {
           title: "BSOS Analytics - Insights de IA",
-          subtitle: "Indicadores, alertas y predicciones para directores y dueños de la empresa"
-        }
+          subtitle:
+            "Indicadores, alertas y predicciones para directores y dueños de la empresa",
+        },
       },
-      
+
       stats: {
         totalProperties: "Total de Propiedades",
         totalClients: "Total de Clientes",
@@ -931,7 +943,7 @@ const es = {
         unpaidInvoices: "Facturas Pendientes",
         monthlyGrowth: "vs mes anterior",
         averagePerformance: "rendimiento promedio",
-        completionRate: "tasa de finalización"
+        completionRate: "tasa de finalización",
       },
 
       performance: {
@@ -939,7 +951,7 @@ const es = {
         avgCleaningTime: "Tiempo Promedio de Limpieza",
         clientSatisfaction: "Satisfacción del Cliente",
         complaintRate: "Tasa de Quejas",
-        revisitRate: "Tasa de Revisitas"
+        revisitRate: "Tasa de Revisitas",
       },
 
       financialSummary: {
@@ -947,7 +959,7 @@ const es = {
         totalRevenue: "Ingresos Totales",
         totalExpenses: "Gastos Totales",
         netProfit: "Beneficio Neto",
-        pendingInvoices: "Facturas Pendientes"
+        pendingInvoices: "Facturas Pendientes",
       },
 
       quickActions: {
@@ -955,7 +967,7 @@ const es = {
         newProperty: "Nueva Propiedad",
         newEmployee: "Nuevo Empleado",
         financialReport: "Informe Financiero",
-        newIntegration: "Nueva Integración"
+        newIntegration: "Nueva Integración",
       },
 
       adminProperties: {
@@ -973,7 +985,7 @@ const es = {
         last: "Última",
         next: "Próxima",
         details: "Detalles",
-        schedule: "Programar"
+        schedule: "Programar",
       },
 
       adminIntegrations: {
@@ -986,7 +998,7 @@ const es = {
         errors: "errores",
         synchronize: "Sincronizar",
         requiresAttention: "Requiere atención",
-        addNewIntegration: "Añadir Nueva Integración"
+        addNewIntegration: "Añadir Nueva Integración",
       },
 
       adminPermissions: {
@@ -1014,8 +1026,8 @@ const es = {
         fullAccess: "Acceso completo",
         manageUsers: "Gestionar usuarios",
         systemSettings: "Configuraciones del sistema",
-        completeAudit: "Auditoría completa"
-      }
+        completeAudit: "Auditoría completa",
+      },
     },
 
     // Client Portal
@@ -1027,7 +1039,7 @@ const es = {
       inventory: "Inventario",
       payments: "Pagos",
       evaluations: "Evaluaciones",
-      
+
       clientCleanings: {
         upcoming: "Próximas Limpiezas",
         history: "Historial de Limpiezas",
@@ -1039,7 +1051,7 @@ const es = {
         duration: "Duración",
         beforeAfter: "Antes/Después",
         reschedule: "Reprogramar",
-        viewDetails: "Ver Detalles"
+        viewDetails: "Ver Detalles",
       },
 
       clientChat: {
@@ -1050,7 +1062,7 @@ const es = {
         offline: "Desconectado",
         typing: "escribiendo...",
         support: "Soporte",
-        general: "General"
+        general: "General",
       },
 
       clientInventory: {
@@ -1065,7 +1077,7 @@ const es = {
         bedding: "Ropa de Cama",
         towels: "Toallas",
         amenities: "Amenidades",
-        supplies: "Suministros"
+        supplies: "Suministros",
       },
 
       clientPayments: {
@@ -1078,7 +1090,7 @@ const es = {
         paid: "Pagado",
         overdue: "Vencido",
         downloadReceipt: "Descargar Recibo",
-        payNow: "Pagar Ahora"
+        payNow: "Pagar Ahora",
       },
 
       clientEvaluations: {
@@ -1090,8 +1102,8 @@ const es = {
         quality: "Calidad",
         communication: "Comunicación",
         submitEvaluation: "Enviar Evaluación",
-        thankYou: "¡Gracias por tu retroalimentación!"
-      }
+        thankYou: "¡Gracias por tu retroalimentación!",
+      },
     },
 
     // Language Selector
@@ -1100,7 +1112,7 @@ const es = {
       english: "Inglés",
       portuguese: "Portugués (BR)",
       spanish: "Español",
-      changeLanguage: "Cambiar Idioma"
+      changeLanguage: "Cambiar Idioma",
     },
 
     // Notifications
@@ -1115,7 +1127,7 @@ const es = {
       created: "Creado exitosamente",
       synchronized: "Sincronizado exitosamente",
       emailSent: "Email enviado exitosamente",
-      paymentProcessed: "Pago procesado exitosamente"
+      paymentProcessed: "Pago procesado exitosamente",
     },
 
     // Time and Date
@@ -1134,9 +1146,9 @@ const es = {
       months: "meses",
       years: "años",
       ago: "hace",
-      in: "en"
-    }
-  }
+      in: "en",
+    },
+  },
 };
 
 i18n
@@ -1146,25 +1158,25 @@ i18n
     resources: {
       en,
       pt: ptBR,
-      es
+      es,
     },
-    fallbackLng: 'en',
-    lng: 'en', // Always start with English to prevent hydration mismatch
-    defaultNS: 'translation',
-    
+    fallbackLng: "en",
+    lng: "en", // Always start with English to prevent hydration mismatch
+    defaultNS: "translation",
+
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
-      caches: ['localStorage'],
+      order: ["localStorage", "navigator", "htmlTag"],
+      caches: ["localStorage"],
     },
 
     interpolation: {
-      escapeValue: false
+      escapeValue: false,
     },
 
     // Prevent hydration mismatch
     react: {
-      useSuspense: false
-    }
+      useSuspense: false,
+    },
   });
 
 export default i18n;

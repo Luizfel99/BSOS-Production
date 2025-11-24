@@ -3,16 +3,46 @@
  * Sistema completo de gestão empresarial
  */
 
-'use client';
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
-import React, { useState, useEffect } from 'react';
-import { 
-  BarChart3, Users, Building2, Calendar, DollarSign, TrendingUp, 
-  Shield, Settings, Download, Filter, Search, RefreshCw, AlertTriangle,
-  Clock, Target, Award, PieChart, Activity, Globe, Lock, UserCheck,
-  FileText, Zap, CreditCard, MapPin, Star, CheckCircle, XCircle,
-  ArrowUp, ArrowDown, Eye, Edit3, Trash2, Plus, MoreHorizontal
-} from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import {
+  BarChart3,
+  Users,
+  Building2,
+  Calendar,
+  DollarSign,
+  TrendingUp,
+  Shield,
+  Settings,
+  Download,
+  Filter,
+  Search,
+  RefreshCw,
+  AlertTriangle,
+  Clock,
+  Target,
+  Award,
+  PieChart,
+  Activity,
+  Globe,
+  Lock,
+  UserCheck,
+  FileText,
+  Zap,
+  CreditCard,
+  MapPin,
+  Star,
+  CheckCircle,
+  XCircle,
+  ArrowUp,
+  ArrowDown,
+  Eye,
+  Edit3,
+  Trash2,
+  Plus,
+  MoreHorizontal } from
+"lucide-react";
 
 interface AdminStats {
   overview: {
@@ -44,10 +74,10 @@ interface AdminStats {
 interface PropertyOverview {
   id: string;
   name: string;
-  type: 'airbnb' | 'residential' | 'commercial';
+  type: "airbnb" | "residential" | "commercial";
   address: string;
   client: string;
-  status: 'active' | 'inactive' | 'maintenance';
+  status: "active" | "inactive" | "maintenance";
   cleaningsThisMonth: number;
   revenue: number;
   avgRating: number;
@@ -60,7 +90,7 @@ interface EmployeePerformance {
   id: string;
   name: string;
   photo: string;
-  role: 'cleaner' | 'supervisor' | 'manager';
+  role: "cleaner" | "supervisor" | "manager";
   cleaningsCompleted: number;
   avgTimePerCleaning: number;
   avgRating: number;
@@ -68,14 +98,14 @@ interface EmployeePerformance {
   revenue: number;
   complaints: number;
   absences: number;
-  status: 'active' | 'vacation' | 'sick' | 'inactive';
+  status: "active" | "vacation" | "sick" | "inactive";
 }
 
 interface IntegrationStatus {
   id: string;
   name: string;
-  type: 'calendar' | 'payment' | 'booking' | 'communication' | 'accounting';
-  status: 'connected' | 'error' | 'disconnected';
+  type: "calendar" | "payment" | "booking" | "communication" | "accounting";
+  status: "connected" | "error" | "disconnected";
   lastSync: string;
   syncFrequency: string;
   recordsProcessed: number;
@@ -83,13 +113,13 @@ interface IntegrationStatus {
 }
 
 const integrationIcons = {
-  airbnb: 'AB',
-  hostaway: 'HW',
-  stripe: 'ST',
-  quickbooks: 'QB',
-  google: 'GO',
-  twilio: 'TW',
-  icall: 'IC'
+  airbnb: "AB",
+  hostaway: "HW",
+  stripe: "ST",
+  quickbooks: "QB",
+  google: "GO",
+  twilio: "TW",
+  icall: "IC"
 };
 
 export default function PainelAdministrativo() {
@@ -97,10 +127,20 @@ export default function PainelAdministrativo() {
   const [properties, setProperties] = useState<PropertyOverview[]>([]);
   const [employees, setEmployees] = useState<EmployeePerformance[]>([]);
   const [integrations, setIntegrations] = useState<IntegrationStatus[]>([]);
-  
-  const [activeTab, setActiveTab] = useState<'overview' | 'properties' | 'employees' | 'financial' | 'reports' | 'integrations' | 'permissions'>('overview');
-  const [selectedPeriod, setSelectedPeriod] = useState(new Date().toISOString().slice(0, 7));
-  const [searchQuery, setSearchQuery] = useState('');
+
+  const [activeTab, setActiveTab] = useState<
+    "overview" |
+    "properties" |
+    "employees" |
+    "financial" |
+    "reports" |
+    "integrations" |
+    "permissions">(
+    "overview");
+  const [selectedPeriod, setSelectedPeriod] = useState(
+    new Date().toISOString().slice(0, 7)
+  );
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
   const [showPropertyModal, setShowPropertyModal] = useState(false);
@@ -115,14 +155,15 @@ export default function PainelAdministrativo() {
   const fetchAdminData = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch all admin data
-      const [statsRes, propertiesRes, employeesRes, integrationsRes] = await Promise.all([
-        fetch(`/api/admin/stats?period=${selectedPeriod}`),
-        fetch(`/api/admin/properties?period=${selectedPeriod}`),
-        fetch(`/api/admin/employees?period=${selectedPeriod}`),
-        fetch(`/api/admin/integrations`)
-      ]);
+      const [statsRes, propertiesRes, employeesRes, integrationsRes] =
+      await Promise.all([
+      fetch(`/api/admin/stats?period=${selectedPeriod}`),
+      fetch(`/api/admin/properties?period=${selectedPeriod}`),
+      fetch(`/api/admin/employees?period=${selectedPeriod}`),
+      fetch(`/api/admin/integrations`)]
+      );
 
       const statsData = await statsRes.json();
       const propertiesData = await propertiesRes.json();
@@ -133,9 +174,8 @@ export default function PainelAdministrativo() {
       setProperties(propertiesData.properties || []);
       setEmployees(employeesData.employees || []);
       setIntegrations(integrationsData.integrations || []);
-      
     } catch (error) {
-      console.error('Erro ao buscar dados administrativos:', error);
+      console.error("Erro ao buscar dados administrativos:", error);
     } finally {
       setLoading(false);
     }
@@ -144,30 +184,30 @@ export default function PainelAdministrativo() {
   const exportReport = async (type: string) => {
     try {
       const response = await fetch(`/api/admin/reports/export`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type, period: selectedPeriod })
       });
-      
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       a.download = `relatorio-${type}-${selectedPeriod}.pdf`;
       a.click();
     } catch (error) {
-      console.error('Erro ao exportar relatório:', error);
+      console.error("Erro ao exportar relatório:", error);
     }
   };
 
   const syncIntegration = async (integrationId: string) => {
     try {
       await fetch(`/api/admin/integrations/${integrationId}/sync`, {
-        method: 'POST'
+        method: "POST"
       });
       fetchAdminData();
     } catch (error) {
-      console.error('Erro ao sincronizar integração:', error);
+      console.error("Erro ao sincronizar integração:", error);
     }
   };
 
@@ -175,8 +215,8 @@ export default function PainelAdministrativo() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
@@ -184,70 +224,74 @@ export default function PainelAdministrativo() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Painel Administrativo</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Painel Administrativo
+          </h1>
           <p className="text-gray-600">Gestão completa da Bright & Shine</p>
         </div>
-        
+
         <div className="flex gap-3">
           <input
             type="month"
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value)}
-            className="border rounded px-3 py-2"
-          />
-          <button
-            onClick={() => exportReport('complete')}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-          >
+            className="border rounded px-3 py-2" />
+
+          <WiredButton
+            onClick={() => exportReport("complete")}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+
             <Download className="h-4 w-4 inline mr-2" />
             Exportar Relatório
-          </button>
-          <button
+          </WiredButton>
+          <WiredButton
             onClick={fetchAdminData}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-          >
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+
             <RefreshCw className="h-4 w-4 inline mr-2" />
             Atualizar
-          </button>
+          </WiredButton>
         </div>
       </div>
 
       {/* Navigation Tabs */}
       <div className="flex border-b overflow-x-auto">
         {[
-          { id: 'overview', label: 'Visão Geral', icon: BarChart3 },
-          { id: 'properties', label: 'Propriedades', icon: Building2 },
-          { id: 'employees', label: 'Equipe', icon: Users },
-          { id: 'financial', label: 'Financeiro', icon: DollarSign },
-          { id: 'reports', label: 'Relatórios', icon: FileText },
-          { id: 'integrations', label: 'Integrações', icon: Zap },
-          { id: 'permissions', label: 'Permissões', icon: Shield }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors whitespace-nowrap ${
-              activeTab === tab.id 
-                ? 'border-b-2 border-blue-600 text-blue-600' 
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
+        { id: "overview", label: "Visão Geral", icon: BarChart3 },
+        { id: "properties", label: "Propriedades", icon: Building2 },
+        { id: "employees", label: "Equipe", icon: Users },
+        { id: "financial", label: "Financeiro", icon: DollarSign },
+        { id: "reports", label: "Relatórios", icon: FileText },
+        { id: "integrations", label: "Integrações", icon: Zap },
+        { id: "permissions", label: "Permissões", icon: Shield }].
+        map((tab) =>
+        <WiredButton
+          key={tab.id}
+          onClick={() => setActiveTab(tab.id as any)}
+          className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors whitespace-nowrap ${
+          activeTab === tab.id ?
+          "border-b-2 border-blue-600 text-blue-600" :
+          "text-gray-600 hover:text-gray-900"}`
+          }>
+
             <tab.icon className="h-4 w-4" />
             {tab.label}
-          </button>
-        ))}
+          </WiredButton>
+        )}
       </div>
 
       {/* Overview Tab */}
-      {activeTab === 'overview' && stats && (
-        <div className="space-y-6">
+      {activeTab === "overview" && stats &&
+      <div className="space-y-6">
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-lg text-white">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-100">Total Propriedades</p>
-                  <p className="text-3xl font-bold">{stats.overview.totalProperties}</p>
+                  <p className="text-3xl font-bold">
+                    {stats.overview.totalProperties}
+                  </p>
                 </div>
                 <Building2 className="h-8 w-8 text-blue-200" />
               </div>
@@ -260,7 +304,9 @@ export default function PainelAdministrativo() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-green-100">Receita Total</p>
-                  <p className="text-3xl font-bold">R$ {stats.financial.totalRevenue.toLocaleString()}</p>
+                  <p className="text-3xl font-bold">
+                    R$ {stats.financial.totalRevenue.toLocaleString()}
+                  </p>
                 </div>
                 <DollarSign className="h-8 w-8 text-green-200" />
               </div>
@@ -274,7 +320,9 @@ export default function PainelAdministrativo() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-purple-100">Equipe Total</p>
-                  <p className="text-3xl font-bold">{stats.overview.totalEmployees}</p>
+                  <p className="text-3xl font-bold">
+                    {stats.overview.totalEmployees}
+                  </p>
                 </div>
                 <Users className="h-8 w-8 text-purple-200" />
               </div>
@@ -287,7 +335,9 @@ export default function PainelAdministrativo() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-orange-100">Limpezas/Mês</p>
-                  <p className="text-3xl font-bold">{stats.overview.totalCleanings}</p>
+                  <p className="text-3xl font-bold">
+                    {stats.overview.totalCleanings}
+                  </p>
                 </div>
                 <Activity className="h-8 w-8 text-orange-200" />
               </div>
@@ -300,11 +350,15 @@ export default function PainelAdministrativo() {
           {/* Performance Overview */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-white border rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4">Indicadores de Performance</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                Indicadores de Performance
+              </h3>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Tempo Médio de Limpeza</span>
-                  <span className="font-semibold">{stats.performance.avgCleaningTime}min</span>
+                  <span className="font-semibold">
+                    {stats.performance.avgCleaningTime}min
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Satisfação do Cliente</span>
@@ -315,11 +369,15 @@ export default function PainelAdministrativo() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Taxa de Reclamações</span>
-                  <span className="font-semibold text-red-600">{stats.performance.complaintRate}%</span>
+                  <span className="font-semibold text-red-600">
+                    {stats.performance.complaintRate}%
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Taxa de Revisitas</span>
-                  <span className="font-semibold text-orange-600">{stats.performance.revisitRate}%</span>
+                  <span className="font-semibold text-orange-600">
+                    {stats.performance.revisitRate}%
+                  </span>
                 </div>
               </div>
             </div>
@@ -359,65 +417,67 @@ export default function PainelAdministrativo() {
           <div className="bg-white border rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4">Ações Rápidas</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button
-                onClick={() => setShowPropertyModal(true)}
-                className="p-4 border rounded-lg hover:bg-gray-50 text-center"
-              >
+              <WiredButton
+              onClick={() => setShowPropertyModal(true)}
+              className="p-4 border rounded-lg hover:bg-gray-50 text-center">
+
                 <Plus className="h-6 w-6 mx-auto mb-2 text-blue-600" />
                 <span className="text-sm font-medium">Nova Propriedade</span>
-              </button>
-              
-              <button
-                onClick={() => setShowEmployeeModal(true)}
-                className="p-4 border rounded-lg hover:bg-gray-50 text-center"
-              >
+              </WiredButton>
+
+              <WiredButton
+              onClick={() => setShowEmployeeModal(true)}
+              className="p-4 border rounded-lg hover:bg-gray-50 text-center">
+
                 <UserCheck className="h-6 w-6 mx-auto mb-2 text-green-600" />
                 <span className="text-sm font-medium">Novo Funcionário</span>
-              </button>
-              
-              <button
-                onClick={() => exportReport('financial')}
-                className="p-4 border rounded-lg hover:bg-gray-50 text-center"
-              >
+              </WiredButton>
+
+              <WiredButton
+              onClick={() => exportReport("financial")}
+              className="p-4 border rounded-lg hover:bg-gray-50 text-center">
+
                 <FileText className="h-6 w-6 mx-auto mb-2 text-purple-600" />
-                <span className="text-sm font-medium">Relatório Financeiro</span>
-              </button>
-              
-              <button
-                onClick={() => setShowIntegrationModal(true)}
-                className="p-4 border rounded-lg hover:bg-gray-50 text-center"
-              >
+                <span className="text-sm font-medium">
+                  Relatório Financeiro
+                </span>
+              </WiredButton>
+
+              <WiredButton
+              onClick={() => setShowIntegrationModal(true)}
+              className="p-4 border rounded-lg hover:bg-gray-50 text-center">
+
                 <Zap className="h-6 w-6 mx-auto mb-2 text-orange-600" />
                 <span className="text-sm font-medium">Nova Integração</span>
-              </button>
+              </WiredButton>
             </div>
           </div>
         </div>
-      )}
+      }
 
       {/* Properties Tab */}
-      {activeTab === 'properties' && (
-        <div className="space-y-6">
+      {activeTab === "properties" &&
+      <div className="space-y-6">
           {/* Search and Filters */}
           <div className="flex flex-wrap gap-4 p-4 bg-gray-50 rounded-lg">
             <div className="flex items-center gap-2">
               <Search className="h-4 w-4 text-gray-400" />
               <input
-                type="text"
-                placeholder="Buscar propriedades..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="border rounded px-3 py-1"
-              />
+              type="text"
+              placeholder="Buscar propriedades..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border rounded px-3 py-1" />
+
             </div>
-            
+
             <select className="border rounded px-3 py-1">
               <option value="all">Todos os Tipos</option>
               <option value="airbnb">Airbnb</option>
               <option value="residential">Residencial</option>
               <option value="commercial">Comercial</option>
             </select>
-            
+
             <select className="border rounded px-3 py-1">
               <option value="all">Todos os Status</option>
               <option value="active">Ativo</option>
@@ -425,41 +485,52 @@ export default function PainelAdministrativo() {
               <option value="maintenance">Manutenção</option>
             </select>
 
-            <button
-              onClick={() => setShowPropertyModal(true)}
-              className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-            >
+            <WiredButton
+            onClick={() => setShowPropertyModal(true)}
+            className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">
+
               <Plus className="h-4 w-4 inline mr-2" />
               Nova Propriedade
-            </button>
+            </WiredButton>
           </div>
 
           {/* Properties Grid */}
           <div className="grid gap-6">
-            {properties.map(property => (
-              <div key={property.id} className="bg-white border rounded-lg p-6">
+            {properties.map((property) =>
+          <div key={property.id} className="bg-white border rounded-lg p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-4">
-                    <div className={`w-3 h-3 rounded-full ${
-                      property.status === 'active' ? 'bg-green-500' : 
-                      property.status === 'inactive' ? 'bg-red-500' : 'bg-yellow-500'
-                    }`}></div>
+                    <div
+                  className={`w-3 h-3 rounded-full ${
+                  property.status === "active" ?
+                  "bg-green-500" :
+                  property.status === "inactive" ?
+                  "bg-red-500" :
+                  "bg-yellow-500"}`
+                  }>
+                </div>
                     <div>
                       <h3 className="font-semibold text-lg">{property.name}</h3>
                       <p className="text-gray-600">{property.address}</p>
                       <div className="flex items-center gap-4 mt-1">
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          property.type === 'airbnb' ? 'bg-red-100 text-red-600' :
-                          property.type === 'residential' ? 'bg-blue-100 text-blue-600' :
-                          'bg-purple-100 text-purple-600'
-                        }`}>
+                        <span
+                      className={`text-xs px-2 py-1 rounded-full ${
+                      property.type === "airbnb" ?
+                      "bg-red-100 text-red-600" :
+                      property.type === "residential" ?
+                      "bg-blue-100 text-blue-600" :
+                      "bg-purple-100 text-purple-600"}`
+                      }>
+
                           {property.type}
                         </span>
-                        <span className="text-sm text-gray-500">Cliente: {property.client}</span>
+                        <span className="text-sm text-gray-500">
+                          Cliente: {property.client}
+                        </span>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="text-right">
                     <div className="text-2xl font-bold text-green-600">
                       R$ {property.revenue.toLocaleString()}
@@ -471,7 +542,9 @@ export default function PainelAdministrativo() {
                 {/* Property Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                   <div className="text-center">
-                    <div className="text-lg font-bold text-blue-600">{property.cleaningsThisMonth}</div>
+                    <div className="text-lg font-bold text-blue-600">
+                      {property.cleaningsThisMonth}
+                    </div>
                     <div className="text-xs text-gray-500">Limpezas</div>
                   </div>
                   <div className="text-center">
@@ -482,15 +555,21 @@ export default function PainelAdministrativo() {
                     <div className="text-xs text-gray-500">Avaliação</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-bold text-purple-600">{property.assignedTeam.length}</div>
+                    <div className="text-lg font-bold text-purple-600">
+                      {property.assignedTeam.length}
+                    </div>
                     <div className="text-xs text-gray-500">Equipe</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm font-bold text-gray-600">{property.lastCleaning}</div>
+                    <div className="text-sm font-bold text-gray-600">
+                      {property.lastCleaning}
+                    </div>
                     <div className="text-xs text-gray-500">Última</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm font-bold text-green-600">{property.nextCleaning}</div>
+                    <div className="text-sm font-bold text-green-600">
+                      {property.nextCleaning}
+                    </div>
                     <div className="text-xs text-gray-500">Próxima</div>
                   </div>
                 </div>
@@ -498,170 +577,241 @@ export default function PainelAdministrativo() {
                 {/* Actions */}
                 <div className="flex justify-between items-center">
                   <div className="flex gap-2">
-                    <button className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                    <WiredButton className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700" data-action="wire.auto">
                       <Eye className="h-4 w-4 inline mr-1" />
                       Detalhes
-                    </button>
-                    <button className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700">
+                    </WiredButton>
+                    <WiredButton className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700" data-action="wire.auto">
                       <Edit3 className="h-4 w-4 inline mr-1" />
                       Editar
-                    </button>
-                    <button className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                    </WiredButton>
+                    <WiredButton className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700" data-action="wire.auto">
                       <Calendar className="h-4 w-4 inline mr-1" />
                       Agendar
-                    </button>
+                    </WiredButton>
                   </div>
-                  
+
                   <div className="text-sm text-gray-500">
-                    Equipe: {property.assignedTeam.join(', ')}
+                    Equipe: {property.assignedTeam.join(", ")}
                   </div>
                 </div>
               </div>
-            ))}
+          )}
           </div>
         </div>
-      )}
+      }
 
       {/* Integrations Tab */}
-      {activeTab === 'integrations' && (
-        <div className="space-y-6">
+      {activeTab === "integrations" &&
+      <div className="space-y-6">
           <div className="grid gap-6">
-            {integrations.map(integration => (
-              <div key={integration.id} className="bg-white border rounded-lg p-6">
+            {integrations.map((integration) =>
+          <div
+            key={integration.id}
+            className="bg-white border rounded-lg p-6">
+
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-4">
                     <div className="text-3xl">
-                      {integrationIcons[integration.name.toLowerCase() as keyof typeof integrationIcons] || '🔗'}
+                      {integrationIcons[
+                  integration.name.toLowerCase() as keyof typeof integrationIcons] ||
+                  "🔗"}
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg">{integration.name}</h3>
-                      <p className="text-gray-600 capitalize">{integration.type}</p>
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mt-2 ${
-                        integration.status === 'connected' ? 'bg-green-100 text-green-800' :
-                        integration.status === 'error' ? 'bg-red-100 text-red-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
-                        {integration.status === 'connected' ? <CheckCircle className="h-4 w-4" /> :
-                         integration.status === 'error' ? <XCircle className="h-4 w-4" /> :
-                         <Clock className="h-4 w-4" />}
+                      <h3 className="font-semibold text-lg">
+                        {integration.name}
+                      </h3>
+                      <p className="text-gray-600 capitalize">
+                        {integration.type}
+                      </p>
+                      <div
+                    className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mt-2 ${
+                    integration.status === "connected" ?
+                    "bg-green-100 text-green-800" :
+                    integration.status === "error" ?
+                    "bg-red-100 text-red-800" :
+                    "bg-gray-100 text-gray-800"}`
+                    }>
+
+                        {integration.status === "connected" ?
+                    <CheckCircle className="h-4 w-4" /> :
+                    integration.status === "error" ?
+                    <XCircle className="h-4 w-4" /> :
+
+                    <Clock className="h-4 w-4" />
+                    }
                         {integration.status}
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="text-right">
                     <div className="text-lg font-bold text-blue-600">
                       {integration.recordsProcessed.toLocaleString()}
                     </div>
-                    <div className="text-sm text-gray-500">Registros processados</div>
-                    {integration.errorCount > 0 && (
-                      <div className="text-sm text-red-600 mt-1">
+                    <div className="text-sm text-gray-500">
+                      Registros processados
+                    </div>
+                    {integration.errorCount > 0 &&
+                <div className="text-sm text-red-600 mt-1">
                         {integration.errorCount} erros
                       </div>
-                    )}
+                }
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
                   <div>
-                    <span className="text-sm text-gray-600">Última Sincronização:</span>
+                    <span className="text-sm text-gray-600">
+                      Última Sincronização:
+                    </span>
                     <div className="font-medium">{integration.lastSync}</div>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">Frequência:</span>
-                    <div className="font-medium">{integration.syncFrequency}</div>
+                    <div className="font-medium">
+                      {integration.syncFrequency}
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center">
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => syncIntegration(integration.id)}
-                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                    >
+                    <WiredButton
+                  onClick={() => syncIntegration(integration.id)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+
                       <RefreshCw className="h-4 w-4 inline mr-2" />
                       Sincronizar
-                    </button>
-                    <button className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                    </WiredButton>
+                    <WiredButton className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700" data-action="wire.auto">
                       <Settings className="h-4 w-4 inline mr-2" />
                       Configurar
-                    </button>
+                    </WiredButton>
                   </div>
-                  
-                  {integration.status === 'error' && (
-                    <div className="text-sm text-red-600 flex items-center">
+
+                  {integration.status === "error" &&
+              <div className="text-sm text-red-600 flex items-center">
                       <AlertTriangle className="h-4 w-4 mr-1" />
                       Requer atenção
                     </div>
-                  )}
+              }
                 </div>
               </div>
-            ))}
+          )}
           </div>
 
           <div className="text-center py-8">
-            <button
-              onClick={() => setShowIntegrationModal(true)}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-            >
+            <WiredButton
+            onClick={() => setShowIntegrationModal(true)}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+
               <Plus className="h-5 w-5 inline mr-2" />
               Adicionar Nova Integração
-            </button>
+            </WiredButton>
           </div>
         </div>
-      )}
+      }
 
       {/* Permissions Tab */}
-      {activeTab === 'permissions' && (
-        <div className="space-y-6">
+      {activeTab === "permissions" &&
+      <div className="space-y-6">
           <div className="bg-white border rounded-lg p-6">
-            <h3 className="text-lg font-semibold mb-4">Controle de Permissões por Função</h3>
-            
+            <h3 className="text-lg font-semibold mb-4">
+              Controle de Permissões por Função
+            </h3>
+
             <div className="grid gap-6">
               {[
-                { role: 'Equipe', level: 'basic', color: 'blue', permissions: ['Ver agendamentos próprios', 'Enviar fotos', 'Marcar conclusão'] },
-                { role: 'Supervisor', level: 'intermediate', color: 'green', permissions: ['Gerenciar equipe', 'Revisar limpezas', 'Aprovar avaliações', 'Acessar relatórios'] },
-                { role: 'Gerente', level: 'advanced', color: 'purple', permissions: ['Gerenciar propriedades', 'Controle financeiro', 'Relatórios completos', 'Configurar integrações'] },
-                { role: 'Administrador', level: 'full', color: 'red', permissions: ['Acesso total', 'Gerenciar usuários', 'Configurações do sistema', 'Auditoria completa'] }
-              ].map(role => (
-                <div key={role.role} className="border rounded-lg p-4">
+            {
+              role: "Equipe",
+              level: "basic",
+              color: "blue",
+              permissions: [
+              "Ver agendamentos próprios",
+              "Enviar fotos",
+              "Marcar conclusão"]
+
+            },
+            {
+              role: "Supervisor",
+              level: "intermediate",
+              color: "green",
+              permissions: [
+              "Gerenciar equipe",
+              "Revisar limpezas",
+              "Aprovar avaliações",
+              "Acessar relatórios"]
+
+            },
+            {
+              role: "Gerente",
+              level: "advanced",
+              color: "purple",
+              permissions: [
+              "Gerenciar propriedades",
+              "Controle financeiro",
+              "Relatórios completos",
+              "Configurar integrações"]
+
+            },
+            {
+              role: "Administrador",
+              level: "full",
+              color: "red",
+              permissions: [
+              "Acesso total",
+              "Gerenciar usuários",
+              "Configurações do sistema",
+              "Auditoria completa"]
+
+            }].
+            map((role) =>
+            <div key={role.role} className="border rounded-lg p-4">
                   <div className="flex justify-between items-center mb-3">
                     <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full bg-${role.color}-500`}></div>
+                      <div
+                    className={`w-3 h-3 rounded-full bg-${role.color}-500`}>
+                  </div>
                       <h4 className="font-semibold">{role.role}</h4>
-                      <span className={`text-xs px-2 py-1 rounded-full bg-${role.color}-100 text-${role.color}-600`}>
+                      <span
+                    className={`text-xs px-2 py-1 rounded-full bg-${role.color}-100 text-${role.color}-600`}>
+
                         {role.level}
                       </span>
                     </div>
-                    <button className="text-gray-400 hover:text-gray-600">
+                    <WiredButton className="text-gray-400 hover:text-gray-600" data-action="wire.auto">
                       <Edit3 className="h-4 w-4" />
-                    </button>
+                    </WiredButton>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    {role.permissions.map(permission => (
-                      <div key={permission} className="text-sm text-gray-600 flex items-center">
+                    {role.permissions.map((permission) =>
+                <div
+                  key={permission}
+                  className="text-sm text-gray-600 flex items-center">
+
                         <CheckCircle className="h-3 w-3 text-green-500 mr-2" />
                         {permission}
                       </div>
-                    ))}
+                )}
                   </div>
                 </div>
-              ))}
+            )}
             </div>
-            
+
             <div className="mt-6">
-              <button
-                onClick={() => setShowPermissionModal(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
+              <WiredButton
+              onClick={() => setShowPermissionModal(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+
                 <Shield className="h-4 w-4 inline mr-2" />
                 Configurar Permissões
-              </button>
+              </WiredButton>
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 }

@@ -1,149 +1,63 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { 
-  withErrorHandling, 
-  createSuccessResponse, 
-  createErrorResponse 
-} from '@/lib/api-utils';
+import { NextResponse } from "next/server";
+import { db } from "@/lib/prisma";
+import { can } from "@/utils/can";
+import { getUserFromRequest } from "@/lib/auth-server";
 
-export const GET = withErrorHandling(async (
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) => {
-  const { id } = await params;
-  const taskId = id;
-
-  const task = await prisma.task.findUnique({
-    where: { id: taskId },
-    include: {
-      assignedToUser: {
-        select: { id: true, name: true, email: true }
-      },
-      property: {
-        select: { id: true, name: true, address: true }
-      },
-      notes: {
-        include: {
-          user: {
-            select: { id: true, name: true }
-          }
-        },
-        orderBy: { createdAt: 'desc' }
-      }
-    }
+export async function GET(
+  _req: Request,
+  { params }: { params: { id: string } }
+) {
+  const task = await db.task.findUnique({
+    where: { id: params.id },
+    include: { property: true, assignee: true },
   });
+  if (!task) return NextResponse.json({ error: "not_found" }, { status: 404 });
+  return NextResponse.json({ task });
+}
 
-  if (!task) {
-    return createErrorResponse('Task not found', 404);
+export async function PATCH(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const user = await getUserFromRequest(req);
+  if (!user || !can(user, "tasks", "update"))
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+
+  const body = await req.json();
+  // regra simples: cleaner só atualiza status das suas tasks
+  if (user.role === "cleaner") {
+    const exists = await db.task.findUnique({ where: { id: params.id } });
+    if (!exists || exists.assigneeId !== user.id)
+      return NextResponse.json({ error: "forbidden" }, { status: 403 });
+    const updated = await db.task.update({
+      where: { id: params.id },
+      data: { status: body.status ?? exists.status },
+    });
+    return NextResponse.json({ task: updated });
   }
 
-  return createSuccessResponse({
-    id: task.id,
-    title: task.title,
-    description: task.description,
-    type: task.type,
-    priority: task.priority,
-    status: task.status,
-    assignedTo: task.assignedToUser?.id,
-    assignedToName: task.assignedToUser?.name,
-    propertyId: task.property?.id,
-    propertyName: task.property?.name,
-    dueDate: task.dueDate?.toISOString(),
-    estimatedDuration: task.estimatedDuration,
-    materials: task.materials,
-    instructions: task.instructions,
-    createdAt: task.createdAt.toISOString(),
-    updatedAt: task.updatedAt.toISOString(),
-    notes: task.notes
-  });
-});
-
-export const PUT = withErrorHandling(async (
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) => {
-  const { id } = await params;
-  const taskId = id;
-  const body = await request.json();
-
-  // Check if task exists
-  const existingTask = await prisma.task.findUnique({
-    where: { id: taskId }
-  });
-
-  if (!existingTask) {
-    return createErrorResponse('Task not found', 404);
-  }
-
-  const task = await prisma.task.update({
-    where: { id: taskId },
+  const updated = await db.task.update({
+    where: { id: params.id },
     data: {
-      ...(body.title && { title: body.title }),
-      ...(body.description !== undefined && { description: body.description }),
-      ...(body.type && { type: body.type }),
-      ...(body.priority && { priority: body.priority }),
-      ...(body.status && { status: body.status }),
-      ...(body.assignedTo !== undefined && { assignedTo: body.assignedTo }),
-      ...(body.propertyId !== undefined && { propertyId: body.propertyId }),
-      ...(body.dueDate !== undefined && { 
-        dueDate: body.dueDate ? new Date(body.dueDate) : null 
-      }),
-      ...(body.estimatedDuration !== undefined && { estimatedDuration: body.estimatedDuration }),
-      ...(body.materials !== undefined && { materials: body.materials }),
-      ...(body.instructions !== undefined && { instructions: body.instructions }),
-      updatedAt: new Date()
+      title: body.title ?? undefined,
+      description: body.description ?? undefined,
+      status: body.status ?? undefined,
+      dueDate: body.dueDate ? new Date(body.dueDate) : undefined,
+      propertyId: body.propertyId ?? undefined,
+      assigneeId: body.assigneeId ?? undefined,
     },
-    include: {
-      assignedToUser: {
-        select: { id: true, name: true, email: true }
-      },
-      property: {
-        select: { id: true, name: true, address: true }
-      }
-    }
   });
+  return NextResponse.json({ task: updated });
+}
 
-  return createSuccessResponse({
-    id: task.id,
-    title: task.title,
-    description: task.description,
-    type: task.type,
-    priority: task.priority,
-    status: task.status,
-    assignedTo: task.assignedToUser?.id,
-    assignedToName: task.assignedToUser?.name,
-    propertyId: task.property?.id,
-    propertyName: task.property?.name,
-    dueDate: task.dueDate?.toISOString(),
-    estimatedDuration: task.estimatedDuration,
-    materials: task.materials,
-    instructions: task.instructions,
-    createdAt: task.createdAt.toISOString(),
-    updatedAt: task.updatedAt.toISOString()
-  });
-});
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const user = await getUserFromRequest(req);
+  if (!user || !can(user, "tasks", "delete"))
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
 
-export const DELETE = withErrorHandling(async (
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) => {
-  const { id } = await params;
-  const taskId = id;
-
-  // Check if task exists
-  const existingTask = await prisma.task.findUnique({
-    where: { id: taskId }
-  });
-
-  if (!existingTask) {
-    return createErrorResponse('Task not found', 404);
-  }
-
-  await prisma.task.delete({
-    where: { id: taskId }
-  });
-
-  return createSuccessResponse({ 
-    message: 'Task deleted successfully' 
-  });
-});
+  await db.task.delete({ where: { id: params.id } });
+  return NextResponse.json({ ok: true });
+}

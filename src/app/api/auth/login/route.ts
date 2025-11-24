@@ -1,85 +1,129 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
+import { db } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { apiRateLimiter, apiHelmet, apiSanitizer, apiLogger } from "../../_security-middleware";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-const SECRET = process.env.NEXTAUTH_SECRET || "bsos_dev_secret";
+const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
+
+const demoEmails: Record<string, string> = {
+  admin: "admin@demo.bsos",
+  manager: "manager@demo.bsos",
+  supervisor: "supervisor@demo.bsos",
+  cleaner: "cleaner@demo.bsos",
+  client: "client@demo.bsos",
+  owner: "owner@demo.bsos",
+};
+
+// Wrapper para aplicar middlewares Express-like em Next.js API Route
+function runMiddlewares(req: any, res: any, middlewares: any[]) {
+  return new Promise((resolve, reject) => {
+    let i = 0;
+    function next(err?: any) {
+      if (err) return reject(err);
+      if (i >= middlewares.length) return resolve(null);
+      middlewares[i++](req, res, next);
+    }
+    next();
+  });
+}
 
 export async function POST(req: Request) {
+  // Adaptar para Next.js API Route
+  const fakeReq: any = {
+    method: "POST",
+    url: "/api/auth/login",
+    headers: Object.fromEntries(req.headers.entries()),
+    body: await req.json().catch(() => ({} as any)),
+    socket: { remoteAddress: req.headers.get("x-forwarded-for") || "" },
+  };
+  const fakeRes: any = {
+    statusCode: 200,
+    json: (data: any) => data,
+    end: () => {},
+    setHeader: () => {},
+  };
   try {
-    console.log("Login attempt started");
+    await runMiddlewares(fakeReq, fakeRes, [apiRateLimiter, apiHelmet, apiSanitizer, apiLogger]);
+  } catch (err: any) {
+    return NextResponse.json({ error: err?.message || "blocked" }, { status: 429 });
+  }
+  const body = fakeReq.body;
 
-    const { email, password } = await req.json();
-    console.log("Received email:", email);
-
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: "Email and password are required" },
-        { status: 400 }
-      );
+  if (body?.demo === true && body?.role) {
+    const email = demoEmails[String(body.role)];
+    if (!email) {
+      return NextResponse.json({ error: "invalid_role" }, { status: 400 });
     }
 
-    console.log("Checking Prisma connection...");
-    const user = await prisma.user.findUnique({
-      where: { email },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        passwordHash: true,  // ✅ correto
-        role: true,
-        phone: true,
-        avatar: true,
-        active: true,
-        createdAt: true,
-      }
-    });
-
-    console.log("User found:", user ? "yes" : "no");
-
+    let user = await db.user.findUnique({ where: { email } });
     if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
-    }
-
-    if (!user.active) {
-      return NextResponse.json(
-        { error: "Account is deactivated" },
-        { status: 403 }
-      );
-    }
-
-    const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 }
-      );
+      const hash = await bcrypt.hash("demo123", 8);
+      user = await db.user.create({
+        data: {
+          email,
+          name: String(body.role).toUpperCase(),
+          role: body.role,
+          passwordHash: hash,
+        },
+      });
     }
 
     const token = jwt.sign(
-      { id: user.id, role: user.role },
-      SECRET,
+      { id: user.id, email: user.email, role: user.role, name: user.name },
+      JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    // Remove password from response
-    const { password: _, ...userWithoutPassword } = user;
+    const cookieStore = await cookies();
+    cookieStore.set("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
 
     return NextResponse.json({
-      success: true,
       token,
-      user: userWithoutPassword,
+      user: { id: user.id, name: user.name, email: user.email, role: user.role }
     });
-  } catch (err) {
-    console.error("Login error:", err);
-    // In development return the error message to help debugging
-    if (process.env.NODE_ENV !== 'production') {
-      const message = err instanceof Error ? err.message : String(err);
-      return NextResponse.json({ error: 'Internal server error', detail: message }, { status: 500 });
-    }
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
+
+  const { email, password } = body ?? {};
+  if (!email || !password) {
+    return NextResponse.json({ error: "missing" }, { status: 400 });
+  }
+
+  const user = await db.user.findUnique({ where: { email } });
+  if (!user) {
+    return NextResponse.json({ error: "invalid" }, { status: 401 });
+  }
+
+  const ok = await bcrypt.compare(password, user.passwordHash);
+  if (!ok) {
+    return NextResponse.json({ error: "invalid" }, { status: 401 });
+  }
+
+  const token = jwt.sign(
+    { id: user.id, email: user.email, role: user.role, name: user.name },
+    JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  const cookieStore = await cookies();
+  cookieStore.set("auth_token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7,
+  });
+
+  return NextResponse.json({
+    token,
+    user: { id: user.id, name: user.name, email: user.email, role: user.role }
+  });
 }

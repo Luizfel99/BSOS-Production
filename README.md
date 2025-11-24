@@ -4,6 +4,26 @@
 
 Uma plataforma operacional completa para gerenciamento inteligente de empresas de limpeza especializada em Airbnb e outros tipos de propriedades.
 
+## ⚡ Quick Start
+
+```bash
+# 1. Diagnóstico completo do sistema (recomendado)
+npm run diagnostics
+
+# 2. Iniciar servidor de desenvolvimento
+npm run dev
+
+# 3. Acessar: http://localhost:3020/login
+# Login: admin@demo.bsos / demo123
+```
+
+**📚 Documentação Completa:**
+- `RESUMO_ACOES.md` - Guia rápido de início
+- `SCRIPTS_GUIA.md` - Referência de comandos
+- `DIAGNOSTICO_COMPLETO.md` - Diagnóstico detalhado
+
+---
+
 ## 🚀 Funcionalidades Implementadas
 
 ### 📊 Dashboard Inteligente

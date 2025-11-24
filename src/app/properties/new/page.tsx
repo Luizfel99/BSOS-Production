@@ -1,24 +1,32 @@
-'use client';
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { ArrowLeft, Save, Building2, MapPin, User, Mail, Clock } from 'lucide-react';
-import { ProtectedComponent } from '@/components/ProtectedComponent';
-import { createProperty, type CreatePropertyData } from '@/services/properties';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  ArrowLeft,
+  Save,
+  Building2,
+  MapPin,
+  User,
+  Mail,
+  Clock } from
+"lucide-react";
+import { ProtectedComponent } from "@/components/ProtectedComponent";
+import { createProperty, type CreatePropertyData } from "@/services/properties";
 
 const propertySchema = z.object({
-  name: z.string().min(1, 'Nome da propriedade é obrigatório'),
-  address: z.string().min(1, 'Endereço é obrigatório'),
-  type: z.enum(['APARTMENT', 'HOUSE', 'STUDIO', 'COMMERCIAL']),
+  name: z.string().min(1, "Nome da propriedade é obrigatório"),
+  address: z.string().min(1, "Endereço é obrigatório"),
+  type: z.enum(["APARTMENT", "HOUSE", "STUDIO", "COMMERCIAL"]),
   size: z.string().optional(),
   clientName: z.string().optional(),
-  contactEmail: z.string().email('Email inválido').optional().or(z.literal('')),
-  cleaningFrequency: z.string().optional(),
+  contactEmail: z.string().email("Email inválido").optional().or(z.literal("")),
+  cleaningFrequency: z.string().optional()
 });
 
 type PropertyFormData = z.infer<typeof propertySchema>;
@@ -35,50 +43,54 @@ export default function NewPropertyPage() {
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
     defaultValues: {
-      type: 'APARTMENT'
+      type: "APARTMENT"
     }
   });
 
   const onSubmit = async (data: PropertyFormData) => {
     setIsSubmitting(true);
-    
+
     try {
       await createProperty({
         ...data,
         contactEmail: data.contactEmail || undefined
       });
-      
-      toast.success('Propriedade criada com sucesso!');
-      router.push('/properties');
+
+      toast.success("Propriedade criada com sucesso!");
+      router.push("/properties");
     } catch (error) {
-      console.error('Error creating property:', error);
-      toast.error('Erro ao criar propriedade');
+      console.error("Error creating property:", error);
+      toast.error("Erro ao criar propriedade");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <ProtectedComponent allowedRoles={['OWNER', 'MANAGER']}>
+    <ProtectedComponent allowedRoles={["OWNER", "MANAGER"]}>
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <motion.div 
+          <motion.div
             className="mb-8"
             initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
+            animate={{ opacity: 1, y: 0 }}>
+
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <button
+                <WiredButton
                   onClick={() => router.back()}
-                  className="p-2 hover:bg-gray-200 rounded-full transition-colors"
-                >
+                  className="p-2 hover:bg-gray-200 rounded-full transition-colors">
+
                   <ArrowLeft className="h-5 w-5" />
-                </button>
+                </WiredButton>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Nova Propriedade</h1>
-                  <p className="text-gray-600">Cadastre uma nova propriedade no sistema</p>
+                  <h1 className="text-3xl font-bold text-gray-900">
+                    Nova Propriedade
+                  </h1>
+                  <p className="text-gray-600">
+                    Cadastre uma nova propriedade no sistema
+                  </p>
                 </div>
               </div>
             </div>
@@ -89,8 +101,8 @@ export default function NewPropertyPage() {
             className="bg-white rounded-xl shadow-sm border border-gray-200"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
+            transition={{ delay: 0.1 }}>
+
             <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
               {/* Basic Information */}
               <div>
@@ -104,14 +116,16 @@ export default function NewPropertyPage() {
                       Nome da Propriedade *
                     </label>
                     <input
-                      {...register('name')}
+                      {...register("name")}
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Ex: Apartamento Centro - 301"
-                    />
-                    {errors.name && (
-                      <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-                    )}
+                      placeholder="Ex: Apartamento Centro - 301" />
+
+                    {errors.name &&
+                    <p className="text-red-500 text-sm mt-1">
+                        {errors.name.message}
+                      </p>
+                    }
                   </div>
 
                   <div>
@@ -119,17 +133,19 @@ export default function NewPropertyPage() {
                       Tipo de Propriedade
                     </label>
                     <select
-                      {...register('type')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
+                      {...register("type")}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                       <option value="APARTMENT">Apartamento</option>
                       <option value="HOUSE">Casa</option>
                       <option value="STUDIO">Studio</option>
                       <option value="COMMERCIAL">Comercial</option>
                     </select>
-                    {errors.type && (
-                      <p className="text-red-500 text-sm mt-1">{errors.type.message}</p>
-                    )}
+                    {errors.type &&
+                    <p className="text-red-500 text-sm mt-1">
+                        {errors.type.message}
+                      </p>
+                    }
                   </div>
 
                   <div className="md:col-span-2">
@@ -138,14 +154,16 @@ export default function NewPropertyPage() {
                       Endereço Completo *
                     </label>
                     <textarea
-                      {...register('address')}
+                      {...register("address")}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Rua, número, bairro, cidade, CEP"
-                    />
-                    {errors.address && (
-                      <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
-                    )}
+                      placeholder="Rua, número, bairro, cidade, CEP" />
+
+                    {errors.address &&
+                    <p className="text-red-500 text-sm mt-1">
+                        {errors.address.message}
+                      </p>
+                    }
                   </div>
 
                   <div>
@@ -153,11 +171,11 @@ export default function NewPropertyPage() {
                       Tamanho
                     </label>
                     <input
-                      {...register('size')}
+                      {...register("size")}
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Ex: 80m², 3 quartos"
-                    />
+                      placeholder="Ex: 80m², 3 quartos" />
+
                   </div>
 
                   <div>
@@ -166,9 +184,9 @@ export default function NewPropertyPage() {
                       Frequência de Limpeza
                     </label>
                     <select
-                      {...register('cleaningFrequency')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
+                      {...register("cleaningFrequency")}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                       <option value="">Selecionar frequência</option>
                       <option value="daily">Diária</option>
                       <option value="weekly">Semanal</option>
@@ -192,11 +210,11 @@ export default function NewPropertyPage() {
                       Nome do Cliente
                     </label>
                     <input
-                      {...register('clientName')}
+                      {...register("clientName")}
                       type="text"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Nome completo do cliente"
-                    />
+                      placeholder="Nome completo do cliente" />
+
                   </div>
 
                   <div>
@@ -205,40 +223,42 @@ export default function NewPropertyPage() {
                       Email de Contato
                     </label>
                     <input
-                      {...register('contactEmail')}
+                      {...register("contactEmail")}
                       type="email"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="email@exemplo.com"
-                    />
-                    {errors.contactEmail && (
-                      <p className="text-red-500 text-sm mt-1">{errors.contactEmail.message}</p>
-                    )}
+                      placeholder="email@exemplo.com" />
+
+                    {errors.contactEmail &&
+                    <p className="text-red-500 text-sm mt-1">
+                        {errors.contactEmail.message}
+                      </p>
+                    }
                   </div>
                 </div>
               </div>
 
               {/* Submit Button */}
               <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-                <button
+                <WiredButton
                   type="button"
                   onClick={() => router.back()}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-                >
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+
                   Cancelar
-                </button>
-                <button
+                </WiredButton>
+                <WiredButton
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors flex items-center disabled:opacity-50"
-                >
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors flex items-center disabled:opacity-50" data-action="wire.auto">
+
                   <Save className="h-4 w-4 mr-2" />
-                  {isSubmitting ? 'Salvando...' : 'Criar Propriedade'}
-                </button>
+                  {isSubmitting ? "Salvando..." : "Criar Propriedade"}
+                </WiredButton>
               </div>
             </form>
           </motion.div>
         </div>
       </div>
-    </ProtectedComponent>
-  );
+    </ProtectedComponent>);
+
 }

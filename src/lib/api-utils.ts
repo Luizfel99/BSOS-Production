@@ -3,8 +3,8 @@
  * Provides consistent error shapes and try/catch wrapper
  */
 
-import { NextResponse } from 'next/server';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { NextResponse } from "next/server";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 // Standard API error response shape
 export interface ApiError {
@@ -28,14 +28,14 @@ export function createErrorResponse(
   message: string,
   statusCode: number = 500,
   code?: string,
-  details?: unknown
+  details?: unknown,
 ): NextResponse<ApiError> {
   const error: ApiError = {
     error: getErrorType(statusCode),
     message,
     code,
-    details: process.env.NODE_ENV === 'development' ? details : undefined,
-    timestamp: new Date().toISOString()
+    details: process.env.NODE_ENV === "development" ? details : undefined,
+    timestamp: new Date().toISOString(),
   };
 
   return NextResponse.json(error, { status: statusCode });
@@ -44,12 +44,12 @@ export function createErrorResponse(
 // Helper to create success responses
 export function createSuccessResponse<T>(
   data: T,
-  statusCode: number = 200
+  statusCode: number = 200,
 ): NextResponse<ApiResponse<T>> {
   const response: ApiResponse<T> = {
     success: true,
     data,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 
   return NextResponse.json(response, { status: statusCode });
@@ -58,16 +58,26 @@ export function createSuccessResponse<T>(
 // Get error type from status code
 function getErrorType(statusCode: number): string {
   switch (statusCode) {
-    case 400: return 'Bad Request';
-    case 401: return 'Unauthorized';
-    case 403: return 'Forbidden';
-    case 404: return 'Not Found';
-    case 409: return 'Conflict';
-    case 422: return 'Validation Error';
-    case 429: return 'Rate Limited';
-    case 500: return 'Internal Server Error';
-    case 503: return 'Service Unavailable';
-    default: return 'Unknown Error';
+    case 400:
+      return "Bad Request";
+    case 401:
+      return "Unauthorized";
+    case 403:
+      return "Forbidden";
+    case 404:
+      return "Not Found";
+    case 409:
+      return "Conflict";
+    case 422:
+      return "Validation Error";
+    case 429:
+      return "Rate Limited";
+    case 500:
+      return "Internal Server Error";
+    case 503:
+      return "Service Unavailable";
+    default:
+      return "Unknown Error";
   }
 }
 
@@ -75,37 +85,33 @@ function getErrorType(statusCode: number): string {
 export function handlePrismaError(error: unknown): NextResponse<ApiError> {
   if (error instanceof PrismaClientKnownRequestError) {
     switch (error.code) {
-      case 'P2002':
+      case "P2002":
         return createErrorResponse(
-          'A record with this data already exists',
+          "A record with this data already exists",
           409,
-          'DUPLICATE_RECORD',
-          { field: error.meta?.target }
+          "DUPLICATE_RECORD",
+          { field: error.meta?.target },
         );
-      case 'P2025':
+      case "P2025":
+        return createErrorResponse("Record not found", 404, "RECORD_NOT_FOUND");
+      case "P2003":
         return createErrorResponse(
-          'Record not found',
-          404,
-          'RECORD_NOT_FOUND'
-        );
-      case 'P2003':
-        return createErrorResponse(
-          'Foreign key constraint failed',
+          "Foreign key constraint failed",
           400,
-          'FOREIGN_KEY_CONSTRAINT'
+          "FOREIGN_KEY_CONSTRAINT",
         );
-      case 'P2014':
+      case "P2014":
         return createErrorResponse(
-          'The change you are trying to make would violate the required relation',
+          "The change you are trying to make would violate the required relation",
           400,
-          'RELATION_VIOLATION'
+          "RELATION_VIOLATION",
         );
       default:
         return createErrorResponse(
-          'Database operation failed',
+          "Database operation failed",
           500,
           error.code,
-          error.message
+          error.message,
         );
     }
   }
@@ -115,27 +121,23 @@ export function handlePrismaError(error: unknown): NextResponse<ApiError> {
     return createErrorResponse(
       error.message,
       500,
-      'UNKNOWN_ERROR',
-      error.stack
+      "UNKNOWN_ERROR",
+      error.stack,
     );
   }
 
-  return createErrorResponse(
-    'An unknown error occurred',
-    500,
-    'UNKNOWN_ERROR'
-  );
+  return createErrorResponse("An unknown error occurred", 500, "UNKNOWN_ERROR");
 }
 
 // API route wrapper with error handling
 export function withErrorHandling<T extends unknown[]>(
-  handler: (...args: T) => Promise<NextResponse>
+  handler: (...args: T) => Promise<NextResponse>,
 ) {
   return async (...args: T): Promise<NextResponse> => {
     try {
       return await handler(...args);
     } catch (error) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
       return handlePrismaError(error);
     }
   };
@@ -144,18 +146,19 @@ export function withErrorHandling<T extends unknown[]>(
 // Validation helper
 export function validateRequiredFields(
   data: Record<string, unknown>,
-  requiredFields: string[]
+  requiredFields: string[],
 ): NextResponse<ApiError> | null {
-  const missingFields = requiredFields.filter(field => 
-    data[field] === undefined || data[field] === null || data[field] === ''
+  const missingFields = requiredFields.filter(
+    (field) =>
+      data[field] === undefined || data[field] === null || data[field] === "",
   );
 
   if (missingFields.length > 0) {
     return createErrorResponse(
-      `Missing required fields: ${missingFields.join(', ')}`,
+      `Missing required fields: ${missingFields.join(", ")}`,
       400,
-      'MISSING_REQUIRED_FIELDS',
-      { missingFields }
+      "MISSING_REQUIRED_FIELDS",
+      { missingFields },
     );
   }
 
@@ -168,7 +171,7 @@ const requestCounts = new Map<string, { count: number; resetTime: number }>();
 export function checkRateLimit(
   identifier: string,
   maxRequests: number = 100,
-  windowMs: number = 60000
+  windowMs: number = 60000,
 ): NextResponse<ApiError> | null {
   const now = Date.now();
   const windowStart = now - windowMs;
@@ -180,20 +183,20 @@ export function checkRateLimit(
     }
   }
 
-  const current = requestCounts.get(identifier) || { count: 0, resetTime: now + windowMs };
-  
+  const current = requestCounts.get(identifier) || {
+    count: 0,
+    resetTime: now + windowMs,
+  };
+
   if (current.count >= maxRequests && current.resetTime > now) {
-    return createErrorResponse(
-      'Rate limit exceeded',
-      429,
-      'RATE_LIMITED',
-      { retryAfter: Math.ceil((current.resetTime - now) / 1000) }
-    );
+    return createErrorResponse("Rate limit exceeded", 429, "RATE_LIMITED", {
+      retryAfter: Math.ceil((current.resetTime - now) / 1000),
+    });
   }
 
   requestCounts.set(identifier, {
     count: current.count + 1,
-    resetTime: current.resetTime > now ? current.resetTime : now + windowMs
+    resetTime: current.resetTime > now ? current.resetTime : now + windowMs,
   });
 
   return null;

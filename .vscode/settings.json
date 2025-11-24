@@ -1,17 +1,29 @@
 {
-  "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 1000,
-  "files.backup.path": "C:\\Backups\\VS_Backups",
-  "files.hotExit": "onExitAndWindowClose",
-  "workbench.settings.enableNaturalLanguageSearch": false,
+  "github.copilot.advanced": {
+    "modelContextWindowSize": 8000
+  },
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll": "never"
   },
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "emmet.includeLanguages": {
-    "typescript": "typescriptreact",
-    "javascript": "javascriptreact"
-},
-"CodeGPT.apiKey": "OpenAI"
+  "github.copilot.inlineSuggest.enable": true,
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.multiplySuggestions": false,
+
+  // 🚫 Prevent AI from rewriting RBAC/auth logic
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.associations": {
+    "rbac.ts": "typescript",
+    "AuthContext.tsx": "typescriptreact",
+    "ProtectedComponent.tsx": "typescriptreact",
+    "RouteGuard.tsx": "typescriptreact"
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "typescript": false,
+    "typescriptreact": false
+  },
+  "prisma.pinToPrisma6": true
 }

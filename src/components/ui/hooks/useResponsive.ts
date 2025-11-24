@@ -1,17 +1,17 @@
 /**
  * Responsive Hook
- * 
+ *
  * Provides responsive breakpoint detection for BSOS components
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 interface BreakpointState {
   isMobile: boolean;
   isTablet: boolean;
   isDesktop: boolean;
   isLarge: boolean;
-  currentBreakpoint: 'mobile' | 'tablet' | 'desktop' | 'large';
+  currentBreakpoint: "mobile" | "tablet" | "desktop" | "large";
 }
 
 const breakpoints = {
@@ -27,22 +27,24 @@ export function useResponsive(): BreakpointState {
     isTablet: false,
     isDesktop: false,
     isLarge: false,
-    currentBreakpoint: 'mobile',
+    currentBreakpoint: "mobile",
   });
 
   useEffect(() => {
     const updateBreakpoint = () => {
       const width = window.innerWidth;
-      
+
       const isMobile = width < breakpoints.tablet;
-      const isTablet = width >= breakpoints.tablet && width < breakpoints.desktop;
-      const isDesktop = width >= breakpoints.desktop && width < breakpoints.large;
+      const isTablet =
+        width >= breakpoints.tablet && width < breakpoints.desktop;
+      const isDesktop =
+        width >= breakpoints.desktop && width < breakpoints.large;
       const isLarge = width >= breakpoints.large;
 
-      let currentBreakpoint: BreakpointState['currentBreakpoint'] = 'mobile';
-      if (isLarge) currentBreakpoint = 'large';
-      else if (isDesktop) currentBreakpoint = 'desktop';
-      else if (isTablet) currentBreakpoint = 'tablet';
+      let currentBreakpoint: BreakpointState["currentBreakpoint"] = "mobile";
+      if (isLarge) currentBreakpoint = "large";
+      else if (isDesktop) currentBreakpoint = "desktop";
+      else if (isTablet) currentBreakpoint = "tablet";
 
       setBreakpointState({
         isMobile,
@@ -57,10 +59,10 @@ export function useResponsive(): BreakpointState {
     updateBreakpoint();
 
     // Add event listener
-    window.addEventListener('resize', updateBreakpoint);
+    window.addEventListener("resize", updateBreakpoint);
 
     // Cleanup
-    return () => window.removeEventListener('resize', updateBreakpoint);
+    return () => window.removeEventListener("resize", updateBreakpoint);
   }, []);
 
   return breakpointState;

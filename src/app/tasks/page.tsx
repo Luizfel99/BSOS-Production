@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { Input } from '@/components/ui/Input';
-import { 
-  Calendar, 
-  Plus, 
-  Search, 
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { Input } from "@/components/ui/Input";
+import {
+  Calendar,
+  Plus,
+  Search,
   Filter,
   Clock,
   User,
   Home,
   CheckCircle,
   AlertCircle,
-  XCircle
-} from 'lucide-react';
-import { ProtectedComponent } from '@/components/ProtectedComponent';
+  XCircle,
+} from "lucide-react";
+import { ProtectedComponent } from "@/components/ProtectedComponent";
 
 // Task interface
 interface Task {
@@ -32,9 +32,9 @@ interface Task {
   scheduledDate?: string;
   dueDate?: string;
   estimatedDuration?: number;
-  type: 'cleaning' | 'maintenance' | 'inspection';
-  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
-  priority: 'low' | 'medium' | 'high';
+  type: "cleaning" | "maintenance" | "inspection";
+  status: "pending" | "in-progress" | "completed" | "cancelled";
+  priority: "low" | "medium" | "high";
   materials?: string;
   instructions?: string;
   checklistCompleted: number;
@@ -53,8 +53,8 @@ export default function TasksPage() {
   const router = useRouter();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   useEffect(() => {
     loadTasks();
@@ -63,66 +63,76 @@ export default function TasksPage() {
   const loadTasks = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/tasks');
-      
+      const response = await fetch("/api/tasks");
+
       if (response.ok) {
         const data = await response.json();
         setTasks(data.data || []);
       } else {
-        toast.error('Erro ao carregar tarefas');
+        toast.error("Erro ao carregar tarefas");
       }
     } catch (error) {
-      console.error('Error loading tasks:', error);
-      toast.error('Erro ao carregar tarefas');
+      console.error("Error loading tasks:", error);
+      toast.error("Erro ao carregar tarefas");
     } finally {
       setLoading(false);
     }
   };
 
   const handleNewTask = () => {
-    router.push('/tasks/new');
+    router.push("/tasks/new");
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'completed': return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case 'in-progress': return <Clock className="h-4 w-4 text-blue-600" />;
-      case 'cancelled': return <XCircle className="h-4 w-4 text-red-600" />;
-      default: return <AlertCircle className="h-4 w-4 text-yellow-600" />;
+      case "completed":
+        return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case "in-progress":
+        return <Clock className="h-4 w-4 text-blue-600" />;
+      case "cancelled":
+        return <XCircle className="h-4 w-4 text-red-600" />;
+      default:
+        return <AlertCircle className="h-4 w-4 text-yellow-600" />;
     }
   };
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      'pending': 'Pendente',
-      'in-progress': 'Em Andamento',
-      'completed': 'Concluída',
-      'cancelled': 'Cancelada'
+      pending: "Pendente",
+      "in-progress": "Em Andamento",
+      completed: "Concluída",
+      cancelled: "Cancelada",
     };
     return labels[status as keyof typeof labels] || status;
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'bg-red-100 text-red-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'low': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "high":
+        return "bg-red-100 text-red-800";
+      case "medium":
+        return "bg-yellow-100 text-yellow-800";
+      case "low":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
-  const filteredTasks = tasks.filter(task => {
-    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (task.description && task.description.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesStatus = statusFilter === 'all' || task.status === statusFilter;
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch =
+      task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (task.description &&
+        task.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesStatus =
+      statusFilter === "all" || task.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   return (
-    <ProtectedComponent allowedRoles={['owner', 'manager', 'cleaner']}>
+    <ProtectedComponent allowedRoles={["owner", "manager", "cleaner"]}>
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -134,11 +144,15 @@ export default function TasksPage() {
                 <div className="flex items-center">
                   <Calendar className="h-8 w-8 mr-3 text-blue-600" />
                   <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Tarefas</h1>
-                    <p className="text-gray-600">Gerencie todas as tarefas de limpeza</p>
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      Tarefas
+                    </h1>
+                    <p className="text-gray-600">
+                      Gerencie todas as tarefas de limpeza
+                    </p>
                   </div>
                 </div>
-                
+
                 <Button
                   onClick={handleNewTask}
                   variant="primary"
@@ -169,7 +183,7 @@ export default function TasksPage() {
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
-                
+
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
@@ -253,8 +267,10 @@ export default function TasksPage() {
                           </p>
                         </div>
                       </div>
-                      
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
+
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}
+                      >
                         {task.priority}
                       </span>
                     </div>
@@ -266,14 +282,14 @@ export default function TasksPage() {
                           {task.assignedTo}
                         </div>
                       )}
-                      
+
                       {task.dueDate && (
                         <div className="flex items-center text-sm text-gray-600">
                           <Clock className="h-4 w-4 mr-2" />
                           {new Date(task.dueDate).toLocaleDateString()}
                         </div>
                       )}
-                      
+
                       {task.propertyId && (
                         <div className="flex items-center text-sm text-gray-600">
                           <Home className="h-4 w-4 mr-2" />
@@ -286,7 +302,7 @@ export default function TasksPage() {
                       <span className="text-sm text-gray-600">
                         {getStatusLabel(task.status)}
                       </span>
-                      
+
                       {task.checklistTotal > 0 && (
                         <span className="text-sm text-gray-600">
                           {task.checklistCompleted}/{task.checklistTotal} itens

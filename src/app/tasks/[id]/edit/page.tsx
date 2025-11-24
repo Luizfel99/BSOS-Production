@@ -1,24 +1,24 @@
-'use client';
+"use client";import WiredButton from "@/components/ui/WiredButton";
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Save, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { toast } from 'react-hot-toast';
-import RouteGuard from '@/components/RouteGuard';
-import MobileNavigation from '@/components/MobileNavigation';
-import ProtectedComponent from '@/components/ProtectedComponent';
-import { getTaskDetails, updateTask, deleteTask } from '@/services/tasks';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Save, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "react-hot-toast";
+import RouteGuard from "@/components/RouteGuard";
+import MobileNavigation from "@/components/MobileNavigation";
+import ProtectedComponent from "@/components/ProtectedComponent";
+import { getTaskDetails, updateTask, deleteTask } from "@/services/tasks";
 
 const taskSchema = z.object({
-  title: z.string().min(1, 'Título é obrigatório'),
+  title: z.string().min(1, "Título é obrigatório"),
   description: z.string().optional(),
-  type: z.enum(['cleaning', 'maintenance', 'inspection', 'other']),
-  priority: z.enum(['low', 'medium', 'high', 'urgent']),
-  status: z.enum(['pending', 'in_progress', 'completed', 'cancelled']),
+  type: z.enum(["cleaning", "maintenance", "inspection", "other"]),
+  priority: z.enum(["low", "medium", "high", "urgent"]),
+  status: z.enum(["pending", "in_progress", "completed", "cancelled"]),
   assignedTo: z.string().optional(),
   propertyId: z.string().optional(),
   dueDate: z.string().optional(),
@@ -31,23 +31,35 @@ type TaskFormData = z.infer<typeof taskSchema>;
 
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.6 }
   }
 };
 
-export default function EditTaskPage({ params }: { params: Promise<{ id: string }> }) {
+export default function EditTaskPage({
+  params
+
+
+}: {params: Promise<{id: string;}>;}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [taskLoading, setTaskLoading] = useState(true);
-  const [users, setUsers] = useState<Array<{id: string, name: string}>>([]);
-  const [properties, setProperties] = useState<Array<{id: string, name: string, address: string}>>([]);
-  const [taskId, setTaskId] = useState<string>('');
+  const [users, setUsers] = useState<Array<{id: string;name: string;}>>([]);
+  const [properties, setProperties] = useState<
+    Array<{id: string;name: string;address: string;}>>(
+    []);
+  const [taskId, setTaskId] = useState<string>("");
 
-  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<TaskFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue
+  } = useForm<TaskFormData>({
     resolver: zodResolver(taskSchema)
   });
 
@@ -68,33 +80,36 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
 
   const loadTaskData = async () => {
     if (!taskId) return;
-    
+
     try {
       setTaskLoading(true);
       const response = await getTaskDetails(taskId);
-      
+
       if (response.success) {
         const task = response.data;
-        
+
         // Set form values
-        setValue('title', task.title);
-        setValue('description', task.description || '');
-        setValue('type', task.type);
-        setValue('priority', task.priority);
-        setValue('status', task.status);
-        setValue('assignedTo', task.assignedTo || '');
-        setValue('propertyId', task.propertyId || '');
-        setValue('dueDate', task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : '');
-        setValue('estimatedDuration', task.estimatedDuration || 0);
-        setValue('materials', task.materials || '');
-        setValue('instructions', task.instructions || '');
+        setValue("title", task.title);
+        setValue("description", task.description || "");
+        setValue("type", task.type);
+        setValue("priority", task.priority);
+        setValue("status", task.status);
+        setValue("assignedTo", task.assignedTo || "");
+        setValue("propertyId", task.propertyId || "");
+        setValue(
+          "dueDate",
+          task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : ""
+        );
+        setValue("estimatedDuration", task.estimatedDuration || 0);
+        setValue("materials", task.materials || "");
+        setValue("instructions", task.instructions || "");
       } else {
-        toast.error('Tarefa não encontrada');
-        router.push('/tasks');
+        toast.error("Tarefa não encontrada");
+        router.push("/tasks");
       }
     } catch (error) {
-      toast.error('Erro ao carregar tarefa');
-      router.push('/tasks');
+      toast.error("Erro ao carregar tarefa");
+      router.push("/tasks");
     } finally {
       setTaskLoading(false);
     }
@@ -104,54 +119,60 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
     try {
       // Load users and properties for dropdowns
       const [usersResponse, propertiesResponse] = await Promise.all([
-        fetch('/api/users').then(res => res.json()),
-        fetch('/api/properties').then(res => res.json())
-      ]);
+      fetch("/api/users").then((res) => res.json()),
+      fetch("/api/properties").then((res) => res.json())]
+      );
 
       if (usersResponse.success) setUsers(usersResponse.data);
       if (propertiesResponse.success) setProperties(propertiesResponse.data);
     } catch (error) {
-      console.error('Erro ao carregar dados do formulário:', error);
+      console.error("Erro ao carregar dados do formulário:", error);
     }
   };
 
   const onSubmit = async (data: TaskFormData) => {
     try {
       setLoading(true);
-      
+
       const taskData = {
         ...data,
-        estimatedDuration: data.estimatedDuration ? Number(data.estimatedDuration) : undefined,
+        estimatedDuration: data.estimatedDuration ?
+        Number(data.estimatedDuration) :
+        undefined,
         dueDate: data.dueDate ? new Date(data.dueDate) : undefined
       };
 
       const response = await updateTask(taskId, taskData);
-      
+
       if (response.success) {
-        toast.success('Tarefa atualizada com sucesso!');
-        router.push('/tasks');
+        toast.success("Tarefa atualizada com sucesso!");
+        router.push("/tasks");
       } else {
-        toast.error(response.message || 'Erro ao atualizar tarefa');
+        toast.error(response.message || "Erro ao atualizar tarefa");
       }
     } catch (error) {
-      toast.error('Erro ao atualizar tarefa');
+      toast.error("Erro ao atualizar tarefa");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!confirm('Tem certeza que deseja excluir esta tarefa? Esta ação não pode ser desfeita.')) {
+    if (
+    !confirm(
+      "Tem certeza que deseja excluir esta tarefa? Esta ação não pode ser desfeita."
+    ))
+    {
       return;
     }
 
     try {
       setDeleteLoading(true);
       await deleteTask(taskId);
-      toast.success('Tarefa excluída com sucesso!');
-      router.push('/tasks');
+      toast.success("Tarefa excluída com sucesso!");
+      router.push("/tasks");
     } catch (error) {
-      toast.error('Erro ao excluir tarefa');
+      toast.error("Erro ao excluir tarefa");
     } finally {
       setDeleteLoading(false);
     }
@@ -168,51 +189,60 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
             </div>
           </div>
         </MobileNavigation>
-      </RouteGuard>
-    );
+      </RouteGuard>);
+
   }
 
   return (
     <RouteGuard>
       <MobileNavigation activeItem="tasks">
-        <motion.div 
+        <motion.div
           className="p-6"
           variants={pageVariants}
           initial="hidden"
-          animate="visible"
-        >
+          animate="visible">
+
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
-                <button
+                <WiredButton
                   onClick={() => router.back()}
-                  className="p-2 hover:bg-gray-100 rounded-lg"
-                >
+                  className="p-2 hover:bg-gray-100 rounded-lg">
+
                   <ArrowLeft className="h-5 w-5" />
-                </button>
+                </WiredButton>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Editar Tarefa</h1>
+                  <h1 className="text-3xl font-bold text-gray-900">
+                    Editar Tarefa
+                  </h1>
                   <p className="text-gray-600 mt-2">
                     Atualize as informações da tarefa
                   </p>
                 </div>
               </div>
-              
-              <ProtectedComponent allowedRoles={['owner', 'manager', 'supervisor']}>
-                <button
+
+              <ProtectedComponent
+                allowedRoles={["owner", "manager", "supervisor"]}>
+
+                <WiredButton
                   onClick={handleDelete}
                   disabled={deleteLoading}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md flex items-center gap-2 disabled:opacity-50"
-                >
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md flex items-center gap-2 disabled:opacity-50">
+
                   <Trash2 className="h-4 w-4" />
-                  {deleteLoading ? 'Excluindo...' : 'Excluir'}
-                </button>
+                  {deleteLoading ? "Excluindo..." : "Excluir"}
+                </WiredButton>
               </ProtectedComponent>
             </div>
 
-            <ProtectedComponent allowedRoles={['owner', 'manager', 'supervisor']}>
+            <ProtectedComponent
+              allowedRoles={["owner", "manager", "supervisor"]}>
+
               <div className="bg-white rounded-lg shadow">
-                <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="p-6 space-y-6">
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -220,13 +250,15 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                       </label>
                       <input
                         type="text"
-                        {...register('title')}
+                        {...register("title")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Digite o título da tarefa"
-                      />
-                      {errors.title && (
-                        <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
-                      )}
+                        placeholder="Digite o título da tarefa" />
+
+                      {errors.title &&
+                      <p className="mt-1 text-sm text-red-600">
+                          {errors.title.message}
+                        </p>
+                      }
                     </div>
 
                     <div>
@@ -234,9 +266,9 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                         Tipo
                       </label>
                       <select
-                        {...register('type')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        {...register("type")}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                         <option value="cleaning">Limpeza</option>
                         <option value="maintenance">Manutenção</option>
                         <option value="inspection">Inspeção</option>
@@ -249,9 +281,9 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                         Prioridade
                       </label>
                       <select
-                        {...register('priority')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        {...register("priority")}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                         <option value="low">Baixa</option>
                         <option value="medium">Média</option>
                         <option value="high">Alta</option>
@@ -264,9 +296,9 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                         Status
                       </label>
                       <select
-                        {...register('status')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        {...register("status")}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                         <option value="pending">Pendente</option>
                         <option value="in_progress">Em Andamento</option>
                         <option value="completed">Concluída</option>
@@ -279,15 +311,15 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                         Responsável
                       </label>
                       <select
-                        {...register('assignedTo')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        {...register("assignedTo")}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                         <option value="">Selecione um responsável</option>
-                        {users.map((user) => (
-                          <option key={user.id} value={user.id}>
+                        {users.map((user) =>
+                        <option key={user.id} value={user.id}>
                             {user.name}
                           </option>
-                        ))}
+                        )}
                       </select>
                     </div>
 
@@ -296,15 +328,15 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                         Propriedade
                       </label>
                       <select
-                        {...register('propertyId')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
+                        {...register("propertyId")}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                         <option value="">Selecione uma propriedade</option>
-                        {properties.map((property) => (
-                          <option key={property.id} value={property.id}>
+                        {properties.map((property) =>
+                        <option key={property.id} value={property.id}>
                             {property.name} - {property.address}
                           </option>
-                        ))}
+                        )}
                       </select>
                     </div>
 
@@ -314,9 +346,9 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                       </label>
                       <input
                         type="datetime-local"
-                        {...register('dueDate')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
+                        {...register("dueDate")}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
                     </div>
 
                     <div>
@@ -325,10 +357,12 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                       </label>
                       <input
                         type="number"
-                        {...register('estimatedDuration', { valueAsNumber: true })}
+                        {...register("estimatedDuration", {
+                          valueAsNumber: true
+                        })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ex: 120"
-                      />
+                        placeholder="Ex: 120" />
+
                     </div>
                   </div>
 
@@ -337,11 +371,11 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                       Descrição
                     </label>
                     <textarea
-                      {...register('description')}
+                      {...register("description")}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Descreva os detalhes da tarefa"
-                    />
+                      placeholder="Descreva os detalhes da tarefa" />
+
                   </div>
 
                   <div>
@@ -349,11 +383,11 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                       Materiais Necessários
                     </label>
                     <textarea
-                      {...register('materials')}
+                      {...register("materials")}
                       rows={2}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Liste os materiais necessários"
-                    />
+                      placeholder="Liste os materiais necessários" />
+
                   </div>
 
                   <div>
@@ -361,29 +395,29 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
                       Instruções Especiais
                     </label>
                     <textarea
-                      {...register('instructions')}
+                      {...register("instructions")}
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Instruções especiais para a execução da tarefa"
-                    />
+                      placeholder="Instruções especiais para a execução da tarefa" />
+
                   </div>
 
                   <div className="flex justify-end gap-4 pt-4 border-t">
-                    <button
+                    <WiredButton
                       type="button"
                       onClick={() => router.back()}
-                      className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
-                    >
+                      className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
+
                       Cancelar
-                    </button>
-                    <button
+                    </WiredButton>
+                    <WiredButton
                       type="submit"
                       disabled={loading}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center gap-2 disabled:opacity-50"
-                    >
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center gap-2 disabled:opacity-50" data-action="wire.auto">
+
                       <Save className="h-4 w-4" />
-                      {loading ? 'Salvando...' : 'Salvar Alterações'}
-                    </button>
+                      {loading ? "Salvando..." : "Salvar Alterações"}
+                    </WiredButton>
                   </div>
                 </form>
               </div>
@@ -391,6 +425,6 @@ export default function EditTaskPage({ params }: { params: Promise<{ id: string 
           </div>
         </motion.div>
       </MobileNavigation>
-    </RouteGuard>
-  );
+    </RouteGuard>);
+
 }

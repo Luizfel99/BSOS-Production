@@ -1,52 +1,49 @@
 /**
  * BSOS Loading Spinner Component
- * 
+ *
  * A customizable loading spinner for async operations and loading states.
  */
 
-import React, { forwardRef } from 'react';
-import { cn } from './utils/cn';
+import React, { forwardRef } from "react";
+import { cn } from "./utils/cn";
 
-export interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  color?: 'primary' | 'secondary' | 'white' | 'current';
+export interface LoadingSpinnerProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  size?: "sm" | "md" | "lg" | "xl";
+  color?: "primary" | "secondary" | "white" | "current";
   label?: string;
   centered?: boolean;
 }
 
 const spinnerSizes = {
-  sm: 'w-4 h-4',
-  md: 'w-6 h-6',
-  lg: 'w-8 h-8',
-  xl: 'w-12 h-12',
+  sm: "w-4 h-4",
+  md: "w-6 h-6",
+  lg: "w-8 h-8",
+  xl: "w-12 h-12",
 };
 
 const spinnerColors = {
-  primary: 'text-blue-600',
-  secondary: 'text-cyan-600',
-  white: 'text-white',
-  current: 'text-current',
+  primary: "text-blue-600",
+  secondary: "text-cyan-600",
+  white: "text-white",
+  current: "text-current",
 };
 
 export const LoadingSpinner = forwardRef<HTMLDivElement, LoadingSpinnerProps>(
   (
     {
-      size = 'md',
-      color = 'primary',
-      label = 'Loading...',
+      size = "md",
+      color = "primary",
+      label = "Loading...",
       centered = false,
       className,
       ...props
     },
-    ref
+    ref,
   ) => {
     const spinner = (
       <svg
-        className={cn(
-          'animate-spin',
-          spinnerSizes[size],
-          spinnerColors[color]
-        )}
+        className={cn("animate-spin", spinnerSizes[size], spinnerColors[color])}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -73,10 +70,7 @@ export const LoadingSpinner = forwardRef<HTMLDivElement, LoadingSpinnerProps>(
       return (
         <div
           ref={ref}
-          className={cn(
-            'flex items-center justify-center',
-            className
-          )}
+          className={cn("flex items-center justify-center", className)}
           {...props}
         >
           {spinner}
@@ -91,7 +85,7 @@ export const LoadingSpinner = forwardRef<HTMLDivElement, LoadingSpinnerProps>(
         <span className="sr-only">{label}</span>
       </div>
     );
-  }
+  },
 );
 
-LoadingSpinner.displayName = 'LoadingSpinner';
+LoadingSpinner.displayName = "LoadingSpinner";

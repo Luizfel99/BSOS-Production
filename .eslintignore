@@ -1,0 +1,11 @@
+node_modules
+.next
+**/backups*/
+**/backup*/
+**/.history/
+**/*.backup.*
+**/*.backup2.*
+**/*.bak*
+backups_before_login_update/
+.turbo
+.env*

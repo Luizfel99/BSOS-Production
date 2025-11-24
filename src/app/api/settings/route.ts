@@ -1,153 +1,84 @@
-// Settings API Route - Simplified with Zod validation
-// GET → return all settings grouped by category
-// PUT → update or create setting (general or integration)
-
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
-// Zod schema for PUT request validation
-const UpdateSettingSchema = z.object({
-  category: z.string().min(1, "Category is required"),
-  key: z.string().min(1, "Key is required"),
-  value: z.string().min(1, "Value is required"),
-  type: z.enum(['STRING', 'BOOLEAN', 'NUMBER', 'JSON', 'ENCRYPTED']).optional().default('STRING'),
-  encrypted: z.boolean().optional().default(false)
-});
+import { NextResponse } from "next/server";
+import { db } from "@/lib/prisma";
+import { requireUser } from "@/lib/auth";
+import { SettingsSchema, DEFAULT_SETTINGS } from "@/lib/validation/settings";
 
 /**
- * GET /api/settings - Get all settings grouped by category
+ * GET /api/settings
+ *
+ * Returns user preferences merged with defaults
  */
-export async function GET(request: NextRequest) {
+export async function GET(req: Request) {
+  let jwtUser;
   try {
-    const userCookie = request.cookies.get('bsos-user')?.value;
-    if (!userCookie) {
-      return NextResponse.json(
-        { success: false, message: 'Authentication required' }, 
-        { status: 401 }
-      );
-    }
-
-    // Parse user data from cookie
-    const userData = JSON.parse(userCookie);
-    const userRole = userData.role || 'CLEANER';
-
-    // Get all settings grouped by category
-    const settings = await prisma.setting.findMany({
-      orderBy: [{ category: 'asc' }, { key: 'asc' }]
-    });
-
-    // Group by category
-    const groupedSettings = settings.reduce((acc, setting) => {
-      if (!acc[setting.category]) {
-        acc[setting.category] = [];
-      }
-      acc[setting.category].push({
-        category: setting.category,
-        key: setting.key,
-        value: setting.value,
-        type: setting.type,
-        encrypted: setting.encrypted
-      });
-      return acc;
-    }, {} as Record<string, any[]>);
-
-    return NextResponse.json({
-      success: true,
-      data: groupedSettings,
-      message: 'Settings retrieved successfully'
-    });
-
-  } catch (error) {
-    console.error('GET Settings error:', error);
-    return NextResponse.json(
-      { success: false, message: 'Failed to retrieve settings' }, 
-      { status: 500 }
-    );
+    jwtUser = requireUser(req);
+  } catch {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
+
+  // Fetch user preference from database
+  const pref = await db.userPreference
+    .findUnique({ where: { userId: jwtUser.id } })
+    .catch(() => null as any);
+
+  // Merge with defaults
+  const merged = {
+    ...DEFAULT_SETTINGS,
+    ...(pref?.prefs || {}),
+    notifications: {
+      ...DEFAULT_SETTINGS.notifications,
+      ...(pref?.prefs?.notifications || {}),
+    },
+  };
+
+  return NextResponse.json({ ok: true, settings: merged });
 }
 
 /**
- * PUT /api/settings - Update or create setting (general or integration)
+ * PATCH /api/settings
+ *
+ * Validates and saves user preferences (upsert)
  */
-export async function PUT(request: NextRequest) {
+export async function PATCH(req: Request) {
+  let jwtUser;
   try {
-    const userCookie = request.cookies.get('bsos-user')?.value;
-    if (!userCookie) {
-      return NextResponse.json(
-        { success: false, message: 'Authentication required' }, 
-        { status: 401 }
-      );
-    }
+    jwtUser = requireUser(req);
+  } catch {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
 
-    const userData = JSON.parse(userCookie);
-    const userRole = userData.role || 'CLEANER';
-
-    // Parse and validate request body with Zod
-    const body = await request.json();
-    const validationResult = UpdateSettingSchema.safeParse(body);
-    
-    if (!validationResult.success) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          message: 'Invalid request data',
-          errors: validationResult.error.errors
-        },
-        { status: 400 }
-      );
-    }
-
-    const { category, key, value, type, encrypted } = validationResult.data;
-
-    // Basic RBAC check
-    if (userRole === 'CLEANER' || userRole === 'CLIENT') {
-      return NextResponse.json(
-        { success: false, message: 'Access denied' },
-        { status: 403 }
-      );
-    }
-
-    // Upsert setting
-    const setting = await prisma.setting.upsert({
-      where: { 
-        category_key: { category, key } 
-      },
-      update: {
-        value,
-        type,
-        encrypted,
-        updatedAt: new Date()
-      },
-      create: {
-        category,
-        key,
-        value,
-        type,
-        encrypted
-      }
-    });
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        category: setting.category,
-        key: setting.key,
-        value: setting.value,
-        type: setting.type,
-        encrypted: setting.encrypted
-      },
-      message: 'Setting updated successfully'
-    });
-
-  } catch (error) {
-    console.error('PUT Settings error:', error);
+  const body = await req.json().catch(() => null);
+  const parsed = SettingsSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json(
-      { success: false, message: 'Failed to update setting' }, 
-      { status: 500 }
+      { error: "validation", details: parsed.error.flatten() },
+      { status: 400 }
     );
   }
-}
 
+  const incoming = parsed.data;
+
+  // Defensive merge with existing preferences
+  const existing = await db.userPreference
+    .findUnique({ where: { userId: jwtUser.id } })
+    .catch(() => null as any);
+
+  const nextPrefs = {
+    ...DEFAULT_SETTINGS,
+    ...(existing?.prefs || {}),
+    ...incoming,
+    notifications: {
+      ...DEFAULT_SETTINGS.notifications,
+      ...(existing?.prefs?.notifications || {}),
+      ...(incoming?.notifications || {}),
+    },
+  };
+
+  await db.userPreference.upsert({
+    where: { userId: jwtUser.id },
+    create: { userId: jwtUser.id, prefs: nextPrefs as any },
+    update: { prefs: nextPrefs as any },
+  });
+
+  return NextResponse.json({ ok: true, settings: nextPrefs });
+}

@@ -3,12 +3,12 @@
  * Handles different layouts for mobile, tablet, and desktop
  */
 
-'use client';
+"use client";
 
-import React from 'react';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
-import ResponsiveNavigation from '@/components/ResponsiveNavigation';
-import { NavigationItem } from '@/config/navigation';
+import React from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import ResponsiveNavigation from "@/components/ResponsiveNavigation";
+import { NavigationItem } from "@/config/navigation";
 
 interface ResponsiveLayoutProps {
   children: React.ReactNode;
@@ -41,9 +41,7 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
           items={navigationItems}
         />
         <main className="flex-1 overflow-y-auto">
-          <div className="p-6">
-            {children}
-          </div>
+          <div className="p-6">{children}</div>
         </main>
       </div>
     );
@@ -58,7 +56,7 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
         onItemClick={onNavigationClick}
         items={navigationItems}
       />
-      
+
       {/* Optional Header */}
       {showHeader && headerContent && (
         <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
@@ -67,13 +65,11 @@ export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
           </div>
         </div>
       )}
-      
+
       {/* Main Content - Optimized for very small screens */}
       <div className="px-2 sm:px-4 py-4 sm:py-6">
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <div className="p-3 sm:p-4 lg:p-6">
-            {children}
-          </div>
+          <div className="p-3 sm:p-4 lg:p-6">{children}</div>
         </div>
       </div>
     </div>
