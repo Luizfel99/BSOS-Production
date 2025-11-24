@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Remove completamente qualquer banner/aviso Demo/Re-Seed da UI.
- * Idempotente. Roda em Linux/macOS/WSL/CI.
+ * Remove COMPLETAMENTE qualquer banner/aviso Demo/Re-Seed da UI.
+ * Idempotente. Também remove strings explícitas de demo dos .tsx/.jsx.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -11,8 +11,7 @@ const SRC = path.join(ROOT, "src");
 
 const DELETE_FILES = [
   path.join(SRC, "components", "DemoInfoBanner.tsx"),
-  // adicione aqui outros banners legados se existirem:
-  // path.join(SRC, "components", "DemoBanner.tsx"),
+  path.join(SRC, "components", "DemoBanner.tsx"),
 ];
 
 const TEXT_MARKERS = [
@@ -37,7 +36,7 @@ function walk(dir, acc = []) {
     if (e.isDirectory()) {
       if (e.name === "node_modules" || e.name === ".next") continue;
       walk(full, acc);
-    } else if (/\.(tsx?|css|md|mjs|cjs|jsx?)$/i.test(e.name)) {
+    } else if (/\.(tsx?|jsx?|css|md|mjs|cjs)$/i.test(e.name)) {
       acc.push(full);
     }
   }

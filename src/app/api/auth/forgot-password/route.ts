@@ -19,18 +19,14 @@ export async function POST(req: Request) {
 
     // Por segurança, sempre retornamos sucesso mesmo se usuário não existir
     if (!user) {
-      return NextResponse.json({
-        success: true,
-        message:
-          "Se o e-mail existir, você receberá instruções para recuperação",
-      });
+      return NextResponse.json({ ok: true });
     }
 
     // Gerar token único
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 1000 * 60 * 15); // 15 minutos
 
-    // Salvar token no banco (você precisará criar esta tabela)
+    // Salvar token no banco (comente se resetToken não existir no schema)
     // await prisma.resetToken.create({
     //   data: {
     //     token,
@@ -42,24 +38,27 @@ export async function POST(req: Request) {
     // Gerar link de recuperação
     const resetLink = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/reset-password?token=${token}`;
 
-    // Enviar e-mail
-    await sendEmail(
-      email,
-      "Recuperação de Senha - BSOS",
-      `
-        <h2>Recuperação de Senha</h2>
-        <p>Olá ${user.name},</p>
-        <p>Você solicitou a recuperação de senha. Clique no link abaixo para criar uma nova senha:</p>
-        <a href="${resetLink}">${resetLink}</a>
-        <p>Este link expira em 15 minutos.</p>
-        <p>Se você não solicitou esta recuperação, ignore este e-mail.</p>
-      `,
-    );
-
-    return NextResponse.json({
-      success: true,
-      message: "Se o e-mail existir, você receberá instruções para recuperação",
+    // resposta curta primeiro; e-mail pode atrasar em ambientes frios
+    queueMicrotask(async () => {
+      try {
+        await sendEmail(
+          email,
+          "Recuperação de Senha - BSOS",
+          `
+            <h2>Recuperação de Senha</h2>
+            <p>Olá ${user.name},</p>
+            <p>Você solicitou a recuperação de senha. Clique no link abaixo para criar uma nova senha:</p>
+            <a href="${resetLink}">${resetLink}</a>
+            <p>Este link expira em 15 minutos.</p>
+            <p>Se você não solicitou esta recuperação, ignore este e-mail.</p>
+          `,
+        );
+      } catch {
+        // silêncio: não bloquear UX
+      }
     });
+
+    return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Error in forgot-password:", error);
     return NextResponse.json(

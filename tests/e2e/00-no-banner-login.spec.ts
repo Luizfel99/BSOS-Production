@@ -20,7 +20,7 @@ test.describe("Login page must NOT show demo/re-seed banners", () => {
       /demo123/i,
     ];
     for (const rx of forbidden) {
-      await expect(page.getByText(rx)).toHaveCount(0);
+      await expect(page.getByText(rx, { exact: false })).toHaveCount(0);
     }
   });
 });

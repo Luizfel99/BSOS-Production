@@ -10,6 +10,7 @@ import GlobalActionBus from "@/components/GlobalActionBus";
 import AppHeader from "@/components/AppHeader";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import DemoModeGate from "@/components/DemoModeGate";
+import ShowChrome from "@/components/ShowChrome";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,7 +44,9 @@ export default function RootLayout({
               <div className="fixed right-3 top-3 z-50">
                 <LocaleSwitcher />
               </div>
-              <AppHeader />
+              <ShowChrome>
+                <AppHeader />
+              </ShowChrome>
               {children}
               <DebugOverlay />
               <GlobalActionBus />

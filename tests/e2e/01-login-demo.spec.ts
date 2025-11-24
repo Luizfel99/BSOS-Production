@@ -1,3 +1,4 @@
+// Mantém APENAS interações via testid; não usa textos demo.
 import { test, expect } from '@playwright/test';
 
 test.describe('Login Demo → Dashboard', () => {
@@ -7,7 +8,9 @@ test.describe('Login Demo → Dashboard', () => {
     await page.getByTestId('demo-admin').click();
 
     await page.waitForURL(/\/dashboard/i, { timeout: 20000 });
-    await expect(page.getByTestId('kpi-total-tasks').or(page.getByText(/total tasks/i))).toBeVisible();
+    await expect(
+      page.getByTestId('kpi-total-tasks').or(page.getByText(/total tasks/i))
+    ).toBeVisible();
   });
 
   test('i18n: toggle EN/PT/ES on login page', async ({ page }) => {
@@ -15,10 +18,10 @@ test.describe('Login Demo → Dashboard', () => {
     const langSelect = page.getByTestId('lang-select');
     await expect(langSelect).toBeVisible();
     await langSelect.selectOption('pt');
-    await expect(page.getByText(/Entrar|Enviar link|Criar usuário|Criar conta/i)).toBeVisible();
+    await expect(page.getByTestId('login-submit')).toHaveText(/entrar/i);
     await langSelect.selectOption('es');
-    await expect(page.getByText(/Iniciar sesión|Enviar enlace|Crear usuario|Crear cuenta/i)).toBeVisible();
+    await expect(page.getByTestId('login-submit')).toHaveText(/iniciar/i);
     await langSelect.selectOption('en');
-    await expect(page.getByText(/Sign In|Send reset link|Create user|Create account/i)).toBeVisible();
+    await expect(page.getByTestId('login-submit')).toHaveText(/sign in/i);
   });
 });

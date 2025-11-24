@@ -5,47 +5,51 @@
 ### 1. **Airbnb Integration**
 
 #### **A. Configuração da API:**
+
 ```typescript
 // src/services/integrations/airbnb.service.ts
 export class AirbnbService {
-  private baseUrl = 'https://api.airbnb.com/v2'
-  private apiKey: string
-  
+  private baseUrl = "https://api.airbnb.com/v2";
+  private apiKey: string;
+
   constructor() {
-    this.apiKey = process.env.AIRBNB_API_KEY!
+    this.apiKey = process.env.AIRBNB_API_KEY!;
   }
 
   async getListings(hostId: string) {
     try {
       const response = await fetch(`${this.baseUrl}/listings`, {
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      
-      const data = await response.json()
-      return data.listings
+          Authorization: `Bearer ${this.apiKey}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      return data.listings;
     } catch (error) {
-      console.error('Erro ao buscar propriedades Airbnb:', error)
-      throw error
+      console.error("Erro ao buscar propriedades Airbnb:", error);
+      throw error;
     }
   }
 
   async getReservations(listingId: string) {
     try {
-      const response = await fetch(`${this.baseUrl}/listings/${listingId}/reservations`, {
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json'
+      const response = await fetch(
+        `${this.baseUrl}/listings/${listingId}/reservations`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            "Content-Type": "application/json",
+          },
         }
-      })
-      
-      const data = await response.json()
-      return data.reservations
+      );
+
+      const data = await response.json();
+      return data.reservations;
     } catch (error) {
-      console.error('Erro ao buscar reservas:', error)
-      throw error
+      console.error("Erro ao buscar reservas:", error);
+      throw error;
     }
   }
 
@@ -55,17 +59,17 @@ export class AirbnbService {
         `${this.baseUrl}/listings/${listingId}/calendar?start_date=${startDate}&end_date=${endDate}`,
         {
           headers: {
-            'Authorization': `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${this.apiKey}`,
+            "Content-Type": "application/json",
+          },
         }
-      )
-      
-      const data = await response.json()
-      return data.calendar
+      );
+
+      const data = await response.json();
+      return data.calendar;
     } catch (error) {
-      console.error('Erro ao buscar calendário:', error)
-      throw error
+      console.error("Erro ao buscar calendário:", error);
+      throw error;
     }
   }
 
@@ -74,13 +78,13 @@ export class AirbnbService {
     return {
       name: airbnbListing.name,
       address: airbnbListing.address,
-      type: 'APARTMENT' as const,
+      type: "APARTMENT" as const,
       rooms: airbnbListing.bedrooms || 1,
       bathrooms: airbnbListing.bathrooms || 1,
       airbnbId: airbnbListing.id.toString(),
-      checkInTime: '15:00',
-      checkOutTime: '11:00'
-    }
+      checkInTime: "15:00",
+      checkOutTime: "11:00",
+    };
   }
 
   transformToReservation(airbnbReservation: any) {
@@ -89,8 +93,8 @@ export class AirbnbService {
       checkIn: new Date(airbnbReservation.start_date),
       checkOut: new Date(airbnbReservation.end_date),
       status: airbnbReservation.status,
-      externalId: airbnbReservation.id.toString()
-    }
+      externalId: airbnbReservation.id.toString(),
+    };
   }
 }
 ```
@@ -98,28 +102,29 @@ export class AirbnbService {
 ### 2. **Google Calendar Integration**
 
 #### **A. Configuração OAuth2:**
+
 ```typescript
 // src/services/integrations/calendar.service.ts
-import { google } from 'googleapis'
+import { google } from "googleapis";
 
 export class GoogleCalendarService {
-  private calendar: any
-  
+  private calendar: any;
+
   constructor() {
     const auth = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
       process.env.GOOGLE_REDIRECT_URI
-    )
-    
+    );
+
     // Set credentials if available
     if (process.env.GOOGLE_REFRESH_TOKEN) {
       auth.setCredentials({
-        refresh_token: process.env.GOOGLE_REFRESH_TOKEN
-      })
+        refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+      });
     }
-    
-    this.calendar = google.calendar({ version: 'v3', auth })
+
+    this.calendar = google.calendar({ version: "v3", auth });
   }
 
   async createCleaningEvent(cleaning: any) {
@@ -132,86 +137,91 @@ export class GoogleCalendarService {
           👤 Funcionário: ${cleaning.employee.name}
           💰 Valor: R$ ${cleaning.price}
           
-          📝 Checklist: ${cleaning.checklist ? 'Incluído' : 'Padrão'}
+          📝 Checklist: ${cleaning.checklist ? "Incluído" : "Padrão"}
         `,
         start: {
           dateTime: cleaning.scheduledDate.toISOString(),
-          timeZone: 'America/Sao_Paulo'
+          timeZone: "America/Sao_Paulo",
         },
         end: {
           dateTime: new Date(
-            cleaning.scheduledDate.getTime() + (cleaning.estimatedDuration * 60000)
+            cleaning.scheduledDate.getTime() +
+              cleaning.estimatedDuration * 60000
           ).toISOString(),
-          timeZone: 'America/Sao_Paulo'
+          timeZone: "America/Sao_Paulo",
         },
         attendees: [
           {
             email: cleaning.employee.email,
             displayName: cleaning.employee.name,
-            responseStatus: 'needsAction'
-          }
+            responseStatus: "needsAction",
+          },
         ],
         reminders: {
           useDefault: false,
           overrides: [
-            { method: 'email', minutes: 24 * 60 }, // 1 dia antes
-            { method: 'popup', minutes: 60 }       // 1 hora antes
-          ]
+            { method: "email", minutes: 24 * 60 }, // 1 dia antes
+            { method: "popup", minutes: 60 }, // 1 hora antes
+          ],
         },
-        colorId: '11', // Vermelho para limpezas
+        colorId: "11", // Vermelho para limpezas
         extendedProperties: {
           shared: {
             bsosCleaningId: cleaning.id,
             bsosPropertyId: cleaning.propertyId,
-            bsosEmployeeId: cleaning.employeeId
-          }
-        }
-      }
+            bsosEmployeeId: cleaning.employeeId,
+          },
+        },
+      };
 
       const response = await this.calendar.events.insert({
-        calendarId: 'primary',
+        calendarId: "primary",
         resource: event,
-        sendUpdates: 'all'
-      })
+        sendUpdates: "all",
+      });
 
-      return response.data
+      return response.data;
     } catch (error) {
-      console.error('Erro ao criar evento no calendário:', error)
-      throw error
+      console.error("Erro ao criar evento no calendário:", error);
+      throw error;
     }
   }
 
   async updateCleaningEvent(eventId: string, updates: any) {
     try {
       const response = await this.calendar.events.patch({
-        calendarId: 'primary',
+        calendarId: "primary",
         eventId: eventId,
         resource: updates,
-        sendUpdates: 'all'
-      })
+        sendUpdates: "all",
+      });
 
-      return response.data
+      return response.data;
     } catch (error) {
-      console.error('Erro ao atualizar evento:', error)
-      throw error
+      console.error("Erro ao atualizar evento:", error);
+      throw error;
     }
   }
 
-  async getEmployeeSchedule(employeeEmail: string, startDate: Date, endDate: Date) {
+  async getEmployeeSchedule(
+    employeeEmail: string,
+    startDate: Date,
+    endDate: Date
+  ) {
     try {
       const response = await this.calendar.events.list({
         calendarId: employeeEmail,
         timeMin: startDate.toISOString(),
         timeMax: endDate.toISOString(),
         singleEvents: true,
-        orderBy: 'startTime',
-        q: 'Limpeza' // Filtrar apenas eventos de limpeza
-      })
+        orderBy: "startTime",
+        q: "Limpeza", // Filtrar apenas eventos de limpeza
+      });
 
-      return response.data.items
+      return response.data.items;
     } catch (error) {
-      console.error('Erro ao buscar agenda do funcionário:', error)
-      throw error
+      console.error("Erro ao buscar agenda do funcionário:", error);
+      throw error;
     }
   }
 
@@ -223,26 +233,27 @@ export class GoogleCalendarService {
         description: `Limpeza automática agendada`,
         start: {
           dateTime: cleaning.scheduledDate.toISOString(),
-          timeZone: 'America/Sao_Paulo'
+          timeZone: "America/Sao_Paulo",
         },
         end: {
           dateTime: new Date(
-            cleaning.scheduledDate.getTime() + (cleaning.estimatedDuration * 60000)
+            cleaning.scheduledDate.getTime() +
+              cleaning.estimatedDuration * 60000
           ).toISOString(),
-          timeZone: 'America/Sao_Paulo'
+          timeZone: "America/Sao_Paulo",
         },
-        recurrence: recurrence // Ex: ['RRULE:FREQ=WEEKLY;BYDAY=SA']
-      }
+        recurrence: recurrence, // Ex: ['RRULE:FREQ=WEEKLY;BYDAY=SA']
+      };
 
       const response = await this.calendar.events.insert({
-        calendarId: 'primary',
-        resource: event
-      })
+        calendarId: "primary",
+        resource: event,
+      });
 
-      return response.data
+      return response.data;
     } catch (error) {
-      console.error('Erro ao criar evento recorrente:', error)
-      throw error
+      console.error("Erro ao criar evento recorrente:", error);
+      throw error;
     }
   }
 }
@@ -251,21 +262,26 @@ export class GoogleCalendarService {
 ### 3. **Stripe Integration**
 
 #### **A. Configuração de Pagamentos:**
+
 ```typescript
 // src/services/integrations/stripe.service.ts
-import Stripe from 'stripe'
+import Stripe from "stripe";
 
 export class StripeService {
-  private stripe: Stripe
-  
+  private stripe: Stripe;
+
   constructor() {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2024-06-20'
-    })
+      apiVersion: "2024-06-20",
+    });
   }
 
   // Pagamento de limpeza pelo cliente
-  async createPaymentIntent(amount: number, currency = 'brl', metadata: any = {}) {
+  async createPaymentIntent(
+    amount: number,
+    currency = "brl",
+    metadata: any = {}
+  ) {
     try {
       const paymentIntent = await this.stripe.paymentIntents.create({
         amount: Math.round(amount * 100), // Stripe usa centavos
@@ -273,37 +289,41 @@ export class StripeService {
         metadata: {
           bsosCleaningId: metadata.cleaningId,
           bsosPropertyId: metadata.propertyId,
-          ...metadata
+          ...metadata,
         },
         automatic_payment_methods: {
-          enabled: true
-        }
-      })
+          enabled: true,
+        },
+      });
 
-      return paymentIntent
+      return paymentIntent;
     } catch (error) {
-      console.error('Erro ao criar payment intent:', error)
-      throw error
+      console.error("Erro ao criar payment intent:", error);
+      throw error;
     }
   }
 
   // Pagamento para funcionários
-  async createTransfer(employeeStripeAccountId: string, amount: number, cleaningId: string) {
+  async createTransfer(
+    employeeStripeAccountId: string,
+    amount: number,
+    cleaningId: string
+  ) {
     try {
       const transfer = await this.stripe.transfers.create({
         amount: Math.round(amount * 100),
-        currency: 'brl',
+        currency: "brl",
         destination: employeeStripeAccountId,
         metadata: {
           bsosCleaningId: cleaningId,
-          type: 'cleaning_payment'
-        }
-      })
+          type: "cleaning_payment",
+        },
+      });
 
-      return transfer
+      return transfer;
     } catch (error) {
-      console.error('Erro ao criar transferência:', error)
-      throw error
+      console.error("Erro ao criar transferência:", error);
+      throw error;
     }
   }
 
@@ -311,36 +331,40 @@ export class StripeService {
   async createConnectedAccount(employee: any) {
     try {
       const account = await this.stripe.accounts.create({
-        type: 'express',
-        country: 'BR',
+        type: "express",
+        country: "BR",
         email: employee.email,
         metadata: {
           bsosEmployeeId: employee.id,
-          bsosCompanyId: employee.companyId
-        }
-      })
+          bsosCompanyId: employee.companyId,
+        },
+      });
 
-      return account
+      return account;
     } catch (error) {
-      console.error('Erro ao criar conta conectada:', error)
-      throw error
+      console.error("Erro ao criar conta conectada:", error);
+      throw error;
     }
   }
 
   // Link de onboarding para funcionário
-  async createAccountLink(accountId: string, returnUrl: string, refreshUrl: string) {
+  async createAccountLink(
+    accountId: string,
+    returnUrl: string,
+    refreshUrl: string
+  ) {
     try {
       const accountLink = await this.stripe.accountLinks.create({
         account: accountId,
         return_url: returnUrl,
         refresh_url: refreshUrl,
-        type: 'account_onboarding'
-      })
+        type: "account_onboarding",
+      });
 
-      return accountLink
+      return accountLink;
     } catch (error) {
-      console.error('Erro ao criar link de onboarding:', error)
-      throw error
+      console.error("Erro ao criar link de onboarding:", error);
+      throw error;
     }
   }
 
@@ -351,66 +375,72 @@ export class StripeService {
         payload,
         signature,
         process.env.STRIPE_WEBHOOK_SECRET!
-      )
+      );
 
       switch (event.type) {
-        case 'payment_intent.succeeded':
-          await this.handlePaymentSuccess(event.data.object as Stripe.PaymentIntent)
-          break
-          
-        case 'payment_intent.payment_failed':
-          await this.handlePaymentFailed(event.data.object as Stripe.PaymentIntent)
-          break
-          
-        case 'transfer.created':
-          await this.handleTransferCreated(event.data.object as Stripe.Transfer)
-          break
-          
+        case "payment_intent.succeeded":
+          await this.handlePaymentSuccess(
+            event.data.object as Stripe.PaymentIntent
+          );
+          break;
+
+        case "payment_intent.payment_failed":
+          await this.handlePaymentFailed(
+            event.data.object as Stripe.PaymentIntent
+          );
+          break;
+
+        case "transfer.created":
+          await this.handleTransferCreated(
+            event.data.object as Stripe.Transfer
+          );
+          break;
+
         default:
-          console.log(`Evento não tratado: ${event.type}`)
+          console.log(`Evento não tratado: ${event.type}`);
       }
 
-      return { received: true }
+      return { received: true };
     } catch (error) {
-      console.error('Erro no webhook:', error)
-      throw error
+      console.error("Erro no webhook:", error);
+      throw error;
     }
   }
 
   private async handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
-    const cleaningId = paymentIntent.metadata.bsosCleaningId
-    
+    const cleaningId = paymentIntent.metadata.bsosCleaningId;
+
     if (cleaningId) {
       // Atualizar status no banco
       await prisma.cleaning.update({
         where: { id: cleaningId },
-        data: { paid: true }
-      })
+        data: { paid: true },
+      });
 
       // Criar registro de pagamento
       await prisma.payment.create({
         data: {
           amount: paymentIntent.amount / 100,
-          type: 'CLEANING_FEE',
-          status: 'PAID',
-          method: 'Cartão',
+          type: "CLEANING_FEE",
+          status: "PAID",
+          method: "Cartão",
           reference: paymentIntent.id,
-          companyId: paymentIntent.metadata.bsosCompanyId
-        }
-      })
+          companyId: paymentIntent.metadata.bsosCompanyId,
+        },
+      });
     }
   }
 
   private async handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
-    const cleaningId = paymentIntent.metadata.bsosCleaningId
-    
+    const cleaningId = paymentIntent.metadata.bsosCleaningId;
+
     if (cleaningId) {
       // Marcar como não pago e criar notificação
       await prisma.cleaning.update({
         where: { id: cleaningId },
-        data: { paid: false }
-      })
-      
+        data: { paid: false },
+      });
+
       // Enviar notificação para admin
       // await notificationService.send(...)
     }
@@ -421,13 +451,13 @@ export class StripeService {
     await prisma.payment.create({
       data: {
         amount: transfer.amount / 100,
-        type: 'EMPLOYEE_PAYMENT',
-        status: 'PAID',
+        type: "EMPLOYEE_PAYMENT",
+        status: "PAID",
         reference: transfer.id,
         employeeId: transfer.metadata.bsosEmployeeId,
-        companyId: transfer.metadata.bsosCompanyId
-      }
-    })
+        companyId: transfer.metadata.bsosCompanyId,
+      },
+    });
   }
 }
 ```
@@ -435,71 +465,84 @@ export class StripeService {
 ### 4. **Hostaway Integration**
 
 #### **A. Multi-plataforma:**
+
 ```typescript
 // src/services/integrations/hostaway.service.ts
 export class HostawayService {
-  private baseUrl = 'https://api.hostaway.com/v1'
-  private accessToken: string
-  
+  private baseUrl = "https://api.hostaway.com/v1";
+  private accessToken: string;
+
   constructor() {
-    this.accessToken = process.env.HOSTAWAY_ACCESS_TOKEN!
+    this.accessToken = process.env.HOSTAWAY_ACCESS_TOKEN!;
   }
 
   async getListings() {
     try {
       const response = await fetch(`${this.baseUrl}/listings`, {
         headers: {
-          'Authorization': `Bearer ${this.accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      
-      const data = await response.json()
-      return data.result
+          Authorization: `Bearer ${this.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      return data.result;
     } catch (error) {
-      console.error('Erro ao buscar propriedades Hostaway:', error)
-      throw error
+      console.error("Erro ao buscar propriedades Hostaway:", error);
+      throw error;
     }
   }
 
-  async getReservations(listingId?: string, startDate?: string, endDate?: string) {
-    const params = new URLSearchParams()
-    if (listingId) params.append('listingId', listingId)
-    if (startDate) params.append('arrivalStartDate', startDate)
-    if (endDate) params.append('arrivalEndDate', endDate)
+  async getReservations(
+    listingId?: string,
+    startDate?: string,
+    endDate?: string
+  ) {
+    const params = new URLSearchParams();
+    if (listingId) params.append("listingId", listingId);
+    if (startDate) params.append("arrivalStartDate", startDate);
+    if (endDate) params.append("arrivalEndDate", endDate);
 
     try {
       const response = await fetch(`${this.baseUrl}/reservations?${params}`, {
         headers: {
-          'Authorization': `Bearer ${this.accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      
-      const data = await response.json()
-      return data.result
+          Authorization: `Bearer ${this.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      return data.result;
     } catch (error) {
-      console.error('Erro ao buscar reservas:', error)
-      throw error
+      console.error("Erro ao buscar reservas:", error);
+      throw error;
     }
   }
 
   async syncAllReservations() {
     try {
       // Buscar todas as reservas dos últimos 30 dias
-      const startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      const endDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      
-      const reservations = await this.getReservations(undefined, startDate, endDate)
-      
+      const startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0];
+      const endDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0];
+
+      const reservations = await this.getReservations(
+        undefined,
+        startDate,
+        endDate
+      );
+
       for (const reservation of reservations) {
-        await this.syncReservation(reservation)
+        await this.syncReservation(reservation);
       }
-      
-      return { synced: reservations.length }
+
+      return { synced: reservations.length };
     } catch (error) {
-      console.error('Erro na sincronização:', error)
-      throw error
+      console.error("Erro na sincronização:", error);
+      throw error;
     }
   }
 
@@ -510,23 +553,25 @@ export class HostawayService {
         where: {
           OR: [
             { airbnbId: hostawayReservation.airbnbListingId?.toString() },
-            { hostAwayId: hostawayReservation.listingId?.toString() }
-          ]
-        }
-      })
+            { hostAwayId: hostawayReservation.listingId?.toString() },
+          ],
+        },
+      });
 
       if (!property) {
-        console.warn(`Propriedade não encontrada para reserva ${hostawayReservation.id}`)
-        return
+        console.warn(
+          `Propriedade não encontrada para reserva ${hostawayReservation.id}`
+        );
+        return;
       }
 
       // Verificar se já existe limpeza para esta reserva
       const existingCleaning = await prisma.cleaning.findFirst({
         where: {
           propertyId: property.id,
-          scheduledDate: new Date(hostawayReservation.departureDate)
-        }
-      })
+          scheduledDate: new Date(hostawayReservation.departureDate),
+        },
+      });
 
       if (!existingCleaning) {
         // Criar limpeza automática para checkout
@@ -534,44 +579,45 @@ export class HostawayService {
           data: {
             scheduledDate: new Date(hostawayReservation.departureDate),
             price: this.calculateCleaningPrice(property),
-            status: 'SCHEDULED',
+            status: "SCHEDULED",
             notes: `Limpeza automática - Checkout reserva #${hostawayReservation.id}`,
             companyId: property.companyId,
             propertyId: property.id,
-            employeeId: await this.assignEmployee(property.id)
-          }
-        })
+            employeeId: await this.assignEmployee(property.id),
+          },
+        });
 
-        console.log(`✅ Limpeza criada para propriedade ${property.name}`)
+        console.log(`✅ Limpeza criada para propriedade ${property.name}`);
       }
     } catch (error) {
-      console.error('Erro ao sincronizar reserva:', error)
+      console.error("Erro ao sincronizar reserva:", error);
     }
   }
 
   private calculateCleaningPrice(property: any): number {
     // Lógica para calcular preço baseado no tipo/tamanho da propriedade
-    const basePrice = 100
-    const roomMultiplier = property.rooms * 20
-    const bathroomMultiplier = property.bathrooms * 15
-    
-    return basePrice + roomMultiplier + bathroomMultiplier
+    const basePrice = 100;
+    const roomMultiplier = property.rooms * 20;
+    const bathroomMultiplier = property.bathrooms * 15;
+
+    return basePrice + roomMultiplier + bathroomMultiplier;
   }
 
   private async assignEmployee(propertyId: string): string {
     // Lógica para atribuir funcionário automaticamente
     // Pode ser baseada em localização, disponibilidade, etc.
-    
+
     const employees = await prisma.user.findMany({
       where: {
-        role: 'EMPLOYEE',
-        isActive: true
-      }
-    })
-    
+        role: "EMPLOYEE",
+        isActive: true,
+      },
+    });
+
     // Por enquanto, atribui aleatoriamente
-    const randomEmployee = employees[Math.floor(Math.random() * employees.length)]
-    return randomEmployee.id
+    const randomEmployee =
+      employees[Math.floor(Math.random() * employees.length)];
+    return randomEmployee.id;
   }
 }
 ```
@@ -579,125 +625,124 @@ export class HostawayService {
 ### 5. **Service Orchestrator**
 
 #### **A. Coordenador de Integrações:**
+
 ```typescript
 // src/services/integrations/integration.orchestrator.ts
-import { AirbnbService } from './airbnb.service'
-import { GoogleCalendarService } from './calendar.service'
-import { StripeService } from './stripe.service'
-import { HostawayService } from './hostaway.service'
+import { AirbnbService } from "./airbnb.service";
+import { GoogleCalendarService } from "./calendar.service";
+import { StripeService } from "./stripe.service";
+import { HostawayService } from "./hostaway.service";
 
 export class IntegrationOrchestrator {
-  private airbnb: AirbnbService
-  private calendar: GoogleCalendarService
-  private stripe: StripeService
-  private hostaway: HostawayService
+  private airbnb: AirbnbService;
+  private calendar: GoogleCalendarService;
+  private stripe: StripeService;
+  private hostaway: HostawayService;
 
   constructor() {
-    this.airbnb = new AirbnbService()
-    this.calendar = new GoogleCalendarService()
-    this.stripe = new StripeService()
-    this.hostaway = new HostawayService()
+    this.airbnb = new AirbnbService();
+    this.calendar = new GoogleCalendarService();
+    this.stripe = new StripeService();
+    this.hostaway = new HostawayService();
   }
 
   // Processo completo: Reserva → Limpeza → Pagamento
   async processNewReservation(reservationData: any) {
     try {
-      console.log('🔄 Processando nova reserva...')
+      console.log("🔄 Processando nova reserva...");
 
       // 1. Criar limpeza no sistema
       const cleaning = await prisma.cleaning.create({
         data: {
           scheduledDate: new Date(reservationData.checkoutDate),
           price: this.calculatePrice(reservationData),
-          status: 'SCHEDULED',
+          status: "SCHEDULED",
           companyId: reservationData.companyId,
           propertyId: reservationData.propertyId,
-          employeeId: reservationData.assignedEmployeeId
+          employeeId: reservationData.assignedEmployeeId,
         },
         include: {
           property: true,
-          employee: true
-        }
-      })
+          employee: true,
+        },
+      });
 
       // 2. Criar evento no Google Calendar
-      const calendarEvent = await this.calendar.createCleaningEvent(cleaning)
-      
+      const calendarEvent = await this.calendar.createCleaningEvent(cleaning);
+
       // 3. Criar Payment Intent no Stripe
       const paymentIntent = await this.stripe.createPaymentIntent(
         cleaning.price,
-        'brl',
+        "brl",
         {
           cleaningId: cleaning.id,
-          propertyId: cleaning.propertyId
+          propertyId: cleaning.propertyId,
         }
-      )
+      );
 
-      console.log('✅ Reserva processada com sucesso')
-      
+      console.log("✅ Reserva processada com sucesso");
+
       return {
         cleaning,
         calendarEvent,
-        paymentIntent
-      }
+        paymentIntent,
+      };
     } catch (error) {
-      console.error('❌ Erro ao processar reserva:', error)
-      throw error
+      console.error("❌ Erro ao processar reserva:", error);
+      throw error;
     }
   }
 
   // Sincronização completa de dados
   async fullSync() {
     try {
-      console.log('🔄 Iniciando sincronização completa...')
+      console.log("🔄 Iniciando sincronização completa...");
 
       // 1. Sync Hostaway/Airbnb reservations
-      const hostawaySync = await this.hostaway.syncAllReservations()
-      
+      const hostawaySync = await this.hostaway.syncAllReservations();
+
       // 2. Sync calendários
-      const today = new Date()
-      const nextMonth = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
-      
+      const today = new Date();
+      const nextMonth = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+
       const employees = await prisma.user.findMany({
-        where: { role: 'EMPLOYEE' }
-      })
+        where: { role: "EMPLOYEE" },
+      });
 
       const calendarSyncs = await Promise.all(
-        employees.map(emp => 
+        employees.map((emp) =>
           this.calendar.getEmployeeSchedule(emp.email, today, nextMonth)
         )
-      )
+      );
 
       // 3. Verificar pagamentos pendentes
       const pendingPayments = await prisma.cleaning.findMany({
-        where: { paid: false, status: 'COMPLETED' }
-      })
+        where: { paid: false, status: "COMPLETED" },
+      });
 
       for (const cleaning of pendingPayments) {
         // Criar cobrança automática se não existir
-        await this.stripe.createPaymentIntent(
-          cleaning.price,
-          'brl',
-          { cleaningId: cleaning.id }
-        )
+        await this.stripe.createPaymentIntent(cleaning.price, "brl", {
+          cleaningId: cleaning.id,
+        });
       }
 
-      console.log('✅ Sincronização completa finalizada')
-      
+      console.log("✅ Sincronização completa finalizada");
+
       return {
         hostawayReservations: hostawaySync.synced,
         employeesScheduled: calendarSyncs.length,
-        pendingPayments: pendingPayments.length
-      }
+        pendingPayments: pendingPayments.length,
+      };
     } catch (error) {
-      console.error('❌ Erro na sincronização:', error)
-      throw error
+      console.error("❌ Erro na sincronização:", error);
+      throw error;
     }
   }
 
   private calculatePrice(reservationData: any): number {
     // Lógica de preço baseada em vários fatores
-    return 150 // Placeholder
+    return 150; // Placeholder
   }
 }
 ```
@@ -705,50 +750,49 @@ export class IntegrationOrchestrator {
 ### 6. **APIs de Integração**
 
 #### **A. Endpoint de sincronização:**
+
 ```typescript
 // src/app/api/integrations/sync/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { IntegrationOrchestrator } from '@/services/integrations/integration.orchestrator'
+import { NextRequest, NextResponse } from "next/server";
+import { IntegrationOrchestrator } from "@/services/integrations/integration.orchestrator";
 
 export async function POST(request: NextRequest) {
   try {
-    const orchestrator = new IntegrationOrchestrator()
-    const result = await orchestrator.fullSync()
-    
+    const orchestrator = new IntegrationOrchestrator();
+    const result = await orchestrator.fullSync();
+
     return NextResponse.json({
       success: true,
       data: result,
-      timestamp: new Date().toISOString()
-    })
+      timestamp: new Date().toISOString(),
+    });
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: 'Erro na sincronização' },
+      { success: false, error: "Erro na sincronização" },
       { status: 500 }
-    )
+    );
   }
 }
 ```
 
 #### **B. Webhook Stripe:**
+
 ```typescript
 // src/app/api/webhooks/stripe/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { StripeService } from '@/services/integrations/stripe.service'
+import { NextRequest, NextResponse } from "next/server";
+import { StripeService } from "@/services/integrations/stripe.service";
 
 export async function POST(request: NextRequest) {
   try {
-    const payload = await request.text()
-    const signature = request.headers.get('stripe-signature')!
-    
-    const stripeService = new StripeService()
-    const result = await stripeService.handleWebhook(payload, signature)
-    
-    return NextResponse.json(result)
+    const payload = await request.text();
+    const signature = request.headers.get("stripe-signature")!;
+
+    const stripeService = new StripeService();
+    const result = await stripeService.handleWebhook(payload, signature);
+
+    return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Webhook error' },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: "Webhook error" }, { status: 400 });
   }
 }
 ```
@@ -758,6 +802,7 @@ export async function POST(request: NextRequest) {
 ## ✅ **Checklist de Implementação**
 
 ### **Airbnb:**
+
 - [ ] Obter credenciais API
 - [ ] Implementar client service
 - [ ] Testar busca de propriedades
@@ -765,24 +810,28 @@ export async function POST(request: NextRequest) {
 - [ ] Implementar transformação de dados
 
 ### **Google Calendar:**
+
 - [ ] Configurar OAuth2
 - [ ] Implementar criação de eventos
 - [ ] Testar sincronização de agenda
 - [ ] Implementar eventos recorrentes
 
 ### **Stripe:**
+
 - [ ] Configurar conta Stripe
 - [ ] Implementar pagamentos
 - [ ] Configurar webhooks
 - [ ] Testar transferências
 
 ### **Hostaway:**
+
 - [ ] Obter credenciais API
 - [ ] Implementar sincronização
 - [ ] Testar multi-plataforma
 - [ ] Automatizar criação de limpezas
 
 ### **Orquestração:**
+
 - [ ] Implementar orchestrator
 - [ ] Criar APIs de sincronização
 - [ ] Configurar cron jobs

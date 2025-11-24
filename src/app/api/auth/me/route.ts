@@ -1,22 +1,26 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import { db } from "@/lib/prisma";
 
 export async function GET(req: Request) {
-  const cookieHeader = req.headers.get("cookie") || "";
-  const tokenMatch = cookieHeader.match(/(?:^|;\s*)auth_token=([^;]+)/);
-  const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
-  const token = tokenMatch?.[1] || bearer;
+  const cookie = (req as any).cookies?.get?.("auth_token")?.value
+    // em edge/web runtime o cookie pode vir via header
+    ?? (req.headers.get("cookie") ?? "")
+      .split(";")
+      .map(s => s.trim())
+      .find(s => s.startsWith("auth_token="))
+      ?.split("=")[1];
 
-  if (!token) return NextResponse.json({ user: null }, { status: 200 });
+  const header = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
+
+  const token = cookie || header;
+  if (!token) return NextResponse.json({ user: null });
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as any;
-    const user = await db.user.findUnique({
-      where: { id: payload.id },
-      select: { id: true, email: true, name: true, role: true, avatar: true },
+    // retorna apenas o necessário
+    return NextResponse.json({
+      user: { id: payload.id, email: payload.email, role: payload.role, name: payload.name ?? "" }
     });
-    return NextResponse.json({ user: user ?? null });
   } catch {
     return NextResponse.json({ user: null });
   }

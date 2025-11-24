@@ -1,0 +1,141 @@
+{
+  "info": {
+    "name": "BSOS API Local",
+    "description": "Coleção completa para testes locais da API do BSOS. Inclui autenticação, CRUD, e rotas internas.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "http://localhost:3020/api/auth/login", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "auth", "login"]},
+        "body": {"mode": "raw", "raw": "{\n  \"email\": \"admin@demo.bsos\",\n  \"password\": \"demo123\"\n}"}
+      },
+      "response": []
+    },
+    {
+      "name": "Auth - Me (protected)",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "http://localhost:3020/api/auth/me", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "auth", "me"]},
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Auth - Logout",
+      "request": {
+        "method": "POST",
+        "url": {"raw": "http://localhost:3020/api/auth/logout", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "auth", "logout"]},
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Properties - List",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "http://localhost:3020/api/properties", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "properties"]},
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Properties - Create",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "http://localhost:3020/api/properties", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "properties"]},
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Test Property\",\n  \"address\": \"Rua Teste, 123\",\n  \"type\": \"APARTMENT\"\n}"}
+      },
+      "response": []
+    },
+    {
+      "name": "Properties - Update",
+      "request": {
+        "method": "PUT",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "http://localhost:3020/api/properties/1", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "properties", "1"]},
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Updated Property\"\n}"}
+      },
+      "response": []
+    },
+    {
+      "name": "Properties - Delete",
+      "request": {
+        "method": "DELETE",
+        "url": {"raw": "http://localhost:3020/api/properties/1", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "properties", "1"]},
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Tasks - List",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "http://localhost:3020/api/tasks", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "tasks"]},
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Tasks - Create",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "http://localhost:3020/api/tasks", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "tasks"]},
+        "body": {"mode": "raw", "raw": "{\n  \"title\": \"Test Task\",\n  \"propertyId\": \"1\",\n  \"status\": \"pending\"\n}"}
+      },
+      "response": []
+    },
+    {
+      "name": "Tasks - Update",
+      "request": {
+        "method": "PUT",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "http://localhost:3020/api/tasks/1", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "tasks", "1"]},
+        "body": {"mode": "raw", "raw": "{\n  \"title\": \"Updated Task\"\n}"}
+      },
+      "response": []
+    },
+    {
+      "name": "Tasks - Delete",
+      "request": {
+        "method": "DELETE",
+        "url": {"raw": "http://localhost:3020/api/tasks/1", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "tasks", "1"]},
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Team - List",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "http://localhost:3020/api/team", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "team"]},
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Team - Get",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "http://localhost:3020/api/team/1", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "team", "1"]},
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Status",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "http://localhost:3020/api/status", "protocol": "http", "host": ["localhost"], "port": "3020", "path": ["api", "status"]},
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}

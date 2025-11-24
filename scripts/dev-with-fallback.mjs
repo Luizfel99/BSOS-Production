@@ -3,15 +3,19 @@ import detect from "detect-port";
 import { spawn } from "node:child_process";
 
 const desired = Number(process.env.PORT || 3020);
-const useTurbo = process.argv.includes("--turbo");
 const port = await detect(desired);
 
-console.log(port !== desired
-  ? `[dev] Porta ${desired} ocupada; iniciando em ${port}.`
-  : `[dev] Iniciando Next em ${port}${useTurbo ? " (Turbopack)" : ""}…`);
-
 const args = ["dev", "-p", String(port)];
-if (useTurbo) args.push("--turbo");
+// liga Turbopack se var estiver setada
+if (process.env.TURBOPACK === "1") {
+  args.splice(1, 0, "--turbo");
+}
+
+const msg =
+  port === desired
+    ? `[dev] Starting Next on ${port}…`
+    : `[dev] Port ${desired} busy; starting on ${port}. Set PORT=<n> to try a specific port.`;
+console.log(msg);
 
 const child = spawn("next", args, { stdio: "inherit", shell: true });
 child.on("exit", (code) => process.exit(code ?? 0));
