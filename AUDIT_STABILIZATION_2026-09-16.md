@@ -81,6 +81,10 @@ Additionally:
 - CRUD smoke tests must cover properties, jobs/tasks, team members, notes, photos and checklists.
 - No secrets may remain in the tracked working tree.
 
+## Vercel connection status
+
+The Vercel project is now connected to `Luizfel99/BSOS-Production`. This commit intentionally updates only audit documentation so the `audit-stabilization-2026-09-16` branch can trigger its first Preview Deployment without changing production application behavior.
+
 ## Current stability assessment
 
 Security: BLOCKED until exposed credentials are rotated.
